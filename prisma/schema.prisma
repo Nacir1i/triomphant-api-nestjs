@@ -1,0 +1,559 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model appointment {
+  id                  Int      @id @default(autoincrement())
+  title               String
+  due_date            DateTime @default(now())
+  created_at          DateTime @default(now())
+  status              Int
+  category_id         Int
+  customer_id         Int?
+  order_id            Int?
+  delivery_invoice_id Int?
+
+  category         invoice_category  @relation(fields: [category_id], references: [id])
+  order            order?            @relation(fields: [order_id], references: [id])
+  customer         customer?         @relation(fields: [customer_id], references: [id])
+  delivery_invoice delivery_invoice? @relation(fields: [delivery_invoice_id], references: [id])
+
+  @@index([order_id])
+  @@index([delivery_invoice_id])
+  @@index([category_id])
+  @@index([customer_id])
+}
+
+model bank_information {
+  id     Int     @id @default(autoincrement())
+  name   String?
+  number String?
+  rib    String?
+  swift  String?
+  ice    String?
+
+  customers customer[]
+  employees user[]
+  vendors   vendor[]
+}
+
+model contact_information {
+  id        Int      @id @default(autoincrement())
+  email     String?
+  phone     String
+  address   String?
+  honorific String?
+  emergency Boolean?
+
+  customers customer[]
+  employees user[]
+  vendors   vendor[]
+}
+
+model cost_modifier {
+  id                     Int     @id @default(autoincrement())
+  shipping               Float
+  discount               Int
+  is_discount_percentage Boolean
+  tax                    Int
+
+  quotes quote[]
+  orders order[]
+}
+
+model customer {
+  id                     Int      @id @default(autoincrement())
+  first_name             String
+  last_name              String
+  contact_information_id Int
+  bank_information_id    Int?
+  created_at             DateTime @default(now())
+  is_deleted             Boolean  @default(false)
+
+  contact_information contact_information @relation(fields: [contact_information_id], references: [id])
+  bank_information    bank_information?   @relation(fields: [bank_information_id], references: [id])
+
+  logs        customer_log[]
+  orders      order[]
+  quotes      quote[]
+  appointment appointment[]
+
+  @@index([contact_information_id])
+  @@index([bank_information_id])
+}
+
+model customer_log {
+  id          Int      @id @default(autoincrement())
+  content     String
+  customer_id Int
+  created_at  DateTime @default(now())
+
+  customer customer @relation(fields: [customer_id], references: [id])
+
+  @@index([customer_id])
+}
+
+model delivery_invoice {
+  id          Int      @id @default(autoincrement())
+  title       String
+  note        String?
+  created_at  DateTime @default(now())
+  status      Int
+  order_id    Int      @unique
+  category_id Int
+  is_deleted  Boolean  @default(false)
+
+  category invoice_category @relation(fields: [category_id], references: [id])
+  orders   order            @relation(fields: [order_id], references: [id])
+
+  products       delivery_invoice_product[]
+  employees      delivery_invoice_user[]
+  manual_content manual_delivery_invoice_content[]
+  appointments   appointment[]
+
+  @@index([category_id])
+}
+
+model delivery_invoice_product {
+  id                  Int @id @default(autoincrement())
+  quantity            Int
+  remaining           Int
+  delivery_invoice_id Int
+  product_id          Int
+
+  delivery_invoice delivery_invoice @relation(fields: [delivery_invoice_id], references: [id])
+  product          product          @relation(fields: [product_id], references: [id])
+
+  @@index([delivery_invoice_id])
+  @@index([product_id])
+}
+
+model delivery_invoice_user {
+  id                  Int @id @default(autoincrement())
+  delivery_invoice_id Int
+  user_id             Int
+
+  delivery_invoice delivery_invoice @relation(fields: [delivery_invoice_id], references: [id])
+  employee         user             @relation(fields: [user_id], references: [id])
+
+  @@index([delivery_invoice_id])
+  @@index([user_id])
+}
+
+model invoice_category {
+  id         Int       @id @default(autoincrement())
+  title      String?
+  created_at DateTime? @default(now())
+
+  quotes            quote[]
+  orders            order[]
+  delivery_invoices delivery_invoice[]
+  appointmrnts      appointment[]
+}
+
+model location {
+  id      Int    @id @default(autoincrement())
+  title   String
+  address String
+
+  products product[]
+}
+
+model manual_delivery_invoice_content {
+  id                  Int    @id @default(autoincrement())
+  price               Float
+  title               String
+  quantity            Int
+  delivery_invoice_id Int
+
+  delivery_invoice delivery_invoice @relation(fields: [delivery_invoice_id], references: [id])
+
+  @@index([delivery_invoice_id])
+}
+
+model manual_order_content {
+  id       Int    @id @default(autoincrement())
+  price    Float
+  title    String
+  quantity Int
+  order_id Int
+
+  order order @relation(fields: [order_id], references: [id])
+
+  @@index([order_id])
+}
+
+model manual_package_content {
+  id         Int    @id @default(autoincrement())
+  price      Float
+  title      String
+  quantity   Int
+  package_id Int
+
+  package Renamedpackage @relation(fields: [package_id], references: [id])
+
+  @@index([package_id])
+}
+
+model manual_quote_content {
+  id       Int    @id @default(autoincrement())
+  price    Float
+  title    String
+  quantity Int
+  quote_id Int
+
+  quote quote @relation(fields: [quote_id], references: [id])
+
+  @@index([quote_id])
+}
+
+model order {
+  id               Int       @id @default(autoincrement())
+  title            String
+  paid             Float     @default(0)
+  price            Float
+  note             String?
+  delivery_address String?
+  due_date         DateTime?
+  created_at       DateTime  @default(now())
+  status           Int
+  customer_id      Int
+  quote_id         Int?      @unique
+  cost_modifier_id Int
+  category_id      Int
+  is_deleted       Boolean   @default(false)
+
+  category      invoice_category @relation(fields: [category_id], references: [id])
+  quote         quote?           @relation(fields: [quote_id], references: [id])
+  customer      customer         @relation(fields: [customer_id], references: [id])
+  cost_modifier cost_modifier    @relation(fields: [cost_modifier_id], references: [id])
+
+  delivery_invoice delivery_invoice?
+  manual_content   manual_order_content[]
+  products         order_product[]
+  services         order_service[]
+  packages         order_package[]
+  payments         order_payment[]
+  appointments     appointment[]
+
+  @@index([category_id])
+  @@index([customer_id])
+  @@index([cost_modifier_id])
+}
+
+model order_package {
+  id         Int @id @default(autoincrement())
+  quantity   Int
+  order_id   Int
+  package_id Int
+
+  order   order          @relation(fields: [order_id], references: [id])
+  package Renamedpackage @relation(fields: [package_id], references: [id])
+
+  @@index([package_id])
+  @@index([order_id])
+}
+
+model order_payment {
+  id         Int      @id @default(autoincrement())
+  status     Int
+  total      Int
+  method     String
+  message    String?
+  created_at DateTime @default(now())
+  paid_at    DateTime @default(now())
+  order_id   Int
+
+  order order @relation(fields: [order_id], references: [id])
+
+  @@index([order_id])
+}
+
+model order_product {
+  id         Int @id @default(autoincrement())
+  quantity   Int
+  order_id   Int
+  product_id Int
+
+  order   order   @relation(fields: [order_id], references: [id])
+  product product @relation(fields: [product_id], references: [id])
+
+  @@index([order_id])
+  @@index([product_id])
+}
+
+model order_service {
+  id         Int @id @default(autoincrement())
+  quantity   Int
+  order_id   Int
+  service_id Int
+
+  order   order   @relation(fields: [order_id], references: [id])
+  service service @relation(fields: [service_id], references: [id])
+
+  @@index([order_id])
+  @@index([service_id])
+}
+
+/// This model has been renamed to 'Renamedpackage', because the original name 'package' is reserved.
+model Renamedpackage {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  category_id Int
+  price       Float
+  created_at  DateTime @default(now())
+  is_deleted  Boolean  @default(false)
+
+  manual_content manual_package_content[]
+  products       package_product[]
+  services       package_service[]
+  quotes         quote_package[]
+  orders         order_package[]
+  category       inventory_category       @relation(fields: [category_id], references: [id])
+
+  @@index([category_id])
+  @@map("package")
+}
+
+model package_product {
+  id         Int @id @default(autoincrement())
+  quantity   Int
+  product_id Int
+  package_id Int
+
+  package Renamedpackage @relation(fields: [package_id], references: [id])
+  product product        @relation(fields: [product_id], references: [id])
+
+  @@index([package_id])
+  @@index([product_id])
+}
+
+model package_service {
+  id         Int @id @default(autoincrement())
+  service_id Int
+  package_id Int
+
+  package Renamedpackage @relation(fields: [package_id], references: [id])
+  service service        @relation(fields: [service_id], references: [id])
+
+  @@index([package_id])
+  @@index([service_id])
+}
+
+model product {
+  id                 Int      @id @default(autoincrement())
+  cost               Float
+  price              Float
+  title              String
+  description        String?
+  barcode            String?
+  sku                String?
+  quantity           Int?
+  quantity_threshold Int?
+  location_id        Int?
+  category_id        Int
+  created_at         DateTime @default(now())
+  is_deleted         Boolean  @default(false)
+
+  location location?          @relation(fields: [location_id], references: [id])
+  category inventory_category @relation(fields: [category_id], references: [id])
+
+  packages          package_product[]
+  quotes            quote_product[]
+  orders            order_product[]
+  delivery_invoices delivery_invoice_product[]
+
+  @@index([location_id])
+  @@index([category_id])
+}
+
+model inventory_category {
+  id    Int    @id @default(autoincrement())
+  title String
+
+  services service[]
+  packages Renamedpackage[]
+  products product[]
+}
+
+model quote {
+  id               Int      @id @default(autoincrement())
+  price            Float
+  title            String
+  note             String?
+  created_at       DateTime @default(now())
+  status           Int
+  customer_id      Int
+  cost_modifier_id Int
+  category_id      Int
+  is_deleted       Boolean  @default(false)
+
+  customer      customer         @relation(fields: [customer_id], references: [id])
+  cost_modifier cost_modifier    @relation(fields: [cost_modifier_id], references: [id])
+  category      invoice_category @relation(fields: [category_id], references: [id])
+
+  order          order?
+  manual_content manual_quote_content[]
+  products       quote_product[]
+  services       quote_service[]
+  packages       quote_package[]
+
+  @@index([customer_id])
+  @@index([cost_modifier_id])
+  @@index([category_id])
+}
+
+model quote_package {
+  id         Int @id @default(autoincrement())
+  quote_id   Int
+  package_id Int
+
+  quote   quote          @relation(fields: [quote_id], references: [id])
+  package Renamedpackage @relation(fields: [package_id], references: [id])
+
+  @@index([quote_id])
+  @@index([package_id])
+}
+
+model quote_product {
+  id         Int @id @default(autoincrement())
+  quantity   Int
+  quote_id   Int
+  product_id Int
+
+  quote   quote   @relation(fields: [quote_id], references: [id])
+  product product @relation(fields: [product_id], references: [id])
+
+  @@index([quote_id])
+  @@index([product_id])
+}
+
+model quote_service {
+  id         Int @id @default(autoincrement())
+  quote_id   Int
+  service_id Int
+
+  quote   quote   @relation(fields: [quote_id], references: [id])
+  service service @relation(fields: [service_id], references: [id])
+
+  @@index([quote_id])
+  @@index([service_id])
+}
+
+model role {
+  id         Int      @id @default(autoincrement())
+  title      String
+  created_at DateTime @default(now())
+
+  employees user[]
+}
+
+model service {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  cost        Float
+  price       Float
+  created_at  DateTime @default(now())
+  is_deleted  Boolean  @default(false)
+
+  packages             package_service[]
+  quotes               quote_service[]
+  orders               order_service[]
+  inventory_category   inventory_category? @relation(fields: [inventory_categoryId], references: [id])
+  inventory_categoryId Int?
+
+  @@index([inventory_categoryId])
+}
+
+model user {
+  id                     Int       @id @default(autoincrement())
+  username               String
+  password               String
+  first_name             String
+  last_name              String
+  image_url              String?
+  created_at             DateTime  @default(now())
+  recruited_at           DateTime? @default(now())
+  birth_date             DateTime? @default(now())
+  salary                 Int?
+  status                 Int?
+  role_id                Int
+  contact_information_id Int
+  bank_information_id    Int?
+  is_deleted             Boolean   @default(false)
+
+  role                role                @relation(fields: [role_id], references: [id])
+  contact_information contact_information @relation(fields: [contact_information_id], references: [id])
+  bank_information    bank_information?   @relation(fields: [bank_information_id], references: [id])
+
+  logs              user_log[]
+  delivery_invoices delivery_invoice_user[]
+  payments          user_payment[]
+
+  @@index([role_id])
+  @@index([contact_information_id])
+  @@index([bank_information_id])
+}
+
+model user_log {
+  id         Int      @id @default(autoincrement())
+  content    String
+  user_id    Int
+  created_at DateTime @default(now())
+
+  user user @relation(fields: [user_id], references: [id])
+
+  @@index([user_id])
+}
+
+model user_payment {
+  id          Int      @id @default(autoincrement())
+  status      Int
+  total       Int
+  method      String
+  message     String?
+  created_at  DateTime @default(now())
+  paid_at     DateTime @default(now())
+  employee_id Int
+
+  employee user @relation(fields: [employee_id], references: [id])
+
+  @@index([employee_id])
+}
+
+model vendor {
+  id                     Int      @id @default(autoincrement())
+  first_name             String
+  last_name              String
+  company_name           String
+  contact_information_id Int
+  bank_information_id    Int?
+  created_at             DateTime @default(now())
+  is_deleted             Boolean  @default(false)
+
+  contact_information contact_information @relation(fields: [contact_information_id], references: [id])
+  bank_information    bank_information?   @relation(fields: [bank_information_id], references: [id])
+
+  logs vendor_log[]
+
+  @@index([contact_information_id])
+  @@index([bank_information_id])
+}
+
+model vendor_log {
+  id         Int      @id @default(autoincrement())
+  content    String
+  vendor_id  Int
+  created_at DateTime @default(now())
+
+  vendor vendor @relation(fields: [vendor_id], references: [id])
+
+  @@index([vendor_id])
+}
