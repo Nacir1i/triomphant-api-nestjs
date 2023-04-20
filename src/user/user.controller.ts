@@ -13,14 +13,16 @@ import { UserDto } from './dto';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Get('get')
+  @Post('get')
   async getUser(@Body() dto: UserDto) {
     try {
       const user = await this.userService.getUser(dto);
 
       if (!user) {
-        throw new NotFoundException();
+        throw new NotFoundException(`User was not found`);
       }
+
+      return user;
     } catch (error) {
       throw error;
     }

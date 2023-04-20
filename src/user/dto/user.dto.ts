@@ -1,10 +1,9 @@
-import { Type } from 'class-transformer';
 import {
   IsString,
   IsNotEmpty,
   IsEmail,
-  ValidateNested,
   IsNumber,
+  IsOptional,
 } from 'class-validator';
 
 export class ContactInfoDto {
@@ -35,20 +34,86 @@ export class BankInfoDto {
 
 export class UserDto {
   @IsNumber()
+  @IsOptional()
   readonly id: number;
 
   @IsString()
+  @IsOptional()
   readonly username: string;
 
   @IsString()
-  readonly email: string;
+  @IsOptional()
+  readonly password: string;
 
   @IsString()
+  @IsOptional()
   readonly firstName: string;
 
   @IsString()
+  @IsOptional()
   readonly lastName: string;
 
   @IsString()
+  @IsOptional()
+  readonly roleId: number;
+
+  @IsString()
+  @IsOptional()
+  readonly imageUrl: string;
+
+  @IsString()
+  @IsOptional()
+  readonly recruitedAt: string;
+
+  @IsString()
+  @IsOptional()
+  readonly birthDate: string;
+
+  @IsString()
+  @IsOptional()
+  readonly salary: number;
+
+  @IsString()
+  @IsOptional()
+  readonly status: number;
+
+  @IsEmail()
+  @IsOptional()
+  readonly email: string;
+
+  @IsString()
+  @IsOptional()
   readonly phone: string;
+
+  @IsString()
+  @IsOptional()
+  readonly address: string;
+
+  @IsString()
+  @IsOptional()
+  readonly honorific: string;
+
+  @IsString()
+  @IsOptional()
+  readonly emergency: boolean;
+
+  @IsString()
+  @IsOptional()
+  readonly name: string;
+
+  @IsString()
+  @IsOptional()
+  readonly number: string;
+
+  @IsString()
+  @IsOptional()
+  readonly rib: string;
+
+  @IsString()
+  @IsOptional()
+  readonly swift: string;
+
+  @IsString()
+  @IsOptional()
+  readonly ice: string;
 }
