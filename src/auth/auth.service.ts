@@ -12,10 +12,15 @@ import { JwtService } from '@nestjs/jwt';
 import { SignupDto, LoginDto } from './dto';
 //3rd party:
 import * as argon from 'argon2';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private jwtService: JwtService, private prisma: PrismaService) {}
+  constructor(
+    private jwtService: JwtService,
+    private prisma: PrismaService,
+    private userService: UserService,
+  ) {}
 
   async login(dto: LoginDto): Promise<string> {
     return '';
