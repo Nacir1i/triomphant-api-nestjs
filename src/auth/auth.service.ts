@@ -3,16 +3,17 @@ import {
   ForbiddenException,
   NotFoundException,
 } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
 import { SignupDto, LoginDto } from './dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { JwtService } from '@nestjs/jwt';
 import { user, Prisma } from '@prisma/client';
 
 @Injectable()
 export class AuthService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private jwtService: JwtService, private prisma: PrismaService) {}
 
-  async login(dto: LoginDto): Promise<any> {
-    return { dto };
+  async login(dto: LoginDto): Promise<string> {
+    return '';
   }
 
   async signup(dto: SignupDto): Promise<user | null> {
