@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 
 //Services:
-import { user, Prisma } from '@prisma/client';
+import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 //DTO:
@@ -21,7 +21,7 @@ export class AuthService {
     return '';
   }
 
-  async signup(dto: SignupDto): Promise<user | null> {
+  async signup(dto: SignupDto): Promise<object | null> {
     try {
       const hash = await argon.hash(dto.password);
 
@@ -49,9 +49,19 @@ export class AuthService {
             create: dto.bankInformation,
           },
         },
+        select: {
+          username: true,
+          first_name: true,
+          last_name: true,
+          role: true,
+          contact_information: true,
+          bank_information: true,
+        },
       });
 
-      return user;
+      const token: string = await this.jwtService.signAsync(user);
+
+      return { user, token };
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
