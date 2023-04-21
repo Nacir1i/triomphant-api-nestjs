@@ -15,16 +15,12 @@ export class UserController {
 
   @Post('get')
   async getUser(@Body() dto: UserDto) {
-    try {
-      const user = await this.userService.getUser(dto);
+    const user = await this.userService.getUser(dto);
 
-      if (!user) {
-        throw new NotFoundException(`User was not found`);
-      }
-
-      return user;
-    } catch (error) {
-      throw error;
+    if (!user) {
+      throw new NotFoundException(`User was not found`);
     }
+
+    return user;
   }
 }
