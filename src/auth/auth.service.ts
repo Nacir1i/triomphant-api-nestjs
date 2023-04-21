@@ -2,35 +2,54 @@ import {
   Injectable,
   ForbiddenException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 
 //Services:
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
+import { UserService } from 'src/user/user.service';
 //DTO:
 import { SignupDto, LoginDto } from './dto';
 //3rd party:
 import * as argon from 'argon2';
-import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private jwtService: JwtService,
-    private prisma: PrismaService,
+    private prismaService: PrismaService,
     private userService: UserService,
   ) {}
 
-  async login(dto: LoginDto): Promise<string> {
-    return '';
+  async login(dto: LoginDto): Promise<object | null> {
+    const user = await this.prismaService.user.findFirst({
+      where: {
+        username: dto.username,
+      },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Credentials provided are wrong');
+    }
+
+    if (!(await argon.verify(user.password, dto.password))) {
+      throw new UnauthorizedException('Credentials provided are wrong');
+    }
+
+    const token: string = await this.jwtService.signAsync(user);
+
+    const { password, ...rest } = user;
+
+    return { user: rest, token };
   }
 
   async signup(dto: SignupDto): Promise<object | null> {
     try {
       const hash = await argon.hash(dto.password);
 
-      const user = await this.prisma.user.create({
+      const user = await this.prismaService.user.create({
         data: {
           username: dto.username,
           password: hash,
@@ -52,6 +71,11 @@ export class AuthService {
           },
           bank_information: {
             create: dto.bankInformation,
+          },
+          logs: {
+            create: {
+              content: 'User created successfully',
+            },
           },
         },
         select: {
@@ -77,5 +101,9 @@ export class AuthService {
       }
       throw error;
     }
+  }
+
+  async assignJwtToken(object: object) {
+    return await this.jwtService.signAsync(object);
   }
 }
