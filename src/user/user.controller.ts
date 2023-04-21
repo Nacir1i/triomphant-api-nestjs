@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpCode,
+  HttpStatus,
   Post,
   NotFoundException,
 } from '@nestjs/common';
@@ -13,7 +14,8 @@ import { UserDto } from './dto';
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Post('get')
+  @Post('getUser')
+  @HttpCode(HttpStatus.OK)
   async getUser(@Body() dto: UserDto) {
     const user = await this.userService.getUser(dto);
 
