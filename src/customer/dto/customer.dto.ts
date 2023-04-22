@@ -1,6 +1,10 @@
-import { IsEmail, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CustomerDto {
+  @IsNumber()
+  @IsOptional()
+  readonly id: number;
+
   @IsString()
   @IsOptional()
   readonly firstName: string;
