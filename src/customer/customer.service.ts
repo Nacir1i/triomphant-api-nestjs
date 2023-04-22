@@ -7,7 +7,36 @@ import { customer } from '@prisma/client';
 export class CustomerService {
   constructor(private prismaService: PrismaService) {}
 
-  async getCustomer(dto: PartialTypedCustomer): Promise<customer | null> {
+  async create(dto: CustomerDto): Promise<customer> {
+    const customer = await this.prismaService.customer.create({
+      data: {
+        first_name: dto.firstName,
+        last_name: dto.lastName,
+        contact_information: {
+          create: {
+            email: dto.email,
+            phone: dto.phone,
+            address: dto.address,
+            honorific: dto.honorific,
+            emergency: dto.emergency,
+          },
+        },
+        bank_information: {
+          create: {
+            name: dto.name,
+            number: dto.number,
+            rib: dto.rib,
+            swift: dto.swift,
+            ice: dto.ice,
+          },
+        },
+      },
+    });
+
+    return customer;
+  }
+
+  async findOne(dto: PartialTypedCustomer): Promise<customer | null> {
     const customer = await this.prismaService.customer.findFirst({
       where: {
         OR: [
@@ -39,6 +68,10 @@ export class CustomerService {
             },
           },
         ],
+      },
+      include: {
+        contact_information: true,
+        bank_information: true,
       },
     });
 

@@ -1,39 +1,5 @@
-import {
-  IsString,
-  IsNotEmpty,
-  IsEmail,
-  IsNumber,
-  IsOptional,
-  ValidateNested,
-} from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-
-export class ContactInfoDto {
-  @IsEmail()
-  readonly email: string;
-
-  @IsNotEmpty()
-  readonly phone: string;
-
-  readonly address: string;
-
-  readonly honorific: string;
-
-  readonly emergency: boolean;
-}
-
-export class BankInfoDto {
-  readonly name: string;
-
-  readonly number: string;
-
-  readonly rib: string;
-
-  readonly swift: string;
-
-  readonly ice: string;
-}
+import { IsString, IsNotEmpty, IsEmail, IsOptional } from 'class-validator';
 
 export class UserDto {
   @ApiProperty()

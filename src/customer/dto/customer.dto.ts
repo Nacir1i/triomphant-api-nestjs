@@ -1,14 +1,5 @@
-import { Type } from 'class-transformer';
-import {
-  IsNumber,
-  IsString,
-  IsOptional,
-  ValidateNested,
-  IsNotEmpty,
-  IsEmail,
-} from 'class-validator';
-import { ContactInfoDto, BankInfoDto } from 'src/user/dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsString, IsOptional, IsNotEmpty, IsEmail } from 'class-validator';
 
 export class CustomerDto {
   @ApiProperty()

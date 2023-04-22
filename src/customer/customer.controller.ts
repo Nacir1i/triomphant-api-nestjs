@@ -8,22 +8,21 @@ import {
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CustomerDto, PartialTypedCustomer } from './dto';
-import { customer } from '@prisma/client';
 
-@Controller('document/customer')
+@Controller('agent/customer')
 export class CustomerController {
   constructor(private customerService: CustomerService) {}
 
   @Post('create')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: CustomerDto) {
-    return {};
+    return this.customerService.create(dto);
   }
 
   @Post('findOne')
   @HttpCode(HttpStatus.OK)
-  async findOne(@Body() dto: PartialTypedCustomer): Promise<customer> {
-    const customer = await this.customerService.getCustomer(dto);
+  async findOne(@Body() dto: PartialTypedCustomer) {
+    const customer = await this.customerService.findOne(dto);
 
     if (!customer) {
       throw new NotFoundException();
