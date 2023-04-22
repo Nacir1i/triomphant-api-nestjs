@@ -1,6 +1,7 @@
 import {
   Controller,
   Post,
+  Get,
   NotFoundException,
   Body,
   HttpCode,
@@ -18,6 +19,9 @@ export class CustomerController {
   async create(@Body() dto: CustomerDto) {
     return this.customerService.create(dto);
   }
+
+  @Get('findAll')
+  async findAll() {}
 
   @Post('findOne')
   @HttpCode(HttpStatus.OK)
