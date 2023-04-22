@@ -7,7 +7,7 @@ import {
   HttpStatus,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
-import { CustomerDto } from './dto';
+import { CustomerDto, PartialTypedCustomer } from './dto';
 import { customer } from '@prisma/client';
 
 @Controller('document/customer')
@@ -20,9 +20,9 @@ export class CustomerController {
     return {};
   }
 
-  @Post('getCustomer')
+  @Post('findOne')
   @HttpCode(HttpStatus.OK)
-  async getCustomer(@Body() dto: CustomerDto): Promise<customer> {
+  async findOne(@Body() dto: PartialTypedCustomer): Promise<customer> {
     const customer = await this.customerService.getCustomer(dto);
 
     if (!customer) {

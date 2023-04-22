@@ -8,15 +8,15 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserDto } from './dto';
+import { UserDto, PartialTypedUser } from './dto';
 
 @Controller('user')
 export class UserController {
   constructor(private userService: UserService) {}
 
-  @Post('getUser')
+  @Post('findOne')
   @HttpCode(HttpStatus.OK)
-  async getUser(@Body() dto: UserDto) {
+  async findOne(@Body() dto: PartialTypedUser) {
     const user = await this.userService.getUser(dto);
 
     if (!user) {

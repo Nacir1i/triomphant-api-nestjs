@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { CustomerDto } from './dto';
+import { CustomerDto, PartialTypedCustomer } from './dto';
 import { customer } from '@prisma/client';
 
 @Injectable()
 export class CustomerService {
   constructor(private prismaService: PrismaService) {}
 
-  async getCustomer(dto: CustomerDto): Promise<customer | null> {
+  async getCustomer(dto: PartialTypedCustomer): Promise<customer | null> {
     const customer = await this.prismaService.customer.findFirst({
       where: {
         OR: [

@@ -4,7 +4,10 @@ import {
   IsEmail,
   IsNumber,
   IsOptional,
+  ValidateNested,
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 export class ContactInfoDto {
   @IsEmail()
@@ -33,87 +36,94 @@ export class BankInfoDto {
 }
 
 export class UserDto {
-  @IsNumber()
-  @IsOptional()
-  readonly id: number;
-
+  @ApiProperty()
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   readonly username: string;
 
+  @ApiProperty()
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   readonly password: string;
 
+  @ApiProperty()
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   readonly firstName: string;
 
+  @ApiProperty()
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   readonly lastName: string;
 
+  @ApiProperty()
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   readonly roleId: number;
 
+  @ApiProperty()
   @IsString()
   @IsOptional()
   readonly imageUrl: string;
 
+  @ApiProperty()
   @IsString()
   @IsOptional()
   readonly recruitedAt: string;
 
+  @ApiProperty()
   @IsString()
   @IsOptional()
   readonly birthDate: string;
 
+  @ApiProperty()
   @IsString()
   @IsOptional()
   readonly salary: number;
 
+  @ApiProperty()
   @IsString()
   @IsOptional()
   readonly status: number;
 
+  @ApiProperty()
   @IsEmail()
-  @IsOptional()
+  @IsNotEmpty()
   readonly email: string;
 
-  @IsString()
-  @IsOptional()
+  @ApiProperty()
+  @IsNotEmpty()
   readonly phone: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly address: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly honorific: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly emergency: boolean;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly name: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly number: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly rib: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly swift: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly ice: string;
 }

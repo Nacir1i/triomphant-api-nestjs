@@ -1,55 +1,64 @@
-import { IsEmail, IsNumber, IsOptional, IsString } from 'class-validator';
+import { Type } from 'class-transformer';
+import {
+  IsNumber,
+  IsString,
+  IsOptional,
+  ValidateNested,
+  IsNotEmpty,
+  IsEmail,
+} from 'class-validator';
+import { ContactInfoDto, BankInfoDto } from 'src/user/dto';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class CustomerDto {
-  @IsNumber()
-  @IsOptional()
-  readonly id: number;
-
+  @ApiProperty()
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   readonly firstName: string;
 
+  @ApiProperty()
   @IsString()
-  @IsOptional()
+  @IsNotEmpty()
   readonly lastName: string;
 
+  @ApiProperty()
   @IsEmail()
-  @IsOptional()
+  @IsNotEmpty()
   readonly email: string;
 
-  @IsString()
-  @IsOptional()
+  @ApiProperty()
+  @IsNotEmpty()
   readonly phone: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly address: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly honorific: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly emergency: boolean;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly name: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly number: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly rib: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly swift: string;
 
-  @IsString()
+  @ApiProperty()
   @IsOptional()
   readonly ice: string;
 }
