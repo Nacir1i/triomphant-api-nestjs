@@ -6,6 +6,8 @@ import {
   Body,
   HttpCode,
   HttpStatus,
+  ParseIntPipe,
+  Query,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CustomerDto, PartialTypedCustomer } from './dto';
@@ -20,9 +22,6 @@ export class CustomerController {
     return this.customerService.create(dto);
   }
 
-  @Get('findAll')
-  async findAll() {}
-
   @Post('findOne')
   @HttpCode(HttpStatus.OK)
   async findOne(@Body() dto: PartialTypedCustomer) {
@@ -32,5 +31,10 @@ export class CustomerController {
       throw new NotFoundException();
     }
     return customer;
+  }
+
+  @Get('findAll')
+  async findAll() {
+    return await this.customerService.findAll();
   }
 }

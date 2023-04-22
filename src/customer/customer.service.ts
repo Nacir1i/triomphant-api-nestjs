@@ -77,4 +77,13 @@ export class CustomerService {
 
     return customer;
   }
+
+  async findAll() {
+    return await this.prismaService.customer.findMany({
+      include: {
+        contact_information: true,
+        bank_information: true,
+      },
+    });
+  }
 }
