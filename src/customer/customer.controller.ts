@@ -2,6 +2,7 @@ import {
   Controller,
   Post,
   Get,
+  Patch,
   NotFoundException,
   Body,
   HttpCode,
@@ -34,15 +35,28 @@ export class CustomerController {
   }
 
   @Get('findAll')
+  @HttpCode(HttpStatus.OK)
   async findAll() {
     return await this.customerService.findAll();
   }
 
   @Get('getPage')
+  @HttpCode(HttpStatus.OK)
   async getPage(
     @Query('page', ParseIntPipe) page: number,
     @Query('limit', ParseIntPipe) limit: number,
   ) {
     return this.customerService.getPage(page, limit);
+  }
+
+  @Patch('update')
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Query('id', ParseIntPipe) id: number,
+    @Body() dto: PartialTypedCustomer,
+  ) {
+    const updated = await this.customerService.update(id, dto);
+
+    return updated;
   }
 }

@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CustomerDto, PartialTypedCustomer } from './dto';
-import { customer } from '@prisma/client';
+import { customer, Prisma } from '@prisma/client';
 
 @Injectable()
 export class CustomerService {
@@ -105,5 +105,59 @@ export class CustomerService {
     const remainingPages = pagesCount - page >= 0 ? pagesCount - page : 0;
 
     return { customers, pagesCount, remainingPages };
+  }
+
+  async update(
+    id: number,
+    dto: PartialTypedCustomer,
+  ): Promise<customer | null> {
+    try {
+      return await this.prismaService.customer.update({
+        where: {
+          id: id,
+        },
+        data: {
+          first_name: dto.firstName,
+          last_name: dto.lastName,
+          contact_information: {
+            update: {
+              email: dto.email,
+              phone: dto.phone,
+              address: dto.address,
+              honorific: dto.honorific,
+              emergency: dto.emergency,
+            },
+          },
+          bank_information: {
+            upsert: {
+              create: {
+                name: dto.name,
+                number: dto.number,
+                rib: dto.rib,
+                swift: dto.swift,
+                ice: dto.ice,
+              },
+              update: {
+                name: dto.name,
+                number: dto.number,
+                rib: dto.rib,
+                swift: dto.swift,
+                ice: dto.ice,
+              },
+            },
+          },
+        },
+        include: {
+          contact_information: true,
+          bank_information: true,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new NotFoundException(error.meta?.cause);
+      }
+
+      throw error;
+    }
   }
 }
