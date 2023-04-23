@@ -9,6 +9,7 @@ import {
   HttpStatus,
   ParseIntPipe,
   Query,
+  Delete,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CustomerDto, PartialTypedCustomer } from './dto';
@@ -58,5 +59,11 @@ export class CustomerController {
     const updated = await this.customerService.update(id, dto);
 
     return updated;
+  }
+
+  @Delete('delete')
+  @HttpCode(HttpStatus.OK)
+  async delete(@Query('id', ParseIntPipe) id: number) {
+    return await this.customerService.delete(id);
   }
 }

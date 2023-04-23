@@ -160,4 +160,25 @@ export class CustomerService {
       throw error;
     }
   }
+
+  async delete(id: number) {
+    try {
+      return await this.prismaService.customer.update({
+        where: {
+          id: id,
+        },
+        data: {
+          is_deleted: true,
+        },
+      });
+    } catch (error) {
+      // TODO: add a better dynamic error handling (db connection error is instance of PrismaClientInitializationError)
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(error.meta?.cause);
+        }
+      }
+      throw error;
+    }
+  }
 }
