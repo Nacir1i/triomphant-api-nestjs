@@ -37,4 +37,12 @@ export class CustomerController {
   async findAll() {
     return await this.customerService.findAll();
   }
+
+  @Get('getPage')
+  async getPage(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return this.customerService.getPage(page, limit);
+  }
 }

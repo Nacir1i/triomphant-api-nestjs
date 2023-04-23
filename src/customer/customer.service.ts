@@ -78,12 +78,32 @@ export class CustomerService {
     return customer;
   }
 
-  async findAll() {
+  async findAll(): Promise<customer[] | []> {
     return await this.prismaService.customer.findMany({
       include: {
         contact_information: true,
         bank_information: true,
       },
     });
+  }
+
+  async getPage(page: number, limit: number): Promise<object> {
+    const startIndex = (page - 1) * limit;
+
+    const customers = await this.prismaService.customer.findMany({
+      skip: startIndex,
+      take: limit,
+      include: {
+        contact_information: true,
+        bank_information: true,
+      },
+    });
+
+    const findAll = (await this.findAll()).length;
+
+    const pagesCount = findAll <= limit ? 1 : Math.ceil(findAll / limit);
+    const remainingPages = pagesCount - page >= 0 ? pagesCount - page : 0;
+
+    return { customers, pagesCount, remainingPages };
   }
 }
