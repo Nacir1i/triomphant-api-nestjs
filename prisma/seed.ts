@@ -1,16 +1,18 @@
 import { PrismaClient } from '@prisma/client';
+import * as argon from 'argon2';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  const hash: string = await argon.hash('admin');
   const user = await prisma.user.upsert({
-    where: { username: 'adminTest' },
+    where: { username: 'admin' },
     update: {},
     create: {
-      first_name: 'user1',
-      last_name: 'user1',
-      username: 'adminTest',
-      password: 'adminTest',
+      first_name: 'user',
+      last_name: 'user',
+      username: 'admin',
+      password: hash,
       role: {
         create: {
           title: 'ADMIN',
@@ -28,8 +30,8 @@ async function main() {
 
   const customer = await prisma.customer.create({
     data: {
-      first_name: 'customer1',
-      last_name: 'customer1',
+      first_name: 'customer',
+      last_name: 'customer',
       contact_information: {
         create: {
           email: 'customer.email@golang.per',
