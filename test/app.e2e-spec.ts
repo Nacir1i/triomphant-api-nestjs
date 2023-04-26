@@ -78,5 +78,107 @@ describe('App e2e testing', () => {
           .expectStatus(200);
       });
     });
+
+    describe('signup', () => {
+      const signupDto: SignupDto = {
+        username: 'user1',
+        password: 'user1',
+        firstName: 'lol',
+        lastName: 'lmao',
+        roleId: 1,
+        imageUrl: '1',
+        recruitedAt: '2023-04-26T00:26:01.344Z',
+        birthDate: '2023-04-26T00:26:01.344Z',
+        salary: 69420,
+        status: 1,
+        contactInformation: {
+          phone: 'fsdfsdf',
+          email: 'dfsdff@sdfd.fsdf',
+          address: 'dfsdff@sdfd.fsdf',
+          honorific: 'dfsdff@sdfd.fsdf',
+          emergency: false,
+        },
+        bankInformation: {
+          name: 'bank',
+          number: 'djqksndjkqsd',
+          rib: 'kkldf',
+          ice: 'ksmdf',
+          swift: 'kfmsdkmlfsdf',
+        },
+      };
+      const fakeSignupDto: SignupDto = {
+        username: 'admin',
+        password: 'admin',
+        firstName: 'lol',
+        lastName: 'lmao',
+        roleId: 1,
+        imageUrl: '1',
+        recruitedAt: '2023-04-26T00:26:01.344Z',
+        birthDate: '2023-04-26T00:26:01.344Z',
+        salary: 69420,
+        status: 1,
+        contactInformation: {
+          phone: 'fsdfsdf',
+          email: 'dfsdff@sdfd.fsdf',
+          address: 'dfsdff@sdfd.fsdf',
+          honorific: 'dfsdff@sdfd.fsdf',
+          emergency: false,
+        },
+        bankInformation: {
+          name: 'bank',
+          number: 'djqksndjkqsd',
+          rib: 'kkldf',
+          ice: 'ksmdf',
+          swift: 'kfmsdkmlfsdf',
+        },
+      };
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody({
+            username: signupDto.username,
+            password: signupDto.password,
+            firstName: signupDto.firstName,
+            lastName: signupDto.lastName,
+            roleId: signupDto.roleId,
+          })
+          .expectStatus(400);
+      });
+      it('should forbidden exception', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody({
+            username: fakeSignupDto.username,
+            password: fakeSignupDto.password,
+            firstName: fakeSignupDto.firstName,
+            lastName: fakeSignupDto.lastName,
+            roleId: fakeSignupDto.roleId,
+            contactInformation: {
+              phone: fakeSignupDto.contactInformation.phone,
+              email: fakeSignupDto.contactInformation.email,
+            },
+          })
+          .expectStatus(403);
+      });
+      it('should signup', () => {
+        return pactum
+          .spec()
+          .post('/auth/signup')
+          .withBody({
+            username: signupDto.username,
+            password: signupDto.password,
+            firstName: signupDto.firstName,
+            lastName: signupDto.lastName,
+            roleId: signupDto.roleId,
+            contactInformation: {
+              phone: signupDto.contactInformation.phone,
+              email: signupDto.contactInformation.email,
+            },
+          })
+          .expectStatus(201);
+      });
+    });
   });
 });
