@@ -52,9 +52,9 @@ describe('AuthService', () => {
         is_deleted: false,
       } as unknown as Prisma.Prisma__userClient<user>;
 
-      jest
-        .spyOn(prismaSerivce.user, 'findFirst')
-        .mockImplementation(async () => data);
+      // jest
+      //   .spyOn(prismaSerivce.user, 'findFirst')
+      //   .mockImplementation(async () => data);
 
       const result = await service.login(dto);
 
