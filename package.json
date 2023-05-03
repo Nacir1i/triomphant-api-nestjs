@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "prisma": {
-    "seed": "ts-node prisma/seed.ts"
+    "seed": "dotenv -e .env.test -- ts-node prisma/seed.ts"
   },
   "scripts": {
     "prisma:dev:deploy": "npx prisma migrate deploy && npx prisma db seed",
@@ -30,6 +30,8 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
+
+    "pretest:e2e": "npm run db:test:restart",
     "test:e2e": "dotenv -e .env.test -- jest --watch --config ./test/jest-e2e.json"
   },
   "dependencies": {
