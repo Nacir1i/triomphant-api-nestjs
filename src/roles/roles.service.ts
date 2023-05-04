@@ -31,7 +31,7 @@ export class RolesService {
   }
 
   async findOne(dto: PartialTypedRoleDto): Promise<role | null> {
-    return await this.prismaService.role.findFirst({
+    const role = await this.prismaService.role.findFirst({
       where: {
         OR: [
           {
@@ -48,6 +48,8 @@ export class RolesService {
         },
       },
     });
+
+    return role;
   }
 
   async findAll() {

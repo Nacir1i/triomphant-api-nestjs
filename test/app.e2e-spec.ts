@@ -44,121 +44,122 @@ describe('App e2e testing', () => {
     };
 
     // create tests :
-    it('should throw bad request exception', () => {
-      return pactum
-        .spec()
-        .post('/role/create')
-        .withBody({ title: '' })
-        .expectStatus(400);
-    });
-    it('should create role', () => {
-      return pactum
-        .spec()
-        .post('/role/create')
-        .withBody(roleDto)
-        .expectStatus(201);
-    });
-    it('forbidden exception', () => {
-      return pactum
-        .spec()
-        .post('/role/create')
-        .withBody(roleDto)
-        .expectStatus(403);
-    });
-    it('should create role', () => {
-      return pactum
-        .spec()
-        .post('/role/create')
-        .withBody(roleDto2)
-        .expectStatus(201);
+    describe('create', () => {
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .post('/role/create')
+          .withBody({ title: '' })
+          .expectStatus(400);
+      });
+      it('should create role', () => {
+        return pactum
+          .spec()
+          .post('/role/create')
+          .withBody(roleDto)
+          .expectStatus(201);
+      });
+      it('forbidden exception', () => {
+        return pactum
+          .spec()
+          .post('/role/create')
+          .withBody(roleDto)
+          .expectStatus(403);
+      });
+      it('should create role', () => {
+        return pactum
+          .spec()
+          .post('/role/create')
+          .withBody(roleDto2)
+          .expectStatus(201);
+      });
     });
 
     // find one tests :
-    it('should throw bad request exception', () => {
-      return pactum.spec().post('/role/finOne').withBody({}).expectStatus(400);
-    });
-    it('should throw bad request exception', () => {
-      return pactum
-        .spec()
-        .post('/role/finOne')
-        .withBody({ id: '1' })
-        .expectStatus(400);
-    });
-    it('should throw not found exception', () => {
-      return pactum
-        .spec()
-        .post('/role/finOne')
-        .withBody({ title: 'fake' })
-        .expectStatus(404);
-    });
-    it('should return role object', () => {
-      return pactum
-        .spec()
-        .post('/role/finOne')
-        .withBody({ title: roleDto.title })
-        .expectStatus(200);
+    describe('find one', () => {
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .post('/role/findOne')
+          .withBody({ id: '1' })
+          .expectStatus(400);
+      });
+      it('should throw not found exception', () => {
+        return pactum
+          .spec()
+          .post('/role/findOne')
+          .withBody({})
+          .expectStatus(404);
+      });
+      it('should throw not found exception', () => {
+        return pactum
+          .spec()
+          .post('/role/findOne')
+          .withBody({ title: 'fake' })
+          .expectStatus(404);
+      });
+      it('should return role object', () => {
+        return pactum
+          .spec()
+          .post('/role/findOne')
+          .withBody({ title: 'ADMIN' })
+          .expectStatus(200);
+      });
     });
 
     // find all tests :
-    it('should return array of role objects', () => {
-      return pactum.spec().get('/role/finAll').expectStatus(200);
+    describe('find all', () => {
+      it('should return array of role objects', () => {
+        return pactum.spec().get('/role/findAll').expectStatus(200);
+      });
     });
 
     // update tests :
-    it('should throw bad request exception', () => {
-      return pactum
-        .spec()
-        .post('/role/update')
-        .withQueryParams({ id: 2 })
-        .withBody({})
-        .expectStatus(400);
-    });
-    it('should throw bad request exception', () => {
-      return pactum
-        .spec()
-        .post('/role/update')
-        .withQueryParams({})
-        .withBody({})
-        .expectStatus(400);
-    });
-    it('should throw not found exception', () => {
-      return pactum
-        .spec()
-        .post('/role/update')
-        .withQueryParams({ id: 9 })
-        .withBody({ title: 'ASSISTANT' })
-        .expectStatus(404);
-    });
-    it('should update "MANAGER" role', () => {
-      return pactum
-        .spec()
-        .post('/role/update')
-        .withQueryParams({ id: 2 })
-        .withBody({ title: 'ASSISTANT' })
-        .expectStatus(200);
+    describe('update', () => {
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .patch('/role/update')
+          .withBody({})
+          .expectStatus(400);
+      });
+      it('should throw not found exception', () => {
+        return pactum
+          .spec()
+          .patch('/role/update')
+          .withQueryParams({ id: 9 })
+          .withBody({ title: 'ASSISTANT' })
+          .expectStatus(404);
+      });
+      it('should update "MANAGER" role', () => {
+        return pactum
+          .spec()
+          .patch('/role/update')
+          .withQueryParams({ id: 3 })
+          .withBody({ title: 'ASSISTANT' })
+          .expectStatus(200);
+      });
     });
 
     // delete tests :
-    it('should throw bad request exception', () => {
-      return pactum
-        .spec()
-        .delete('/role/delete')
-        .withQueryParams({})
-        .expectStatus(400);
-    });
-    it('should throw not found exception', () => {
-      return pactum
-        .spec()
-        .delete('/role/delete')
-        .withQueryParams({ id: 9 })
-        .expectStatus(404);
-    });
-    it('should soft delete role admin', () => {
-      return pactum
-        .spec()
-        .delete('/role/delete')
-        .withQueryParams({ id: 1 })
-        .expectStatus(200);
+    describe('delete', () => {
+      it('should throw bad request exception', () => {
+        return pactum.spec().delete('/role/delete').expectStatus(400);
+      });
+      it('should throw not found exception', () => {
+        return pactum
+          .spec()
+          .delete('/role/delete')
+          .withQueryParams({ id: 9 })
+          .expectStatus(404);
+      });
+      it('should soft delete role admin', () => {
+        return pactum
+          .spec()
+          .delete('/role/delete')
+          .withQueryParams({ id: 1 })
+          .expectStatus(200);
+      });
     });
   });
 

@@ -9,6 +9,7 @@ import {
   HttpCode,
   HttpStatus,
   NotFoundException,
+  ParseIntPipe,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { RoleDto, PartialTypedRoleDto } from './dto';
@@ -45,13 +46,16 @@ export class RolesController {
 
   @Patch('update')
   @HttpCode(HttpStatus.OK)
-  async update(@Query('id') id: number, @Body() dto: PartialTypedRoleDto) {
+  async update(
+    @Query('id', ParseIntPipe) id: number,
+    @Body() dto: PartialTypedRoleDto,
+  ) {
     return await this.rolesService.update(id, dto);
   }
 
   @Delete('delete')
   @HttpCode(HttpStatus.OK)
-  async remove(@Query('id') id: number) {
+  async remove(@Query('id', ParseIntPipe) id: number) {
     return await this.rolesService.delete(id);
   }
 }
