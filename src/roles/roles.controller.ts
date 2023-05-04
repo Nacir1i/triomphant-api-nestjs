@@ -4,7 +4,7 @@ import {
   Post,
   Body,
   Patch,
-  Param,
+  Query,
   Delete,
   HttpCode,
   HttpStatus,
@@ -24,25 +24,25 @@ export class RolesController {
 
   @Post('findOne')
   @HttpCode(HttpStatus.OK)
-  findOne(@Param('id') id: string) {
+  findOne(@Query('id') id: string) {
     return this.rolesService.findOne(+id);
   }
 
-  @Get()
+  @Get('findAll')
   @HttpCode(HttpStatus.OK)
   findAll() {
     return this.rolesService.findAll();
   }
 
-  @Patch(':id')
+  @Patch('update')
   @HttpCode(HttpStatus.OK)
-  update(@Param('id') id: string, @Body() dto: PartialTypedRoleDto) {
+  update(@Query('id') id: string, @Body() dto: PartialTypedRoleDto) {
     return this.rolesService.update(+id, dto);
   }
 
-  @Delete(':id')
+  @Delete('delete')
   @HttpCode(HttpStatus.OK)
-  remove(@Param('id') id: string) {
+  remove(@Query('id') id: string) {
     return this.rolesService.remove(+id);
   }
 }

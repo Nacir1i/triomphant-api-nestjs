@@ -26,12 +26,12 @@ export class RolesService {
     }
   }
 
-  findAll() {
-    return `This action returns all roles`;
-  }
-
   findOne(id: number) {
     return `This action returns a #${id} role`;
+  }
+
+  findAll() {
+    return `This action returns all roles`;
   }
 
   update(id: number, dto: PartialTypedRoleDto) {
