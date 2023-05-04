@@ -8,6 +8,7 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  NotFoundException,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { RoleDto, PartialTypedRoleDto } from './dto';
@@ -24,8 +25,14 @@ export class RolesController {
 
   @Post('findOne')
   @HttpCode(HttpStatus.OK)
-  findOne(@Query('id') id: string) {
-    return this.rolesService.findOne(+id);
+  async findOne(@Body() dto: PartialTypedRoleDto) {
+    const role = await this.rolesService.findOne(dto);
+
+    if (!role) {
+      throw new NotFoundException('Role was not found');
+    }
+
+    return role;
   }
 
   @Get('findAll')

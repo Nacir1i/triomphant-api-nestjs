@@ -26,8 +26,21 @@ export class RolesService {
     }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} role`;
+  async findOne(dto: PartialTypedRoleDto): Promise<role | null> {
+    return await this.prismaService.role.findFirst({
+      where: {
+        OR: [
+          {
+            id: dto.id,
+          },
+          {
+            title: {
+              contains: dto.title,
+            },
+          },
+        ],
+      },
+    });
   }
 
   findAll() {
