@@ -19,8 +19,10 @@ export class RolesController {
 
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
-  create(@Body() dto: RoleDto) {
-    return this.rolesService.create(dto);
+  async create(@Body() dto: RoleDto) {
+    const role = await this.rolesService.create(dto);
+
+    return role;
   }
 
   @Post('findOne')
@@ -37,8 +39,8 @@ export class RolesController {
 
   @Get('findAll')
   @HttpCode(HttpStatus.OK)
-  findAll() {
-    return this.rolesService.findAll();
+  async findAll() {
+    return await this.rolesService.findAll();
   }
 
   @Patch('update')

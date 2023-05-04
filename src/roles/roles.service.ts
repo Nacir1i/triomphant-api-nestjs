@@ -43,8 +43,8 @@ export class RolesService {
     });
   }
 
-  findAll() {
-    return `This action returns all roles`;
+  async findAll() {
+    return await this.prismaService.role.findMany();
   }
 
   update(id: number, dto: PartialTypedRoleDto) {
