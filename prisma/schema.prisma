@@ -450,6 +450,7 @@ model role {
   id         Int      @id @default(autoincrement())
   title      String   @unique
   created_at DateTime @default(now())
+  is_deleted Boolean  @default(false)
 
   employees user[]
 }

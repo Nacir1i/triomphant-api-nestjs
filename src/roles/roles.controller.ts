@@ -51,7 +51,7 @@ export class RolesController {
 
   @Delete('delete')
   @HttpCode(HttpStatus.OK)
-  remove(@Query('id') id: string) {
-    return this.rolesService.remove(+id);
+  async remove(@Query('id') id: number) {
+    return await this.rolesService.delete(id);
   }
 }

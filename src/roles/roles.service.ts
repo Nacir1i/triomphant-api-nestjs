@@ -43,12 +43,19 @@ export class RolesService {
             },
           },
         ],
+        AND: {
+          is_deleted: false,
+        },
       },
     });
   }
 
   async findAll() {
-    return await this.prismaService.role.findMany();
+    return await this.prismaService.role.findMany({
+      where: {
+        is_deleted: false,
+      },
+    });
   }
 
   async update(id: number, dto: PartialTypedRoleDto) {
@@ -73,7 +80,25 @@ export class RolesService {
     }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} role`;
+  async delete(id: number) {
+    try {
+      const role = await this.prismaService.role.update({
+        where: {
+          id: id,
+        },
+        data: {
+          is_deleted: true,
+        },
+      });
+
+      return role;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException('Role was not found');
+        }
+      }
+      throw error;
+    }
   }
 }
