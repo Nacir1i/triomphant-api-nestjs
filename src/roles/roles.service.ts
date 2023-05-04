@@ -1,4 +1,8 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { RoleDto, PartialTypedRoleDto } from './dto';
 import { role, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
@@ -19,7 +23,7 @@ export class RolesService {
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
-          throw new ForbiddenException('Credentials taken');
+          throw new ForbiddenException('Role already exists');
         }
       }
       throw error;
@@ -47,8 +51,26 @@ export class RolesService {
     return await this.prismaService.role.findMany();
   }
 
-  update(id: number, dto: PartialTypedRoleDto) {
-    return `This action updates a #${id} role`;
+  async update(id: number, dto: PartialTypedRoleDto) {
+    try {
+      const role = await this.prismaService.role.update({
+        where: {
+          id: id,
+        },
+        data: {
+          title: dto.title,
+        },
+      });
+
+      return role;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException('Role was not found');
+        }
+      }
+      throw error;
+    }
   }
 
   remove(id: number) {

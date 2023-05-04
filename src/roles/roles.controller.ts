@@ -45,8 +45,8 @@ export class RolesController {
 
   @Patch('update')
   @HttpCode(HttpStatus.OK)
-  update(@Query('id') id: string, @Body() dto: PartialTypedRoleDto) {
-    return this.rolesService.update(+id, dto);
+  async update(@Query('id') id: number, @Body() dto: PartialTypedRoleDto) {
+    return await this.rolesService.update(id, dto);
   }
 
   @Delete('delete')
