@@ -36,36 +36,15 @@ export class CustomerService {
     return customer;
   }
 
-  async findOne(dto: PartialTypedCustomer): Promise<customer | null> {
+  async findOne(id: number): Promise<customer | null> {
     const customer = await this.prismaService.customer.findFirst({
       where: {
-        OR: [
+        AND: [
           {
-            id: dto.id,
+            id: id,
           },
           {
-            first_name: {
-              contains: dto.firstName,
-            },
-          },
-          {
-            last_name: {
-              contains: dto.lastName,
-            },
-          },
-          {
-            contact_information: {
-              email: {
-                contains: dto.email,
-              },
-            },
-          },
-          {
-            contact_information: {
-              phone: {
-                contains: dto.phone,
-              },
-            },
+            is_deleted: false,
           },
         ],
       },
@@ -78,8 +57,56 @@ export class CustomerService {
     return customer;
   }
 
+  async findSearch(search: string): Promise<customer | null> {
+    const customers = await this.prismaService.customer.findFirst({
+      where: {
+        OR: [
+          {
+            first_name: {
+              contains: search,
+            },
+          },
+          {
+            last_name: {
+              contains: search,
+            },
+          },
+          {
+            contact_information: {
+              email: {
+                contains: search,
+              },
+            },
+          },
+          {
+            contact_information: {
+              phone: {
+                contains: search,
+              },
+              email: {
+                contains: search,
+              },
+            },
+          },
+        ],
+        AND: {
+          is_deleted: false,
+        },
+      },
+      include: {
+        contact_information: true,
+        bank_information: true,
+      },
+    });
+
+    return customers;
+  }
+
   async findAll(): Promise<customer[] | []> {
     return await this.prismaService.customer.findMany({
+      where: {
+        is_deleted: false,
+      },
       include: {
         contact_information: true,
         bank_information: true,
@@ -93,6 +120,9 @@ export class CustomerService {
     const customers = await this.prismaService.customer.findMany({
       skip: startIndex,
       take: limit,
+      where: {
+        is_deleted: false,
+      },
       include: {
         contact_information: true,
         bank_information: true,

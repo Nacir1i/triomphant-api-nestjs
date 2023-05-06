@@ -5,6 +5,7 @@ import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { LoginDto, SignupDto } from '../src/auth/dto';
 import { PartialTypedRoleDto, RoleDto } from 'src/roles/dto';
+import { CustomerDto } from 'src/customer/dto';
 
 describe('App e2e testing', () => {
   let app: INestApplication;
@@ -282,6 +283,108 @@ describe('App e2e testing', () => {
             username: loginDto.username,
             password: loginDto.password,
           })
+          .expectStatus(200);
+      });
+    });
+  });
+
+  describe('Customer', () => {
+    describe('create', () => {
+      const customerDto: CustomerDto = {
+        firstName: 'customer1',
+        lastName: 'customer1',
+        email: 'customer@email.bob',
+        phone: '0666666666',
+        address: 'Customer address N°47',
+        honorific: 'Mister',
+        emergency: false,
+        name: 'Bank',
+        number: 'XXXXXXXXXX',
+        rib: 'XXXXXXXXXX',
+        swift: 'XXXXXXXXX',
+        ice: 'XXXXXXXXXXX',
+      };
+      const customerDto2: CustomerDto = {
+        firstName: 'customer2',
+        lastName: 'customer2',
+        email: 'customer@email.bob',
+        phone: '0666666666',
+        address: 'Customer address N°47',
+        honorific: 'Mister',
+        emergency: false,
+        name: 'Bank',
+        number: 'XXXXXXXXXX',
+        rib: 'XXXXXXXXXX',
+        swift: 'XXXXXXXXX',
+        ice: 'XXXXXXXXXXX',
+      };
+
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/create')
+          .withBody({})
+          .expectStatus(400);
+      });
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/create')
+          .withBody({
+            firstName: customerDto.firstName,
+            lastName: customerDto.lastName,
+          })
+          .expectStatus(400);
+      });
+      it('should create a customer', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/create')
+          .withBody(customerDto)
+          .expectStatus(201);
+      });
+      it('should create a customer', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/create')
+          .withBody(customerDto)
+          .expectStatus(201);
+      });
+    });
+
+    describe('find one', () => {
+      it('should throw bad request exception-', () => {
+        return pactum.spec().get('/agent/customer/findOne').expectStatus(400);
+      });
+      it('should throw not found exception-', () => {
+        return pactum
+          .spec()
+          .get('/agent/customer/findOne')
+          .withQueryParams({ id: 69 })
+          .expectStatus(404);
+      });
+      it('should return customer object', () => {
+        return pactum
+          .spec()
+          .get('/agent/customer/findOne')
+          .withQueryParams({ id: 1 })
+          .expectStatus(200);
+      });
+    });
+
+    describe('find search', () => {
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .get('/agent/customer/findSearch')
+          .withQueryParams({ test: '' })
+          .expectStatus(400);
+      });
+      it('should return  array of customers', () => {
+        return pactum
+          .spec()
+          .get('/agent/customer/findSearch')
+          .withQueryParams({ search: 'customer' })
           .expectStatus(200);
       });
     });

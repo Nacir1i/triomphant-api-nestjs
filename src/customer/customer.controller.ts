@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   Query,
   Delete,
+  Param,
 } from '@nestjs/common';
 import { CustomerService } from './customer.service';
 import { CustomerDto, PartialTypedCustomer } from './dto';
@@ -24,15 +25,23 @@ export class CustomerController {
     return this.customerService.create(dto);
   }
 
-  @Post('findOne')
+  @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
-  async findOne(@Body() dto: PartialTypedCustomer) {
-    const customer = await this.customerService.findOne(dto);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const customer = await this.customerService.findOne(id);
 
     if (!customer) {
       throw new NotFoundException();
     }
     return customer;
+  }
+
+  @Get('findSearch/:search')
+  @HttpCode(HttpStatus.OK)
+  async findSearch(@Param('search') search: string) {
+    const customers = await this.customerService.findSearch(search);
+
+    return customers;
   }
 
   @Get('findAll')
