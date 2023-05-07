@@ -5,7 +5,7 @@ import { AppModule } from '../src/app.module';
 import { PrismaService } from '../src/prisma/prisma.service';
 import { LoginDto, SignupDto } from '../src/auth/dto';
 import { PartialTypedRoleDto, RoleDto } from 'src/roles/dto';
-import { CustomerDto } from 'src/customer/dto';
+import { CustomerDto, PartialTypedCustomer } from 'src/customer/dto';
 
 describe('App e2e testing', () => {
   let app: INestApplication;
@@ -304,20 +304,6 @@ describe('App e2e testing', () => {
         swift: 'XXXXXXXXX',
         ice: 'XXXXXXXXXXX',
       };
-      const customerDto2: CustomerDto = {
-        firstName: 'customer2',
-        lastName: 'customer2',
-        email: 'customer@email.bob',
-        phone: '0666666666',
-        address: 'Customer address N°47',
-        honorific: 'Mister',
-        emergency: false,
-        name: 'Bank',
-        number: 'XXXXXXXXXX',
-        rib: 'XXXXXXXXXX',
-        swift: 'XXXXXXXXX',
-        ice: 'XXXXXXXXXXX',
-      };
 
       it('should throw bad request exception', () => {
         return pactum
@@ -388,6 +374,101 @@ describe('App e2e testing', () => {
           .spec()
           .get('/agent/customer/findSearch/{findSearch}')
           .withQueryParams({ search: 'customer' })
+          .expectStatus(200);
+      });
+    });
+
+    describe('get page', () => {
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .get('/agent/customer/getPage')
+          .withQueryParams({
+            page: 1,
+          })
+          .expectStatus(400);
+      });
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .get('/agent/customer/getPage')
+          .withQueryParams({
+            limit: 10,
+          })
+          .expectStatus(400);
+      });
+      it('should return array of customers', () => {
+        return pactum
+          .spec()
+          .get('/agent/customer/getPage')
+          .withQueryParams({
+            page: 1,
+            limit: 10,
+          })
+          .expectStatus(200);
+      });
+    });
+
+    describe('update', () => {
+      const customerDto: PartialTypedCustomer = {
+        id: 1,
+        firstName: 'updatedCustomer',
+        lastName: 'updatedCustomer',
+        email: 'customer@email.bob',
+        phone: '0666666666',
+        address: 'Customer address N°47',
+        honorific: 'Mister',
+        emergency: false,
+        name: 'Bank',
+        number: 'XXXXXXXXXX',
+        rib: 'XXXXXXXXXX',
+        swift: 'XXXXXXXXX',
+        ice: 'XXXXXXXXXXX',
+      };
+
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .patch('/agent/customer/update')
+          .withBody(customerDto)
+          .expectStatus(400);
+      });
+
+      it('should not found exception', () => {
+        return pactum
+          .spec()
+          .patch('/agent/customer/update')
+          .withQueryParams({ id: 999 })
+          .withBody(customerDto)
+          .expectStatus(404);
+      });
+
+      it('should update customers', () => {
+        return pactum
+          .spec()
+          .patch('/agent/customer/update')
+          .withQueryParams({ id: 1 })
+          .withBody(customerDto)
+          .expectStatus(200);
+      });
+    });
+
+    describe('delete', () => {
+      it('should throw a bad  request exception', () => {
+        return pactum.spec().patch('/agent/customer/update').expectStatus(400);
+      });
+      it('should throw not found exception', () => {
+        return pactum
+          .spec()
+          .patch('/agent/customer/update')
+          .withQueryParams({ id: 999 })
+          .expectStatus(404);
+      });
+      it('should delete a customer', () => {
+        return pactum
+          .spec()
+          .patch('/agent/customer/update')
+          .withQueryParams({ id: 1 })
           .expectStatus(200);
       });
     });
