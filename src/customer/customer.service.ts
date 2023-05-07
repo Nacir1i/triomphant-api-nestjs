@@ -57,8 +57,8 @@ export class CustomerService {
     return customer;
   }
 
-  async findSearch(search: string): Promise<customer | null> {
-    const customers = await this.prismaService.customer.findFirst({
+  async findSearch(search: string): Promise<customer[] | []> {
+    const customers = await this.prismaService.customer.findMany({
       where: {
         OR: [
           {

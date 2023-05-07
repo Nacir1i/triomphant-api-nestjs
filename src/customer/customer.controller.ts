@@ -12,6 +12,7 @@ import {
   Delete,
   Param,
 } from '@nestjs/common';
+import { PipeStringPipe } from '../customerPipes';
 import { CustomerService } from './customer.service';
 import { CustomerDto, PartialTypedCustomer } from './dto';
 
@@ -38,7 +39,7 @@ export class CustomerController {
 
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
-  async findSearch(@Param('search') search: string) {
+  async findSearch(@Param('search', PipeStringPipe) search: string) {
     const customers = await this.customerService.findSearch(search);
 
     return customers;

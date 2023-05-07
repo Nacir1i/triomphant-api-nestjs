@@ -354,36 +354,39 @@ describe('App e2e testing', () => {
 
     describe('find one', () => {
       it('should throw bad request exception-', () => {
-        return pactum.spec().get('/agent/customer/findOne').expectStatus(400);
+        return pactum
+          .spec()
+          .get('/agent/customer/findOne/{findOne}')
+          .withPathParams('findOne', 'test')
+          .expectStatus(400);
       });
       it('should throw not found exception-', () => {
         return pactum
           .spec()
-          .get('/agent/customer/findOne')
-          .withQueryParams({ id: 69 })
+          .get('/agent/customer/findOne/{findOne}')
+          .withPathParams('findOne', 69)
           .expectStatus(404);
       });
       it('should return customer object', () => {
         return pactum
           .spec()
-          .get('/agent/customer/findOne')
-          .withQueryParams({ id: 1 })
+          .get('/agent/customer/findOne/{findOne}')
+          .withPathParams('findOne', 1)
           .expectStatus(200);
       });
     });
 
     describe('find search', () => {
-      it('should throw bad request exception', () => {
+      it('should throw not found exception', () => {
         return pactum
           .spec()
           .get('/agent/customer/findSearch')
-          .withQueryParams({ test: '' })
-          .expectStatus(400);
+          .expectStatus(404);
       });
       it('should return  array of customers', () => {
         return pactum
           .spec()
-          .get('/agent/customer/findSearch')
+          .get('/agent/customer/findSearch/{findSearch}')
           .withQueryParams({ search: 'customer' })
           .expectStatus(200);
       });
