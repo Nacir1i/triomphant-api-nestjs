@@ -35,17 +35,16 @@ describe('App e2e testing', () => {
   });
 
   describe('Roles', () => {
-    const roleDto: PartialTypedRoleDto = {
-      id: 1,
-      title: 'ADMIN',
-    };
-    const roleDto2: PartialTypedRoleDto = {
-      id: 2,
-      title: 'MANAGER',
-    };
+    describe('POST: role/create', () => {
+      const roleDto: PartialTypedRoleDto = {
+        id: 1,
+        title: 'ADMIN',
+      };
+      const roleDto2: PartialTypedRoleDto = {
+        id: 2,
+        title: 'MANAGER',
+      };
 
-    // create tests :
-    describe('create', () => {
       it('should throw bad request exception', () => {
         return pactum
           .spec()
@@ -76,47 +75,48 @@ describe('App e2e testing', () => {
       });
     });
 
-    // find one tests :
-    describe('find one', () => {
+    describe('GET: role/findOne/{id}', () => {
       it('should throw bad request exception', () => {
         return pactum
           .spec()
-          .post('/role/findOne')
-          .withBody({ id: '1' })
+          .get('/role/findOne/{findOne}')
+          .withPathParams('findOne', 'test')
           .expectStatus(400);
       });
       it('should throw not found exception', () => {
         return pactum
           .spec()
-          .post('/role/findOne')
-          .withBody({})
-          .expectStatus(404);
-      });
-      it('should throw not found exception', () => {
-        return pactum
-          .spec()
-          .post('/role/findOne')
-          .withBody({ title: 'fake' })
+          .get('/role/findOne/{findOne}')
+          .withPathParams('findOne', 999)
           .expectStatus(404);
       });
       it('should return role object', () => {
         return pactum
           .spec()
-          .post('/role/findOne')
-          .withBody({ title: 'ADMIN' })
+          .get('/role/findOne/{findOne}')
+          .withPathParams('findOne', 1)
           .expectStatus(200);
       });
     });
 
-    // find all tests :
-    describe('find all', () => {
-      it('should return array of role objects', () => {
-        return pactum.spec().get('/role/findAll').expectStatus(200);
+    describe('GET: role/findSearch/{search}', () => {
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .get('/role/findSearch/{findSearch}')
+          .withPathParams('findSearch', 1)
+          .expectStatus(400);
+      });
+      it('should return role object', () => {
+        return pactum
+          .spec()
+          .get('/role/findSearch/{findSearch}')
+          .withPathParams('findSearch', 'ADMIN')
+          .expectStatus(200);
       });
     });
 
-    // update tests :
-    describe('update', () => {
+    describe('PATCH: role/update', () => {
       it('should throw bad request exception', () => {
         return pactum
           .spec()
@@ -142,8 +142,7 @@ describe('App e2e testing', () => {
       });
     });
 
-    // delete tests :
-    describe('delete', () => {
+    describe('DELETE: role/delete', () => {
       it('should throw bad request exception', () => {
         return pactum.spec().delete('/role/delete').expectStatus(400);
       });
@@ -165,7 +164,7 @@ describe('App e2e testing', () => {
   });
 
   describe('Authentication', () => {
-    describe('signup', () => {
+    describe('POST: auth/signup', () => {
       const signupDto: SignupDto = {
         username: 'admin',
         password: 'admin',
@@ -241,7 +240,7 @@ describe('App e2e testing', () => {
       });
     });
 
-    describe('login', () => {
+    describe('POST: auth/login', () => {
       const loginDto: LoginDto = {
         username: 'admin',
         password: 'admin',
@@ -289,7 +288,7 @@ describe('App e2e testing', () => {
   });
 
   describe('Customer', () => {
-    describe('create', () => {
+    describe('POST: agent/customer/create', () => {
       const customerDto: CustomerDto = {
         firstName: 'customer1',
         lastName: 'customer1',
@@ -338,7 +337,7 @@ describe('App e2e testing', () => {
       });
     });
 
-    describe('find one', () => {
+    describe('GET: agent/customer/findOne/{id}', () => {
       it('should throw bad request exception-', () => {
         return pactum
           .spec()
@@ -362,23 +361,24 @@ describe('App e2e testing', () => {
       });
     });
 
-    describe('find search', () => {
-      it('should throw not found exception', () => {
-        return pactum
-          .spec()
-          .get('/agent/customer/findSearch')
-          .expectStatus(404);
-      });
-      it('should return  array of customers', () => {
+    describe('GET: agent/customer/findSearch/{search}', () => {
+      it('should throw bad request exception', () => {
         return pactum
           .spec()
           .get('/agent/customer/findSearch/{findSearch}')
-          .withQueryParams({ search: 'customer' })
+          .withPathParams('findSearch', 88)
+          .expectStatus(400);
+      });
+      it('should return array of customers', () => {
+        return pactum
+          .spec()
+          .get('/agent/customer/findSearch/{findSearch}')
+          .withPathParams('findSearch', 'customer')
           .expectStatus(200);
       });
     });
 
-    describe('get page', () => {
+    describe('GET: agent/customer/getPage?page=X&limit=X', () => {
       it('should throw bad request exception', () => {
         return pactum
           .spec()
@@ -409,7 +409,7 @@ describe('App e2e testing', () => {
       });
     });
 
-    describe('update', () => {
+    describe('PATCH: agent/customer/update/{id}', () => {
       const customerDto: PartialTypedCustomer = {
         id: 1,
         firstName: 'updatedCustomer',
@@ -453,7 +453,7 @@ describe('App e2e testing', () => {
       });
     });
 
-    describe('delete', () => {
+    describe('DELETE: agent/customer/delete/{id}', () => {
       it('should throw a bad  request exception', () => {
         return pactum.spec().patch('/agent/customer/update').expectStatus(400);
       });
@@ -473,4 +473,6 @@ describe('App e2e testing', () => {
       });
     });
   });
+
+  // describe('Role', () => {});
 });

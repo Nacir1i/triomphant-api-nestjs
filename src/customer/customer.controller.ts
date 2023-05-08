@@ -12,7 +12,7 @@ import {
   Delete,
   Param,
 } from '@nestjs/common';
-import { PipeStringPipe } from '../customerPipes';
+import { ParseStringPipe } from '../customPipes';
 import { CustomerService } from './customer.service';
 import { CustomerDto, PartialTypedCustomer } from './dto';
 
@@ -34,12 +34,13 @@ export class CustomerController {
     if (!customer) {
       throw new NotFoundException();
     }
+
     return customer;
   }
 
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
-  async findSearch(@Param('search', PipeStringPipe) search: string) {
+  async findSearch(@Param('search', ParseStringPipe) search: string) {
     const customers = await this.customerService.findSearch(search);
 
     return customers;

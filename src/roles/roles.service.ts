@@ -30,22 +30,29 @@ export class RolesService {
     }
   }
 
-  async findOne(dto: PartialTypedRoleDto): Promise<role | null> {
-    const role = await this.prismaService.role.findFirst({
+  async findOne(id: number): Promise<role | null> {
+    const role = await this.prismaService.role.findUnique({
       where: {
-        OR: [
-          {
-            id: dto.id,
-          },
+        id: id,
+      },
+    });
+
+    return role;
+  }
+
+  async findSearch(search: string): Promise<role[] | []> {
+    const role = await this.prismaService.role.findMany({
+      where: {
+        AND: [
           {
             title: {
-              contains: dto.title,
+              contains: search,
             },
           },
+          {
+            is_deleted: false,
+          },
         ],
-        AND: {
-          is_deleted: false,
-        },
       },
     });
 

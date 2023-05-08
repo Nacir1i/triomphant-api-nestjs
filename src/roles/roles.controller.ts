@@ -7,11 +7,13 @@ import {
   Query,
   Delete,
   HttpCode,
+  Param,
   HttpStatus,
   NotFoundException,
   ParseIntPipe,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
+import { ParseStringPipe } from '../customPipes';
 import { RoleDto, PartialTypedRoleDto } from './dto';
 
 @Controller('role')
@@ -26,16 +28,24 @@ export class RolesController {
     return role;
   }
 
-  @Post('findOne')
+  @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
-  async findOne(@Body() dto: PartialTypedRoleDto) {
-    const role = await this.rolesService.findOne(dto);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const role = await this.rolesService.findOne(id);
 
     if (!role) {
       throw new NotFoundException('Role was not found');
     }
 
     return role;
+  }
+
+  @Get('findSearch/:search')
+  @HttpCode(HttpStatus.OK)
+  async findSearch(@Param('search', ParseStringPipe) search: string) {
+    const roles = await this.rolesService.findSearch(search);
+
+    return roles;
   }
 
   @Get('findAll')
