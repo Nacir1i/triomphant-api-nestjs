@@ -6,60 +6,96 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
 import { LoginDto } from './dto';
-import { user } from '@prisma/client';
-import { Prisma } from '@prisma/client';
+import { createMock } from '@golevelup/ts-jest';
+import { UnauthorizedException } from '@nestjs/common';
 
 describe('AuthService', () => {
   let service: AuthService;
-  let prismaSerivce: PrismaService;
+  let prismaService: PrismaService;
+
+  const dto: LoginDto = {
+    username: 'admin',
+    password: 'admin',
+  };
+
+  const fakeDto: LoginDto = {
+    username: 'test',
+    password: 'test',
+  };
+
+  const user = {
+    id: 1,
+    username: 'admin',
+    password:
+      '$argon2id$v=19$m=65536,t=3,p=4$hZIvUcS/c7KtLzZ3BGKwcA$NO0lrVNuktRxTaFLLNR0wslmfAFj/NXEp2/NrK/2hX8',
+    first_name: 'user',
+    last_name: 'user',
+    image_url: null,
+    created_at: '2023-05-07T18:31:59.283Z',
+    recruited_at: '2023-05-07T18:31:59.283Z',
+    birth_date: '2023-05-07T18:31:59.283Z',
+    salary: 69420,
+    status: null,
+    role_id: 1,
+    contact_information_id: 1,
+    bank_information_id: null,
+    is_deleted: false,
+  };
+
+  const { password, ...result } = user;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [AuthController],
       providers: [
         AuthService,
-        PrismaService,
-        ConfigService,
-        JwtService,
+        {
+          provide: PrismaService,
+          useValue: {
+            user: {
+              findUnique: jest.fn().mockReturnValue(user),
+              create: jest.fn().mockReturnValue(user),
+            },
+          },
+        },
+        {
+          provide: ConfigService,
+          useValue: createMock<ConfigService>(),
+        },
+        {
+          provide: JwtService,
+          useValue: createMock<JwtService>(),
+        },
         UserService,
       ],
     }).compile();
 
-    service = module.get<AuthService>(AuthController);
+    service = module.get<AuthService>(AuthService);
+    prismaService = module.get<PrismaService>(PrismaService);
+  });
+
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
+  it('should be defined', () => {
+    expect(service).toBeDefined();
   });
 
   describe('login', () => {
     it('should return user object with token', async () => {
-      const dto: LoginDto = {
-        username: 'admin',
-        password: 'admin',
-      };
-      const data = {
-        id: 1,
-        username: 'admin',
-        password: 'admin',
-        first_name: 'user',
-        last_name: 'user',
-        image_url: null,
-        created_at: new Date(),
-        recruited_at: new Date(),
-        birth_date: new Date(),
-        salary: 69420,
-        status: null,
-        role_id: 1,
-        contact_information_id: 1,
-        bank_information_id: null,
-        is_deleted: false,
-      } as unknown as Prisma.Prisma__userClient<user>;
+      const response = await service.login(dto);
 
-      // jest
-      //   .spyOn(prismaSerivce.user, 'findFirst')
-      //   .mockImplementation(async () => data);
+      expect(prismaService.user.findUnique).toHaveBeenCalled();
+      expect(response).toEqual({
+        token: {},
+        user: result,
+      });
+    });
 
-      const result = await service.login(dto);
-
-      expect(result).toEqual(
-        expect.objectContaining({ user: data, token: expect.any(String) }),
+    it('should throw unauthorized exception', async () => {
+      await expect(service.login(fakeDto)).rejects.toThrow(
+        UnauthorizedException,
       );
     });
   });
