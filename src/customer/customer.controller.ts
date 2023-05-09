@@ -72,9 +72,9 @@ export class CustomerController {
     return updated;
   }
 
-  @Delete('delete')
+  @Delete('delete/:id')
   @HttpCode(HttpStatus.OK)
-  async delete(@Query('id', ParseIntPipe) id: number) {
+  async delete(@Param('id', ParseIntPipe) id: number) {
     return await this.customerService.delete(id);
   }
 }
