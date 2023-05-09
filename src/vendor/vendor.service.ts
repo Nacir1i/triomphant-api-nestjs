@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateVendorDto } from './dto/create-vendor.dto';
-import { UpdateVendorDto } from './dto/update-vendor.dto';
+import { CreateVendorDto } from './dto/vendor.dto';
+import { UpdateVendorDto } from './dto/partialTypedVendor.dto';
 
 @Injectable()
 export class VendorService {
