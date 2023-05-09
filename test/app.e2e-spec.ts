@@ -455,24 +455,276 @@ describe('App e2e testing', () => {
 
     describe('DELETE: agent/customer/delete/{id}', () => {
       it('should throw a bad  request exception', () => {
-        return pactum.spec().patch('/agent/customer/update').expectStatus(400);
+        return pactum
+          .spec()
+          .delete('/agent/customer/delete/{id}')
+          .expectStatus(400);
+      });
+      it('should throw bad exception', () => {
+        return pactum
+          .spec()
+          .delete('/agent/customer/delete/{id}')
+          .withPathParams('id', 'test')
+          .expectStatus(400);
       });
       it('should throw not found exception', () => {
         return pactum
           .spec()
-          .patch('/agent/customer/update')
-          .withQueryParams({ id: 999 })
+          .delete('/agent/customer/delete/{id}')
+          .withPathParams('id', 99)
           .expectStatus(404);
       });
       it('should delete a customer', () => {
         return pactum
           .spec()
-          .patch('/agent/customer/update')
-          .withQueryParams({ id: 1 })
+          .delete('/agent/customer/delete/{id}')
+          .withPathParams('id', 1)
           .expectStatus(200);
       });
     });
   });
 
-  // describe('Role', () => {});
+  describe('Vendor', () => {
+    describe('POST: agent/vendor/create', () => {
+      const vendor1 = {
+        firstName: 'vendor1',
+        lastName: 'vendor1',
+        companyName: 'Company',
+        email: 'vendor@email.bob',
+        phone: '0666666666',
+        address: 'Customer address N°47',
+        honorific: 'Mister',
+        emergency: false,
+        name: 'Bank',
+        number: 'XXXXXXXXXX',
+        rib: 'XXXXXXXXXX',
+        swift: 'XXXXXXXXX',
+        ice: 'XXXXXXXXXXX',
+      };
+      const vendor2 = {
+        firstName: 'vendor2',
+        lastName: 'vendor2',
+        companyName: 'Company',
+        email: 'vendor@email.bob',
+        phone: '0666666666',
+        address: 'Customer address N°47',
+        honorific: 'Mister',
+        emergency: false,
+        name: 'Bank',
+        number: 'XXXXXXXXXX',
+        rib: 'XXXXXXXXXX',
+        swift: 'XXXXXXXXX',
+        ice: 'XXXXXXXXXXX',
+      };
+
+      it('should bad request exception', () => {
+        return pactum.spec().post('/agent/customer/create').expectStatus(400);
+      });
+      it('should bad request exception', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/create')
+          .withBody({})
+          .expectStatus(400);
+      });
+      it('should bad request exception', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/create')
+          .withBody({
+            firstName: 'test',
+            lastName: 'test',
+          })
+          .expectStatus(400);
+      });
+      it('should create first vendor', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/create')
+          .withBody(vendor1)
+          .expectStatus(201);
+      });
+      it('should create second vendor', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/create')
+          .withBody(vendor2)
+          .expectStatus(201);
+      });
+    });
+
+    describe('GET: agent/vendor/findOne/{id}', () => {
+      it('should bad request exception', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/findOne/{findOne}')
+          .expectStatus(400);
+      });
+      it('should bad request exception', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/findOne/{findOne}')
+          .withPathParams('findOne', 'test')
+          .expectStatus(400);
+      });
+      it('should not found exception', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/findOne/{findOne}')
+          .withPathParams('findOne', 99)
+          .expectStatus(404);
+      });
+      it('should return vendor object', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/findOne/{findOne}')
+          .withPathParams('findOne', 1)
+          .expectStatus(200);
+      });
+    });
+
+    describe('GET: agent/vendor/findSearch/{search}', () => {
+      it('should bad request exception', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/findSearch/{findSearch}')
+          .expectStatus(400);
+      });
+      it('should bad request exception', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/findSearch/{findSearch}')
+          .withPathParams('findSearch', 1)
+          .expectStatus(400);
+      });
+      it('should not found exception', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/findSearch/{findSearch}')
+          .withPathParams('findSearch', 'test')
+          .expectStatus(404);
+      });
+      it('should return vendor array', () => {
+        return pactum
+          .spec()
+          .post('/agent/customer/findSearch/{findSearch}')
+          .withPathParams('findSearch', 'vendor')
+          .expectStatus(200);
+      });
+    });
+
+    describe('GET: agent/vendor/getPage?page=X&limit=X', () => {
+      it('should bad request exception', () => {
+        return pactum.spec().get('/agent/vendor/getPage').expectStatus(400);
+      });
+      it('should bad request exception', () => {
+        return pactum
+          .spec()
+          .get('/agent/vendor/getPage')
+          .withQueryParams({
+            page: 1,
+          })
+          .expectStatus(400);
+      });
+      it('should bad request exception', () => {
+        return pactum
+          .spec()
+          .get('/agent/vendor/getPage')
+          .withQueryParams({
+            page: 1,
+            limit: 10,
+          })
+          .expectStatus(400);
+      });
+      it('should return vendor array', () => {
+        return pactum
+          .spec()
+          .get('/agent/vendor/getPage')
+          .withQueryParams({
+            page: 1,
+            limit: 10,
+          })
+          .expectStatus(200);
+      });
+    });
+
+    describe('PATCH: agent/vendor/update/{id}', () => {
+      const vendor = {
+        firstName: 'updatedVendor',
+        lastName: 'updatedVendor',
+        companyName: 'Company',
+        email: 'vendor@email.bob',
+        phone: '0666666666',
+        address: 'Customer address N°47',
+        honorific: 'Mister',
+        emergency: false,
+        name: 'Bank',
+        number: 'XXXXXXXXXX',
+        rib: 'XXXXXXXXXX',
+        swift: 'XXXXXXXXX',
+        ice: 'XXXXXXXXXXX',
+      };
+
+      it('should bad request exception', () => {
+        return pactum
+          .spec()
+          .patch('/agent/vendor/update')
+          .withBody(vendor)
+          .expectStatus(400);
+      });
+      it('should bad request exception', () => {
+        return pactum
+          .spec()
+          .patch('/agent/vendor/update')
+          .withQueryParams({ id: 1 })
+          .expectStatus(400);
+      });
+      it('should not found exception', () => {
+        return pactum
+          .spec()
+          .patch('/agent/vendor/update')
+          .withQueryParams({ id: 99 })
+          .withBody(vendor)
+          .expectStatus(404);
+      });
+      it('should update vendor', () => {
+        return pactum
+          .spec()
+          .patch('/agent/vendor/update')
+          .withQueryParams({ id: 1 })
+          .withBody(vendor)
+          .expectStatus(200);
+      });
+    });
+
+    describe('DELETE: agent/vendor/delete/{id}', () => {
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .delete('agent/vendor/delete/{id}')
+          .expectStatus(400);
+      });
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .delete('agent/vendor/delete/{id}')
+          .withPathParams('id', 'test')
+          .expectStatus(400);
+      });
+      it('should throw not found exception', () => {
+        return pactum
+          .spec()
+          .delete('agent/vendor/delete/{id}')
+          .withPathParams('id', 99)
+          .expectStatus(404);
+      });
+      it('should delete vendor', () => {
+        return pactum
+          .spec()
+          .delete('agent/vendor/delete/{id}')
+          .withPathParams('id', 1)
+          .expectStatus(200);
+      });
+    });
+  });
 });
