@@ -8,15 +8,14 @@ import {
   Delete,
 } from '@nestjs/common';
 import { VendorService } from './vendor.service';
-import { CreateVendorDto } from './dto/vendor.dto';
-import { UpdateVendorDto } from './dto/partialTypedVendor.dto';
+import { VendorDto, PartialTypedVendor } from './dto';
 
 @Controller('vendor')
 export class VendorController {
   constructor(private readonly vendorService: VendorService) {}
 
   @Post()
-  create(@Body() createVendorDto: CreateVendorDto) {
+  create(@Body() createVendorDto: VendorDto) {
     return this.vendorService.create(createVendorDto);
   }
 
@@ -31,7 +30,7 @@ export class VendorController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVendorDto: UpdateVendorDto) {
+  update(@Param('id') id: string, @Body() updateVendorDto: PartialTypedVendor) {
     return this.vendorService.update(+id, updateVendorDto);
   }
 

@@ -6,6 +6,7 @@ import { PrismaService } from '../src/prisma/prisma.service';
 import { LoginDto, SignupDto } from '../src/auth/dto';
 import { PartialTypedRoleDto, RoleDto } from 'src/roles/dto';
 import { CustomerDto, PartialTypedCustomer } from 'src/customer/dto';
+import { VendorDto, PartialTypedVendor } from 'src/vendor/dto';
 
 describe('App e2e testing', () => {
   let app: INestApplication;
@@ -486,7 +487,7 @@ describe('App e2e testing', () => {
 
   describe('Vendor', () => {
     describe('POST: agent/vendor/create', () => {
-      const vendor1 = {
+      const vendor1: VendorDto = {
         firstName: 'vendor1',
         lastName: 'vendor1',
         companyName: 'Company',
@@ -501,7 +502,7 @@ describe('App e2e testing', () => {
         swift: 'XXXXXXXXX',
         ice: 'XXXXXXXXXXX',
       };
-      const vendor2 = {
+      const vendor2: VendorDto = {
         firstName: 'vendor2',
         lastName: 'vendor2',
         companyName: 'Company',
@@ -649,7 +650,7 @@ describe('App e2e testing', () => {
     });
 
     describe('PATCH: agent/vendor/update/{id}', () => {
-      const vendor = {
+      const vendor: PartialTypedVendor = {
         firstName: 'updatedVendor',
         lastName: 'updatedVendor',
         companyName: 'Company',

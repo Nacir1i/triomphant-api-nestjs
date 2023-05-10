@@ -1,10 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { CreateVendorDto } from './dto/vendor.dto';
-import { UpdateVendorDto } from './dto/partialTypedVendor.dto';
+import { VendorDto, PartialTypedVendor } from './dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class VendorService {
-  create(createVendorDto: CreateVendorDto) {
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async create(dto: VendorDto) {
     return 'This action adds a new vendor';
   }
 
@@ -16,7 +18,7 @@ export class VendorService {
     return `This action returns a #${id} vendor`;
   }
 
-  update(id: number, updateVendorDto: UpdateVendorDto) {
+  update(id: number, dto: PartialTypedVendor) {
     return `This action updates a #${id} vendor`;
   }
 
