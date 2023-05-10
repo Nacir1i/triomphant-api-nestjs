@@ -6,6 +6,8 @@ import {
   Patch,
   Param,
   Delete,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { VendorService } from './vendor.service';
 import { VendorDto, PartialTypedVendor } from './dto';
@@ -15,8 +17,9 @@ export class VendorController {
   constructor(private readonly vendorService: VendorService) {}
 
   @Post()
-  create(@Body() createVendorDto: VendorDto) {
-    return this.vendorService.create(createVendorDto);
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() dto: VendorDto) {
+    return await this.vendorService.create(dto);
   }
 
   @Get()
