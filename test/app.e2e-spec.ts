@@ -621,7 +621,6 @@ describe('App e2e testing', () => {
           .spec()
           .get('/agent/vendor/getPage')
           .withQueryParams({
-            page: 1,
             limit: 10,
           })
           .expectStatus(400);
