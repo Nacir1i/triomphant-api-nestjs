@@ -12,6 +12,8 @@ import {
 } from '@nestjs/common';
 import { VendorService } from './vendor.service';
 import { VendorDto, PartialTypedVendor } from './dto';
+import { ParseIntPipe } from '@nestjs/common/pipes';
+import { ParseStringPipe } from 'src/customPipes';
 
 @Controller('agent/vendor')
 export class VendorController {
@@ -25,7 +27,7 @@ export class VendorController {
 
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
-  async findOne(@Param('id') id: number) {
+  async findOne(@Param('id', ParseIntPipe) id: number) {
     const vendor = await this.vendorService.findOne(id);
 
     if (!vendor) {
@@ -33,6 +35,12 @@ export class VendorController {
     }
 
     return vendor;
+  }
+
+  @Get('findSearch/:search')
+  @HttpCode(HttpStatus.OK)
+  async findSearch(@Param('search', ParseStringPipe) search: string) {
+    return await this.vendorService.findSearch(search);
   }
 
   @Get('findAll')

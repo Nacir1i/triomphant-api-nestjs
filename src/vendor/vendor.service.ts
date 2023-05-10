@@ -40,6 +40,40 @@ export class VendorService {
     });
   }
 
+  async findSearch(search: string): Promise<vendor[] | []> {
+    return await this.prismaService.vendor.findMany({
+      where: {
+        OR: [
+          {
+            first_name: {
+              contains: search,
+            },
+          },
+          {
+            last_name: {
+              contains: search,
+            },
+          },
+          {
+            company_name: {
+              contains: search,
+            },
+          },
+          {
+            contact_information: {
+              email: {
+                contains: search,
+              },
+            },
+          },
+        ],
+        AND: {
+          is_deleted: false,
+        },
+      },
+    });
+  }
+
   async findOne(id: number): Promise<vendor | null> {
     return await this.prismaService.vendor.findUnique({
       where: {
@@ -48,8 +82,12 @@ export class VendorService {
     });
   }
 
-  async findAll() {
-    return await this.prismaService.vendor.findMany();
+  async findAll(): Promise<vendor[] | []> {
+    return await this.prismaService.vendor.findMany({
+      where: {
+        is_deleted: false,
+      },
+    });
   }
 
   update(id: number, dto: PartialTypedVendor) {
