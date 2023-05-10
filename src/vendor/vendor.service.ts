@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { VendorDto, PartialTypedVendor } from './dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { vendor } from '@prisma/client';
+import { vendor, Prisma } from '@prisma/client';
 
 @Injectable()
 export class VendorService {
@@ -91,49 +91,69 @@ export class VendorService {
   }
 
   async update(id: number, dto: PartialTypedVendor): Promise<vendor> {
-    return await this.prismaService.vendor.update({
-      where: {
-        id: id,
-      },
-      data: {
-        first_name: dto.firstName,
-        last_name: dto.lastName,
-        company_name: dto.companyName,
-        contact_information: {
-          create: {
-            email: dto.email,
-            phone: dto.phone,
-            address: dto.address,
-            honorific: dto.honorific,
-            emergency: dto.emergency,
+    try {
+      return await this.prismaService.vendor.update({
+        where: {
+          id: id,
+        },
+        data: {
+          first_name: dto.firstName,
+          last_name: dto.lastName,
+          company_name: dto.companyName,
+          contact_information: {
+            create: {
+              email: dto.email,
+              phone: dto.phone,
+              address: dto.address,
+              honorific: dto.honorific,
+              emergency: dto.emergency,
+            },
+          },
+          bank_information: {
+            create: {
+              name: dto.name,
+              number: dto.number,
+              rib: dto.rib,
+              swift: dto.swift,
+              ice: dto.ice,
+            },
+          },
+          logs: {
+            create: {
+              content: 'Vendor updated successfully',
+            },
           },
         },
-        bank_information: {
-          create: {
-            name: dto.name,
-            number: dto.number,
-            rib: dto.rib,
-            swift: dto.swift,
-            ice: dto.ice,
-          },
-        },
-        logs: {
-          create: {
-            content: 'Vendor updated successfully',
-          },
-        },
-      },
-    });
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(error.meta?.cause);
+        }
+      }
+
+      throw error;
+    }
   }
 
   async delete(id: number) {
-    return await this.prismaService.vendor.update({
-      where: {
-        id: id,
-      },
-      data: {
-        is_deleted: true,
-      },
-    });
+    try {
+      return await this.prismaService.vendor.update({
+        where: {
+          id: id,
+        },
+        data: {
+          is_deleted: true,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(error.meta?.cause);
+        }
+      }
+
+      throw error;
+    }
   }
 }

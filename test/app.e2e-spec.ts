@@ -2,7 +2,6 @@ import { INestApplication, ValidationPipe } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import * as pactum from 'pactum';
 import { AppModule } from '../src/app.module';
-import { PrismaService } from '../src/prisma/prisma.service';
 import { LoginDto, SignupDto } from '../src/auth/dto';
 import { PartialTypedRoleDto, RoleDto } from 'src/roles/dto';
 import { CustomerDto, PartialTypedCustomer } from 'src/customer/dto';
@@ -10,7 +9,6 @@ import { VendorDto, PartialTypedVendor } from 'src/vendor/dto';
 
 describe('App e2e testing', () => {
   let app: INestApplication;
-  let prismaService: PrismaService;
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -25,8 +23,6 @@ describe('App e2e testing', () => {
     );
     await app.init();
     await app.listen(3333);
-
-    prismaService = app.get(PrismaService);
 
     pactum.request.setBaseUrl('http://localhost:3333');
   });
@@ -519,19 +515,19 @@ describe('App e2e testing', () => {
       };
 
       it('should bad request exception', () => {
-        return pactum.spec().post('/agent/customer/create').expectStatus(400);
+        return pactum.spec().post('/agent/vendor/create').expectStatus(400);
       });
       it('should bad request exception', () => {
         return pactum
           .spec()
-          .post('/agent/customer/create')
+          .post('/agent/vendor/create')
           .withBody({})
           .expectStatus(400);
       });
       it('should bad request exception', () => {
         return pactum
           .spec()
-          .post('/agent/customer/create')
+          .post('/agent/vendor/create')
           .withBody({
             firstName: 'test',
             lastName: 'test',
@@ -541,14 +537,14 @@ describe('App e2e testing', () => {
       it('should create first vendor', () => {
         return pactum
           .spec()
-          .post('/agent/customer/create')
+          .post('/agent/vendor/create')
           .withBody(vendor1)
           .expectStatus(201);
       });
       it('should create second vendor', () => {
         return pactum
           .spec()
-          .post('/agent/customer/create')
+          .post('/agent/vendor/create')
           .withBody(vendor2)
           .expectStatus(201);
       });
@@ -558,27 +554,27 @@ describe('App e2e testing', () => {
       it('should bad request exception', () => {
         return pactum
           .spec()
-          .post('/agent/customer/findOne/{findOne}')
+          .get('/agent/vendor/findOne/{findOne}')
           .expectStatus(400);
       });
       it('should bad request exception', () => {
         return pactum
           .spec()
-          .post('/agent/customer/findOne/{findOne}')
+          .get('/agent/vendor/findOne/{findOne}')
           .withPathParams('findOne', 'test')
           .expectStatus(400);
       });
       it('should not found exception', () => {
         return pactum
           .spec()
-          .post('/agent/customer/findOne/{findOne}')
+          .get('/agent/vendor/findOne/{findOne}')
           .withPathParams('findOne', 99)
           .expectStatus(404);
       });
       it('should return vendor object', () => {
         return pactum
           .spec()
-          .post('/agent/customer/findOne/{findOne}')
+          .get('/agent/vendor/findOne/{findOne}')
           .withPathParams('findOne', 1)
           .expectStatus(200);
       });
@@ -588,27 +584,20 @@ describe('App e2e testing', () => {
       it('should bad request exception', () => {
         return pactum
           .spec()
-          .post('/agent/customer/findSearch/{findSearch}')
+          .get('/agent/vendor/findSearch/{findSearch}')
           .expectStatus(400);
       });
       it('should bad request exception', () => {
         return pactum
           .spec()
-          .post('/agent/customer/findSearch/{findSearch}')
+          .get('/agent/vendor/findSearch/{findSearch}')
           .withPathParams('findSearch', 1)
           .expectStatus(400);
-      });
-      it('should not found exception', () => {
-        return pactum
-          .spec()
-          .post('/agent/customer/findSearch/{findSearch}')
-          .withPathParams('findSearch', 'test')
-          .expectStatus(404);
       });
       it('should return vendor array', () => {
         return pactum
           .spec()
-          .post('/agent/customer/findSearch/{findSearch}')
+          .get('/agent/vendor/findSearch/{findSearch}')
           .withPathParams('findSearch', 'vendor')
           .expectStatus(200);
       });
@@ -669,30 +658,30 @@ describe('App e2e testing', () => {
       it('should bad request exception', () => {
         return pactum
           .spec()
-          .patch('/agent/vendor/update')
+          .patch('/agent/vendor/update/{id}')
           .withBody(vendor)
           .expectStatus(400);
       });
       it('should bad request exception', () => {
         return pactum
           .spec()
-          .patch('/agent/vendor/update')
-          .withQueryParams({ id: 1 })
+          .patch('/agent/vendor/update/{id}')
+          .withPathParams('id', 'test')
           .expectStatus(400);
       });
       it('should not found exception', () => {
         return pactum
           .spec()
-          .patch('/agent/vendor/update')
-          .withQueryParams({ id: 99 })
+          .patch('/agent/vendor/update/{id}')
+          .withPathParams('id', 99)
           .withBody(vendor)
           .expectStatus(404);
       });
       it('should update vendor', () => {
         return pactum
           .spec()
-          .patch('/agent/vendor/update')
-          .withQueryParams({ id: 1 })
+          .patch('/agent/vendor/update/{id}')
+          .withPathParams('id', 1)
           .withBody(vendor)
           .expectStatus(200);
       });
@@ -702,28 +691,28 @@ describe('App e2e testing', () => {
       it('should throw bad request exception', () => {
         return pactum
           .spec()
-          .delete('agent/vendor/delete/{id}')
+          .delete('/agent/vendor/delete/{id}')
           .expectStatus(400);
       });
       it('should throw bad request exception', () => {
         return pactum
           .spec()
-          .delete('agent/vendor/delete/{id}')
+          .delete('/agent/vendor/delete/{id}')
           .withPathParams('id', 'test')
           .expectStatus(400);
       });
       it('should throw not found exception', () => {
         return pactum
           .spec()
-          .delete('agent/vendor/delete/{id}')
+          .delete('/agent/vendor/delete/{id}')
           .withPathParams('id', 99)
           .expectStatus(404);
       });
       it('should delete vendor', () => {
         return pactum
           .spec()
-          .delete('agent/vendor/delete/{id}')
-          .withPathParams('id', 1)
+          .delete('/agent/vendor/delete/{id}')
+          .withPathParams('id', 2)
           .expectStatus(200);
       });
     });

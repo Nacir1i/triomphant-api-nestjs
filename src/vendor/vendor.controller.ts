@@ -28,8 +28,8 @@ export class VendorController {
 
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    const vendor = this.vendorService.findOne(id);
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const vendor = await this.vendorService.findOne(id);
 
     if (!vendor) {
       throw new NotFoundException(`Vendor ${id} not found`);
@@ -56,34 +56,16 @@ export class VendorController {
     @Param('id', ParseIntPipe) id: number,
     @Body() updateVendorDto: PartialTypedVendor,
   ) {
-    try {
-      const vendor = this.vendorService.update(id, updateVendorDto);
+    const vendor = this.vendorService.update(id, updateVendorDto);
 
-      return vendor;
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+    return vendor;
   }
 
   @Delete('delete/:id')
   @HttpCode(HttpStatus.OK)
   delete(@Param('id', ParseIntPipe) id: number) {
-    try {
-      const vendor = this.vendorService.delete(id);
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
+    const vendor = this.vendorService.delete(id);
 
-      throw error;
-    }
+    return vendor;
   }
 }
