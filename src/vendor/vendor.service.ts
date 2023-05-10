@@ -48,8 +48,8 @@ export class VendorService {
     });
   }
 
-  findAll() {
-    return `This action returns all vendor`;
+  async findAll() {
+    return await this.prismaService.vendor.findMany();
   }
 
   update(id: number, dto: PartialTypedVendor) {

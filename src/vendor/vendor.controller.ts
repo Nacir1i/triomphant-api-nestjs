@@ -35,9 +35,9 @@ export class VendorController {
     return vendor;
   }
 
-  @Get()
-  findAll() {
-    return this.vendorService.findAll();
+  @Get('findAll')
+  async findAll() {
+    return await this.vendorService.findAll();
   }
 
   @Patch(':id')
