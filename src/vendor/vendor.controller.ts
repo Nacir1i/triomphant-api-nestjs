@@ -13,7 +13,7 @@ import {
 import { VendorService } from './vendor.service';
 import { VendorDto, PartialTypedVendor } from './dto';
 import { ParseIntPipe } from '@nestjs/common/pipes';
-import { ParseStringPipe } from 'src/customPipes';
+import { ParseStringPipe } from '../customPipes';
 import { Prisma } from '@prisma/client';
 
 @Controller('agent/vendor')
