@@ -14,6 +14,7 @@ import { VendorService } from './vendor.service';
 import { VendorDto, PartialTypedVendor } from './dto';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { ParseStringPipe } from 'src/customPipes';
+import { Prisma } from '@prisma/client';
 
 @Controller('agent/vendor')
 export class VendorController {
@@ -21,14 +22,14 @@ export class VendorController {
 
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
-  async create(@Body() dto: VendorDto) {
-    return await this.vendorService.create(dto);
+  create(@Body() dto: VendorDto) {
+    return this.vendorService.create(dto);
   }
 
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
-  async findOne(@Param('id', ParseIntPipe) id: number) {
-    const vendor = await this.vendorService.findOne(id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    const vendor = this.vendorService.findOne(id);
 
     if (!vendor) {
       throw new NotFoundException(`Vendor ${id} not found`);
@@ -39,22 +40,37 @@ export class VendorController {
 
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
-  async findSearch(@Param('search', ParseStringPipe) search: string) {
-    return await this.vendorService.findSearch(search);
+  findSearch(@Param('search', ParseStringPipe) search: string) {
+    return this.vendorService.findSearch(search);
   }
 
   @Get('findAll')
-  async findAll() {
-    return await this.vendorService.findAll();
+  @HttpCode(HttpStatus.OK)
+  findAll() {
+    return this.vendorService.findAll();
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateVendorDto: PartialTypedVendor) {
-    return this.vendorService.update(+id, updateVendorDto);
+  @Patch('update/:id')
+  @HttpCode(HttpStatus.OK)
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateVendorDto: PartialTypedVendor,
+  ) {
+    try {
+      const vendor = this.vendorService.update(id, updateVendorDto);
+
+      return vendor;
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        throw new NotFoundException(error.meta?.cause);
+      }
+
+      throw error;
+    }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.vendorService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.vendorService.remove(id);
   }
 }

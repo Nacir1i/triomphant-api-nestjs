@@ -90,8 +90,40 @@ export class VendorService {
     });
   }
 
-  update(id: number, dto: PartialTypedVendor) {
-    return `This action updates a #${id} vendor`;
+  async update(id: number, dto: PartialTypedVendor): Promise<vendor> {
+    return await this.prismaService.vendor.update({
+      where: {
+        id: id,
+      },
+      data: {
+        first_name: dto.firstName,
+        last_name: dto.lastName,
+        company_name: dto.companyName,
+        contact_information: {
+          create: {
+            email: dto.email,
+            phone: dto.phone,
+            address: dto.address,
+            honorific: dto.honorific,
+            emergency: dto.emergency,
+          },
+        },
+        bank_information: {
+          create: {
+            name: dto.name,
+            number: dto.number,
+            rib: dto.rib,
+            swift: dto.swift,
+            ice: dto.ice,
+          },
+        },
+        logs: {
+          create: {
+            content: 'Vendor updated successfully',
+          },
+        },
+      },
+    });
   }
 
   remove(id: number) {
