@@ -40,12 +40,16 @@ export class VendorService {
     });
   }
 
-  findAll() {
-    return `This action returns all vendor`;
+  async findOne(id: number): Promise<vendor | null> {
+    return await this.prismaService.vendor.findUnique({
+      where: {
+        id: id,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} vendor`;
+  findAll() {
+    return `This action returns all vendor`;
   }
 
   update(id: number, dto: PartialTypedVendor) {

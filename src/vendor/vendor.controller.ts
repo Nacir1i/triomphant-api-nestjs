@@ -8,28 +8,36 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
+  NotFoundException,
 } from '@nestjs/common';
 import { VendorService } from './vendor.service';
 import { VendorDto, PartialTypedVendor } from './dto';
 
-@Controller('vendor')
+@Controller('agent/vendor')
 export class VendorController {
   constructor(private readonly vendorService: VendorService) {}
 
-  @Post()
+  @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: VendorDto) {
     return await this.vendorService.create(dto);
   }
 
+  @Get('findOne/:id')
+  @HttpCode(HttpStatus.OK)
+  async findOne(@Param('id') id: number) {
+    const vendor = await this.vendorService.findOne(id);
+
+    if (!vendor) {
+      throw new NotFoundException(`Vendor ${id} not found`);
+    }
+
+    return vendor;
+  }
+
   @Get()
   findAll() {
     return this.vendorService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.vendorService.findOne(+id);
   }
 
   @Patch(':id')
