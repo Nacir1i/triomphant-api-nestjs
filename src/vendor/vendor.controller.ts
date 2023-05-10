@@ -5,6 +5,7 @@ import {
   Body,
   Patch,
   Param,
+  Query,
   Delete,
   HttpCode,
   HttpStatus,
@@ -48,6 +49,15 @@ export class VendorController {
   @HttpCode(HttpStatus.OK)
   findAll() {
     return this.vendorService.findAll();
+  }
+
+  @Get('getPage')
+  @HttpCode(HttpStatus.OK)
+  async getPage(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return this.vendorService.getPage(page, limit);
   }
 
   @Patch('update/:id')

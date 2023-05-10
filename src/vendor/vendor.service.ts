@@ -71,6 +71,10 @@ export class VendorService {
           is_deleted: false,
         },
       },
+      include: {
+        contact_information: true,
+        bank_information: true,
+      },
     });
   }
 
@@ -78,6 +82,10 @@ export class VendorService {
     return await this.prismaService.vendor.findUnique({
       where: {
         id: id,
+      },
+      include: {
+        contact_information: true,
+        bank_information: true,
       },
     });
   }
@@ -88,6 +96,29 @@ export class VendorService {
         is_deleted: false,
       },
     });
+  }
+
+  async getPage(page: number, limit: number): Promise<object> {
+    const startIndex = (page - 1) * limit;
+
+    const vendors = await this.prismaService.vendor.findMany({
+      skip: startIndex,
+      take: limit,
+      where: {
+        is_deleted: false,
+      },
+      include: {
+        contact_information: true,
+        bank_information: true,
+      },
+    });
+
+    const findAll = (await this.findAll()).length;
+
+    const pagesCount = findAll <= limit ? 1 : Math.ceil(findAll / limit);
+    const remainingPages = pagesCount - page >= 0 ? pagesCount - page : 0;
+
+    return { vendors, pagesCount, remainingPages };
   }
 
   async update(id: number, dto: PartialTypedVendor): Promise<vendor> {
