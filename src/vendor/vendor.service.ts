@@ -126,7 +126,14 @@ export class VendorService {
     });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} vendor`;
+  async delete(id: number) {
+    return await this.prismaService.vendor.update({
+      where: {
+        id: id,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
   }
 }

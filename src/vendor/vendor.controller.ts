@@ -62,15 +62,28 @@ export class VendorController {
       return vendor;
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        throw new NotFoundException(error.meta?.cause);
+        if (error.code === 'P2025') {
+          throw new NotFoundException(error.meta?.cause);
+        }
       }
 
       throw error;
     }
   }
 
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.vendorService.remove(id);
+  @Delete('delete/:id')
+  @HttpCode(HttpStatus.OK)
+  delete(@Param('id', ParseIntPipe) id: number) {
+    try {
+      const vendor = this.vendorService.delete(id);
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(error.meta?.cause);
+        }
+      }
+
+      throw error;
+    }
   }
 }

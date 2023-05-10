@@ -184,7 +184,9 @@ export class CustomerService {
       });
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        throw new NotFoundException(error.meta?.cause);
+        if (error.code === 'P2025') {
+          throw new NotFoundException(error.meta?.cause);
+        }
       }
 
       throw error;
