@@ -15,9 +15,13 @@ import {
 import { RolesService } from './roles.service';
 import { ParseStringPipe } from '../customPipes';
 import { RoleDto, PartialTypedRoleDto } from './dto';
+import { ControllerInterface } from '../utils/interfaces';
+import { role } from '@prisma/client';
 
 @Controller('role')
-export class RolesController {
+export class RolesController
+  implements ControllerInterface<RoleDto, PartialTypedRoleDto, role>
+{
   constructor(private readonly rolesService: RolesService) {}
 
   @Post('create')
@@ -54,6 +58,8 @@ export class RolesController {
     return await this.rolesService.findAll();
   }
 
+  async getPage() {}
+
   @Patch('update')
   @HttpCode(HttpStatus.OK)
   async update(
@@ -65,7 +71,7 @@ export class RolesController {
 
   @Delete('delete')
   @HttpCode(HttpStatus.OK)
-  async remove(@Query('id', ParseIntPipe) id: number) {
+  async delete(@Query('id', ParseIntPipe) id: number) {
     return await this.rolesService.delete(id);
   }
 }
