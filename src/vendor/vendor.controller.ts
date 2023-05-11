@@ -15,10 +15,13 @@ import { VendorService } from './vendor.service';
 import { VendorDto, PartialTypedVendor } from './dto';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { ParseStringPipe } from '../customPipes';
-import { Prisma } from '@prisma/client';
+import ControllerInterface from 'src/utils/interfaces/ControllerInterface';
+import { vendor } from '@prisma/client';
 
 @Controller('agent/vendor')
-export class VendorController {
+export class VendorController
+  implements ControllerInterface<VendorDto, PartialTypedVendor, vendor>
+{
   constructor(private readonly vendorService: VendorService) {}
 
   @Post('create')
