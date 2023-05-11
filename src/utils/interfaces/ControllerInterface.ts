@@ -1,4 +1,4 @@
-interface ControllerInterface<D, U, P> {
+export interface ControllerInterface<D, U, P> {
   create(dto: D): Promise<P>;
   findOne(id: number): Promise<P>;
   findSearch(search: string): Promise<P[] | []>;
@@ -7,5 +7,3 @@ interface ControllerInterface<D, U, P> {
   update(id: number, dto: U): Promise<P>;
   delete(id: number): Promise<P>;
 }
-
-export default ControllerInterface;

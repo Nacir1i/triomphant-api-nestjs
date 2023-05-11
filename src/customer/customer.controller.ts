@@ -15,7 +15,7 @@ import {
 import { ParseStringPipe } from '../customPipes';
 import { CustomerService } from './customer.service';
 import { CustomerDto, PartialTypedCustomer } from './dto';
-import ControllerInterface from 'src/utils/interfaces/ControllerInterface';
+import { ControllerInterface } from '../utils/interfaces';
 import { customer } from '@prisma/client';
 
 @Controller('agent/customer')

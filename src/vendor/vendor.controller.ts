@@ -15,7 +15,7 @@ import { VendorService } from './vendor.service';
 import { VendorDto, PartialTypedVendor } from './dto';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { ParseStringPipe } from '../customPipes';
-import ControllerInterface from 'src/utils/interfaces/ControllerInterface';
+import { ControllerInterface } from '../utils/interfaces';
 import { vendor } from '@prisma/client';
 
 @Controller('agent/vendor')
