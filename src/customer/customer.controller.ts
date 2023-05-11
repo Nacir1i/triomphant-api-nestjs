@@ -15,9 +15,13 @@ import {
 import { ParseStringPipe } from '../customPipes';
 import { CustomerService } from './customer.service';
 import { CustomerDto, PartialTypedCustomer } from './dto';
+import ControllerInterface from 'src/utils/interfaces/ControllerInterface';
+import { customer } from '@prisma/client';
 
 @Controller('agent/customer')
-export class CustomerController {
+export class CustomerController
+  implements ControllerInterface<CustomerDto, PartialTypedCustomer, customer>
+{
   constructor(private customerService: CustomerService) {}
 
   @Post('create')
