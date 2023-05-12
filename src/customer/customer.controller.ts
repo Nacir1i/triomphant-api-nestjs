@@ -12,7 +12,7 @@ import {
   Delete,
   Param,
 } from '@nestjs/common';
-import { ParseStringPipe } from '../customPipes';
+import { ParseStringPipe } from '../utils/customPipes';
 import { CustomerService } from './customer.service';
 import { CustomerDto, PartialTypedCustomer } from './dto';
 import { ControllerInterface } from '../utils/interfaces';

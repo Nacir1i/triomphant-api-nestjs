@@ -14,7 +14,7 @@ import {
 import { VendorService } from './vendor.service';
 import { VendorDto, PartialTypedVendor } from './dto';
 import { ParseIntPipe } from '@nestjs/common/pipes';
-import { ParseStringPipe } from '../customPipes';
+import { ParseStringPipe } from '../utils/customPipes';
 import { ControllerInterface } from '../utils/interfaces';
 import { vendor } from '@prisma/client';
 

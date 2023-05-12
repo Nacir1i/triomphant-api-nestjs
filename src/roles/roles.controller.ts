@@ -13,7 +13,7 @@ import {
   ParseIntPipe,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
-import { ParseStringPipe } from '../customPipes';
+import { ParseStringPipe } from '../utils/customPipes';
 import { RoleDto, PartialTypedRoleDto } from './dto';
 import { ControllerInterface } from '../utils/interfaces';
 import { role } from '@prisma/client';
