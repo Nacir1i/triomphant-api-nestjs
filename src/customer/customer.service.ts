@@ -2,9 +2,12 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CustomerDto, PartialTypedCustomer } from './dto';
 import { customer, Prisma } from '@prisma/client';
+import { ServiceInterface } from '../utils/interfaces';
 
 @Injectable()
-export class CustomerService {
+export class CustomerService
+  implements ServiceInterface<CustomerDto, PartialTypedCustomer, customer>
+{
   constructor(private prismaService: PrismaService) {}
 
   async create(dto: CustomerDto): Promise<customer> {
