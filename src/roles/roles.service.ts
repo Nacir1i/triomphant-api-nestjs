@@ -6,9 +6,12 @@ import {
 import { RoleDto, PartialTypedRoleDto } from './dto';
 import { role, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import { ServiceInterface } from '../utils/interfaces';
 
 @Injectable()
-export class RolesService {
+export class RolesService
+  implements ServiceInterface<RoleDto, PartialTypedRoleDto, role>
+{
   constructor(private prismaService: PrismaService) {}
 
   async create(dto: RoleDto): Promise<role> {
@@ -65,6 +68,10 @@ export class RolesService {
         is_deleted: false,
       },
     });
+  }
+
+  getPage(page: number, limit: number): object {
+    return {};
   }
 
   async update(id: number, dto: PartialTypedRoleDto) {

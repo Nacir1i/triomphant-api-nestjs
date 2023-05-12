@@ -1,6 +1,6 @@
 export interface ServiceInterface<D, U, P> {
   create(dto: D): Promise<P>;
-  findOne(id: number): Promise<P>;
+  findOne(id: number): Promise<P | null>;
   findSearch(search: string): Promise<P[] | []>;
   findAll(): Promise<P[] | []>;
   getPage(page: number, limit: number): object;
