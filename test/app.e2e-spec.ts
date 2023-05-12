@@ -33,12 +33,10 @@ describe('App e2e testing', () => {
 
   describe('Roles', () => {
     describe('POST: role/create', () => {
-      const roleDto: PartialTypedRoleDto = {
-        id: 1,
+      const roleDto: RoleDto = {
         title: 'ADMIN',
       };
-      const roleDto2: PartialTypedRoleDto = {
-        id: 2,
+      const roleDto2: RoleDto = {
         title: 'MANAGER',
       };
 
