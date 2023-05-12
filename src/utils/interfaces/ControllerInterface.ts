@@ -1,9 +1,9 @@
 export interface ControllerInterface<D, U, P> {
-  create(dto: D): Promise<P>;
-  findOne(id: number): Promise<P>;
-  findSearch(search: string): Promise<P[] | []>;
-  findAll(): Promise<P[] | []>;
-  getPage(page: number, limit: number): object;
-  update(id: number, dto: U): Promise<P>;
-  delete(id: number): Promise<P>;
+  create(dto: D): any;
+  findOne(id: number): any;
+  findSearch(search: string): any;
+  findAll(): any;
+  getPage(page: number, limit: number): any;
+  update(id: number, dto: U): any;
+  delete(id: number): any;
 }
