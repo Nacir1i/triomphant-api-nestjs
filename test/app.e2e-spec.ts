@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import * as pactum from 'pactum';
 import { AppModule } from '../src/app.module';
 import { LoginDto, SignupDto } from '../src/auth/dto';
-import { PartialTypedRoleDto, RoleDto } from 'src/roles/dto';
+import { RoleDto } from 'src/roles/dto';
 import { CustomerDto, PartialTypedCustomer } from 'src/customer/dto';
 import { VendorDto, PartialTypedVendor } from 'src/vendor/dto';
 
@@ -333,7 +333,13 @@ describe('App e2e testing', () => {
     });
 
     describe('GET: agent/customer/findOne/{id}', () => {
-      it('should throw bad request exception-', () => {
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .get('/agent/customer/findOne/{findOne}')
+          .expectStatus(400);
+      });
+      it('should throw bad request exception', () => {
         return pactum
           .spec()
           .get('/agent/customer/findOne/{findOne}')
@@ -710,6 +716,187 @@ describe('App e2e testing', () => {
           .spec()
           .delete('/agent/vendor/delete/{id}')
           .withPathParams('id', 2)
+          .expectStatus(200);
+      });
+    });
+  });
+
+  describe('Employee', () => {
+    describe('GET: agent/employee/findOne', () => {
+      it('should throw bad request exception (field type error)', () => {
+        return pactum
+          .spec()
+          .get('/agent/employee/findOne/{findOne}')
+          .withPathParams('findOne', 'test')
+          .expectStatus(400);
+      });
+      it('should throw bad request exception (missing id)', () => {
+        return pactum
+          .spec()
+          .get('/agent/employee/findOne/{findOne}')
+          .expectStatus(400);
+      });
+      it('should throw not found exception', () => {
+        return pactum
+          .spec()
+          .get('/agent/employee/findOne/{findOne}')
+          .withPathParams('findOne', 99)
+          .expectStatus(404);
+      });
+      it('should return employee object', () => {
+        return pactum
+          .spec()
+          .get('/agent/employee/findOne/{findOne}')
+          .withPathParams('findOne', 1)
+          .expectStatus(200);
+      });
+    });
+
+    describe('GET: agent/employee/findSearch', () => {
+      describe('GET: agent/employee/findSearch', () => {
+        it('should throw bad request exception (missing search)', () => {
+          return pactum
+            .spec()
+            .get('/agent/employee/findSearch/{findSearch}')
+            .expectStatus(400);
+        });
+        it('should throw bad request exception (search type error)', () => {
+          return pactum
+            .spec()
+            .get('/agent/employee/findSearch/{findSearch}')
+            .withPathParams('findSearch', 'test')
+            .expectStatus(400);
+        });
+        it('should return array of employees objects', () => {
+          return pactum
+            .spec()
+            .get('/agent/employee/findSearch/{findSearch}')
+            .withPathParams('findSearch', 'admin')
+            .expectStatus(200);
+        });
+      });
+    });
+
+    describe('GET: agent/employee/getPage?page=X&limit=X', () => {
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .get('/agent/employee/getPage')
+          .withQueryParams({
+            page: 1,
+          })
+          .expectStatus(400);
+      });
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .get('/agent/employee/getPage')
+          .withQueryParams({
+            limit: 10,
+          })
+          .expectStatus(400);
+      });
+      it('should return array of employees', () => {
+        return pactum
+          .spec()
+          .get('/agent/employee/getPage')
+          .withQueryParams({
+            page: 1,
+            limit: 10,
+          })
+          .expectStatus(200);
+      });
+    });
+
+    describe('PATCH: agent/employee/update/{id}', () => {
+      const signupDto: SignupDto = {
+        username: 'admin',
+        password: 'admin',
+        firstName: 'Updated',
+        lastName: 'Updated',
+        roleId: 1,
+        imageUrl: '1',
+        recruitedAt: '2023-04-26T00:26:01.344Z',
+        birthDate: '2023-04-26T00:26:01.344Z',
+        salary: 69420,
+        status: 1,
+        contactInformation: {
+          phone: 'fsdfsdf',
+          email: 'dfsdff@sdfd.fsdf',
+          address: 'dfsdff@sdfd.fsdf',
+          honorific: 'dfsdff@sdfd.fsdf',
+          emergency: false,
+        },
+        bankInformation: {
+          name: 'bank',
+          number: 'djqksndjkqsd',
+          rib: 'kkldf',
+          ice: 'ksmdf',
+          swift: 'kfmsdkmlfsdf',
+        },
+      };
+
+      it('should throw bad request exception', () => {
+        return pactum.spec().patch('/agent/employee/update').expectStatus(400);
+      });
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .patch('/agent/employee/update')
+          .withQueryParams({ id: 1 })
+          .expectStatus(400);
+      });
+      it('should throw bad request exception', () => {
+        return pactum
+          .spec()
+          .patch('/agent/employee/update')
+          .withBody(signupDto)
+          .expectStatus(400);
+      });
+      it('should not found exception', () => {
+        return pactum
+          .spec()
+          .patch('/agent/employee/update')
+          .withQueryParams({ id: 999 })
+          .withBody(signupDto)
+          .expectStatus(404);
+      });
+      it('should update employee', () => {
+        return pactum
+          .spec()
+          .patch('/agent/employee/update')
+          .withQueryParams({ id: 1 })
+          .withBody(signupDto)
+          .expectStatus(200);
+      });
+    });
+
+    describe('DELETE: agent/employee/delete/{id}', () => {
+      it('should throw a bad  request exception', () => {
+        return pactum
+          .spec()
+          .delete('/agent/employee/delete/{id}')
+          .expectStatus(400);
+      });
+      it('should throw bad exception', () => {
+        return pactum
+          .spec()
+          .delete('/agent/employee/delete/{id}')
+          .withPathParams('id', 'test')
+          .expectStatus(400);
+      });
+      it('should throw not found exception', () => {
+        return pactum
+          .spec()
+          .delete('/agent/employee/delete/{id}')
+          .withPathParams('id', 99)
+          .expectStatus(404);
+      });
+      it('should delete a employee', () => {
+        return pactum
+          .spec()
+          .delete('/agent/employee/delete/{id}')
+          .withPathParams('id', 1)
           .expectStatus(200);
       });
     });
