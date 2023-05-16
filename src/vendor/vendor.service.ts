@@ -36,7 +36,7 @@ export class VendorService
         },
         logs: {
           create: {
-            content: `Vendor ${dto.firstName} ${dto.lastName} create successfully`,
+            title: `Vendor ${dto.firstName} ${dto.lastName} create successfully`,
           },
         },
       },
@@ -154,7 +154,7 @@ export class VendorService
           },
           logs: {
             create: {
-              content: 'Vendor updated successfully',
+              title: 'Vendor updated successfully',
             },
           },
         },

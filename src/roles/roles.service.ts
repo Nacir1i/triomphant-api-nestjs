@@ -46,16 +46,9 @@ export class RolesService
   async findSearch(search: string): Promise<role[] | []> {
     const role = await this.prismaService.role.findMany({
       where: {
-        AND: [
-          {
-            title: {
-              contains: search,
-            },
-          },
-          {
-            is_deleted: false,
-          },
-        ],
+        title: {
+          contains: search,
+        },
       },
     });
 
@@ -63,11 +56,7 @@ export class RolesService
   }
 
   async findAll() {
-    return await this.prismaService.role.findMany({
-      where: {
-        is_deleted: false,
-      },
-    });
+    return await this.prismaService.role.findMany();
   }
 
   getPage(page: number, limit: number): object {
@@ -102,9 +91,7 @@ export class RolesService
         where: {
           id: id,
         },
-        data: {
-          is_deleted: true,
-        },
+        data: {},
       });
 
       return role;

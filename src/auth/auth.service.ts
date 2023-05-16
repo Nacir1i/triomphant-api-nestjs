@@ -24,9 +24,9 @@ export class AuthService {
   ) {}
 
   async login(dto: LoginDto): Promise<object | null> {
-    const user = await this.prismaService.user.findUnique({
+    const user = await this.prismaService.user.findFirst({
       where: {
-        username: dto.username,
+        username: dto.password,
       },
     });
 
@@ -74,7 +74,7 @@ export class AuthService {
           },
           logs: {
             create: {
-              content: 'User created successfully',
+              title: 'User created successfully',
             },
           },
         },
