@@ -13,9 +13,9 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto, PartialTypedUser } from './dto';
-import { ControllerInterface } from 'src/utils/interfaces';
+import { ControllerInterface } from '../utils/interfaces';
 import { user } from '@prisma/client';
-import { ParseStringPipe } from 'src/utils/customPipes';
+import { ParseStringPipe } from '../utils/customPipes';
 
 @Controller('user')
 export class UserController
@@ -27,22 +27,25 @@ export class UserController
 
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
-  async findOne(id: number) {}
+  async findOne(id: number) {
+    const user = await this.userService.findOne(id);
+
+    if (!user) {
+      throw new NotFoundException(`User#${id} not found`);
+    }
+  }
 
   @Get('findOne/:search')
   @HttpCode(HttpStatus.OK)
-  async findSearch(@Param('search', ParseStringPipe) search: string) {}
+  async findSearch(@Param('search', ParseStringPipe) search: string) {
+    return await this.userService.findSearch(search);
+  }
 
   @Get('findAll')
   @HttpCode(HttpStatus.OK)
-  async findAll() {}
-
-  @Patch('update')
-  @HttpCode(HttpStatus.OK)
-  async update(
-    @Query('id', ParseIntPipe) id: number,
-    @Body() dto: PartialTypedUser,
-  ) {}
+  async findAll() {
+    return await this.userService.findAll();
+  }
 
   @Get('getPage')
   @HttpCode(HttpStatus.OK)
@@ -50,12 +53,21 @@ export class UserController
     @Query('page', ParseIntPipe) page: number,
     @Query('limit', ParseIntPipe) limit: number,
   ) {
-    throw new Error('Method not implemented.');
+    return await this.userService.getPage(page, limit);
+  }
+
+  @Patch('update')
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Query('id', ParseIntPipe) id: number,
+    @Body() dto: PartialTypedUser,
+  ) {
+    return await this.userService.update(id, dto);
   }
 
   @Delete('delete/:id')
   @HttpCode(HttpStatus.OK)
   async delete(@Param('id', ParseIntPipe) id: number) {
-    throw new Error('Method not implemented.');
+    return await this.userService.delete(id);
   }
 }

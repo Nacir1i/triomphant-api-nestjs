@@ -3,20 +3,24 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
 }
 
 model appointment {
   id                  Int      @id @default(autoincrement())
+  status              Int
   title               String
   due_date            DateTime @default(now())
   created_at          DateTime @default(now())
-  status              Int
+  is_deleted          Boolean  @default(false)
   category_id         Int
-  customer_id         Int?
   order_id            Int?
+  customer_id         Int?
   delivery_invoice_id Int?
+
+  logs appointment_log[]
 
   category         invoice_category  @relation(fields: [category_id], references: [id])
   order            order?            @relation(fields: [order_id], references: [id])
@@ -27,6 +31,18 @@ model appointment {
   @@index([delivery_invoice_id])
   @@index([category_id])
   @@index([customer_id])
+}
+
+model appointment_log {
+  id             Int      @id @default(autoincrement())
+  appointment_id Int
+  title          String
+  changes        String   @default("")
+  created_at     DateTime @default(now())
+
+  appointment appointment @relation(fields: [appointment_id], references: [id])
+
+  @@index([appointment_id])
 }
 
 model bank_information {
@@ -62,8 +78,9 @@ model cost_modifier {
   is_discount_percentage Boolean
   tax                    Int
 
-  quotes quote[]
-  orders order[]
+  quotes          quote[]
+  orders          order[]
+  vendor_invoices vendor_invoice[]
 }
 
 model customer {
@@ -89,8 +106,9 @@ model customer {
 
 model customer_log {
   id          Int      @id @default(autoincrement())
-  content     String
   customer_id Int
+  title       String
+  changes     String   @default("")
   created_at  DateTime @default(now())
 
   customer customer @relation(fields: [customer_id], references: [id])
@@ -99,38 +117,51 @@ model customer_log {
 }
 
 model delivery_invoice {
-  id          Int      @id @default(autoincrement())
-  title       String
-  note        String?
-  created_at  DateTime @default(now())
-  status      Int
-  order_id    Int      @unique
-  category_id Int
-  is_deleted  Boolean  @default(false)
+  id         Int      @id @default(autoincrement())
+  title      String
+  note       String?
+  created_at DateTime @default(now())
+  status     Int
+  order_id   Int      @unique
+  // category_id Int?
+  is_deleted Boolean  @default(false)
 
-  category invoice_category @relation(fields: [category_id], references: [id])
-  orders   order            @relation(fields: [order_id], references: [id])
+  // category invoice_category? @relation(fields: [category_id], references: [id])
+  orders order @relation(fields: [order_id], references: [id])
 
-  products       delivery_invoice_product[]
+  materials      delivery_invoice_material[]
   employees      delivery_invoice_user[]
   manual_content manual_delivery_invoice_content[]
   appointments   appointment[]
+  logs           delivery_invoice_log[]
 
-  @@index([category_id])
+  // @@index([category_id])
 }
 
-model delivery_invoice_product {
+model delivery_invoice_log {
+  id                  Int      @id @default(autoincrement())
+  delivery_invoice_id Int
+  title               String
+  changes             String   @default("")
+  created_at          DateTime @default(now())
+
+  delivery_invoice delivery_invoice @relation(fields: [delivery_invoice_id], references: [id])
+
+  @@index([delivery_invoice_id])
+}
+
+model delivery_invoice_material {
   id                  Int @id @default(autoincrement())
   quantity            Int
   remaining           Int
   delivery_invoice_id Int
-  product_id          Int
+  material_id         Int
 
   delivery_invoice delivery_invoice @relation(fields: [delivery_invoice_id], references: [id])
-  product          product          @relation(fields: [product_id], references: [id])
+  material         material         @relation(fields: [material_id], references: [id])
 
   @@index([delivery_invoice_id])
-  @@index([product_id])
+  @@index([material_id])
 }
 
 model delivery_invoice_user {
@@ -150,10 +181,10 @@ model invoice_category {
   title      String?
   created_at DateTime? @default(now())
 
-  quotes            quote[]
-  orders            order[]
-  delivery_invoices delivery_invoice[]
-  appointmrnts      appointment[]
+  quotes       quote[]
+  orders       order[]
+  // delivery_invoices delivery_invoice[]
+  appointmrnts appointment[]
 }
 
 model location {
@@ -162,6 +193,7 @@ model location {
   address String
 
   products product[]
+  material material[]
 }
 
 model manual_delivery_invoice_content {
@@ -212,8 +244,43 @@ model manual_quote_content {
   @@index([quote_id])
 }
 
+model material {
+  id                 Int     @id @default(autoincrement())
+  sku                String  @default("")
+  price              Float
+  title              String
+  category_id        Int?
+  description        String?
+  quantity           Int?
+  quantity_threshold Int?
+  location_id        Int?
+  is_deleted         Boolean @default(false)
+
+  delivery_invoices delivery_invoice_material[]
+  logs              material_log[]
+
+  location location?           @relation(fields: [location_id], references: [id])
+  category inventory_category? @relation(fields: [category_id], references: [id])
+
+  @@index([location_id])
+  @@index([category_id])
+}
+
+model material_log {
+  id          Int      @id @default(autoincrement())
+  material_id Int
+  title       String
+  changes     String   @default("")
+  created_at  DateTime @default(now())
+
+  material material @relation(fields: [material_id], references: [id])
+
+  @@index([material_id])
+}
+
 model order {
   id               Int       @id @default(autoincrement())
+  ref              String    @unique @default(uuid())
   title            String
   paid             Float     @default(0)
   price            Float
@@ -240,10 +307,23 @@ model order {
   packages         order_package[]
   payments         order_payment[]
   appointments     appointment[]
+  logs             order_log[]
 
   @@index([category_id])
   @@index([customer_id])
   @@index([cost_modifier_id])
+}
+
+model order_log {
+  id         Int      @id @default(autoincrement())
+  order_id   Int
+  title      String
+  changes    String   @default("")
+  created_at DateTime @default(now())
+
+  order order @relation(fields: [order_id], references: [id])
+
+  @@index([order_id])
 }
 
 model order_package {
@@ -315,10 +395,24 @@ model Renamedpackage {
   services       package_service[]
   quotes         quote_package[]
   orders         order_package[]
-  category       inventory_category       @relation(fields: [category_id], references: [id])
+  logs           package_log[]
+
+  category inventory_category @relation(fields: [category_id], references: [id])
 
   @@index([category_id])
   @@map("package")
+}
+
+model package_log {
+  id         Int      @id @default(autoincrement())
+  package_id Int
+  title      String
+  changes    String   @default("")
+  created_at DateTime @default(now())
+
+  package Renamedpackage @relation(fields: [package_id], references: [id])
+
+  @@index([package_id])
 }
 
 model package_product {
@@ -358,36 +452,55 @@ model product {
   quantity_threshold Int?
   location_id        Int?
   category_id        Int
+  vendor_invoice_id  Int?
   created_at         DateTime @default(now())
   is_deleted         Boolean  @default(false)
 
   location location?          @relation(fields: [location_id], references: [id])
   category inventory_category @relation(fields: [category_id], references: [id])
 
-  packages          package_product[]
-  quotes            quote_product[]
-  orders            order_product[]
-  delivery_invoices delivery_invoice_product[]
+  packages       package_product[]
+  quotes         quote_product[]
+  orders         order_product[]
+  vendor_invoice vendor_invoice_product[]
+  logs           product_log[]
 
   @@index([location_id])
   @@index([category_id])
+  @@index([vendor_invoice_id])
+}
+
+model product_log {
+  id         Int      @id @default(autoincrement())
+  product_id Int
+  title      String
+  changes    String   @default("")
+  created_at DateTime @default(now())
+
+  product product @relation(fields: [product_id], references: [id])
+
+  @@index([product_id])
 }
 
 model inventory_category {
   id    Int    @id @default(autoincrement())
   title String
 
-  services service[]
-  packages Renamedpackage[]
-  products product[]
+  services  service[]
+  packages  Renamedpackage[]
+  products  product[]
+  materials material[]
 }
 
 model quote {
   id               Int      @id @default(autoincrement())
+  ref              String   @unique @default(uuid())
   price            Float
   title            String
   note             String?
   created_at       DateTime @default(now())
+  due_date         DateTime @default(now())
+  address          String   @default("")
   status           Int
   customer_id      Int
   cost_modifier_id Int
@@ -403,14 +516,28 @@ model quote {
   products       quote_product[]
   services       quote_service[]
   packages       quote_package[]
+  logs           quote_log[]
 
   @@index([customer_id])
   @@index([cost_modifier_id])
   @@index([category_id])
 }
 
+model quote_log {
+  id         Int      @id @default(autoincrement())
+  quote_id   Int
+  title      String
+  changes    String   @default("")
+  created_at DateTime @default(now())
+
+  quote quote @relation(fields: [quote_id], references: [id])
+
+  @@index([quote_id])
+}
+
 model quote_package {
   id         Int @id @default(autoincrement())
+  quantity   Int
   quote_id   Int
   package_id Int
 
@@ -436,6 +563,7 @@ model quote_product {
 
 model quote_service {
   id         Int @id @default(autoincrement())
+  quantity   Int
   quote_id   Int
   service_id Int
 
@@ -448,9 +576,8 @@ model quote_service {
 
 model role {
   id         Int      @id @default(autoincrement())
-  title      String   @unique
+  title      String
   created_at DateTime @default(now())
-  is_deleted Boolean  @default(false)
 
   employees user[]
 }
@@ -463,23 +590,37 @@ model service {
   price       Float
   created_at  DateTime @default(now())
   is_deleted  Boolean  @default(false)
+  category_id Int?
 
-  packages             package_service[]
-  quotes               quote_service[]
-  orders               order_service[]
-  inventory_category   inventory_category? @relation(fields: [inventory_categoryId], references: [id])
-  inventory_categoryId Int?
+  packages package_service[]
+  quotes   quote_service[]
+  orders   order_service[]
+  logs     service_log[]
 
-  @@index([inventory_categoryId])
+  category inventory_category? @relation(fields: [category_id], references: [id])
+
+  @@index([category_id])
+}
+
+model service_log {
+  id         Int      @id @default(autoincrement())
+  service_id Int
+  title      String
+  changes    String   @default("")
+  created_at DateTime @default(now())
+
+  service service @relation(fields: [service_id], references: [id])
+
+  @@index([service_id])
 }
 
 model user {
   id                     Int       @id @default(autoincrement())
-  username               String    @unique
+  username               String
   password               String
   first_name             String
   last_name              String
-  image_url              String?
+  image_url              String?   @db.MediumText
   created_at             DateTime  @default(now())
   recruited_at           DateTime? @default(now())
   birth_date             DateTime? @default(now())
@@ -505,8 +646,9 @@ model user {
 
 model user_log {
   id         Int      @id @default(autoincrement())
-  content    String
   user_id    Int
+  title      String
+  changes    String   @default("")
   created_at DateTime @default(now())
 
   user user @relation(fields: [user_id], references: [id])
@@ -542,7 +684,8 @@ model vendor {
   contact_information contact_information @relation(fields: [contact_information_id], references: [id])
   bank_information    bank_information?   @relation(fields: [bank_information_id], references: [id])
 
-  logs vendor_log[]
+  logs            vendor_log[]
+  vendor_invoices vendor_invoice[]
 
   @@index([contact_information_id])
   @@index([bank_information_id])
@@ -550,11 +693,48 @@ model vendor {
 
 model vendor_log {
   id         Int      @id @default(autoincrement())
-  content    String
   vendor_id  Int
+  title      String
+  changes    String   @default("")
   created_at DateTime @default(now())
 
   vendor vendor @relation(fields: [vendor_id], references: [id])
 
   @@index([vendor_id])
+}
+
+model vendor_invoice {
+  id               Int      @id @default(autoincrement())
+  title            String
+  paid             Float    @default(0)
+  price            Float
+  note             String?
+  created_at       DateTime @default(now())
+  status           Int
+  vendor_id        Int
+  cost_modifier_id Int
+  is_deleted       Boolean  @default(false)
+
+  vendor        vendor        @relation(fields: [vendor_id], references: [id])
+  cost_modifier cost_modifier @relation(fields: [cost_modifier_id], references: [id])
+
+  products vendor_invoice_product[]
+
+  @@index([vendor_id])
+  @@index([cost_modifier_id])
+}
+
+model vendor_invoice_product {
+  id                Int @id @default(autoincrement())
+  product_id        Int
+  vendor_invoice_id Int
+
+  quantity  Int
+  remaining Int
+
+  product        product        @relation(fields: [product_id], references: [id])
+  vendor_invoice vendor_invoice @relation(fields: [vendor_invoice_id], references: [id])
+
+  @@index([product_id])
+  @@index([vendor_invoice_id])
 }
