@@ -18,7 +18,7 @@ import { LocationDto, UpdateLocationDto } from './dto';
 import { location } from '@prisma/client';
 import { ParseStringPipe } from 'src/utils/customPipes';
 
-@Controller('locations')
+@Controller('category/locations')
 export class LocationsController
   implements ControllerInterface<LocationDto, UpdateLocationDto, location>
 {
