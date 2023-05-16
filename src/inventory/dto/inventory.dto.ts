@@ -5,5 +5,5 @@ export class InventoryDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly firstName: string;
+  readonly title: string;
 }
