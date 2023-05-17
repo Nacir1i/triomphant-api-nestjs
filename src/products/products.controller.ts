@@ -1,4 +1,18 @@
-import { Controller } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  NotFoundException,
+  Body,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
+  Query,
+  Delete,
+  Param,
+} from '@nestjs/common';
+import { ParseStringPipe } from '../utils/customPipes';
 import { ProductsService } from './products.service';
 import { ControllerInterface } from 'src/utils/interfaces';
 import { ProductDto, UpdateProductDto } from './dto';
@@ -10,31 +24,55 @@ export class ProductsController
 {
   constructor(private readonly productsService: ProductsService) {}
 
-  create(dto: ProductDto) {
-    throw new Error('Method not implemented.');
+  @Post('create')
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() dto: ProductDto) {
+    return await this.productsService.create(dto);
   }
 
-  findOne(id: number) {
-    throw new Error('Method not implemented.');
+  @Get('findOne/:id')
+  @HttpCode(HttpStatus.OK)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const product = await this.productsService.findOne(id);
+
+    if (!product) {
+      throw new NotFoundException(`Product ${id} not found`);
+    }
   }
 
-  findSearch(search: string) {
-    throw new Error('Method not implemented.');
+  @Get('findSearch/:search')
+  @HttpCode(HttpStatus.OK)
+  async findSearch(@Param('search', ParseStringPipe) search: string) {
+    return await this.productsService.findSearch(search);
   }
 
-  findAll() {
-    throw new Error('Method not implemented.');
+  @Get('findAll')
+  @HttpCode(HttpStatus.OK)
+  async findAll() {
+    return await this.productsService.findAll();
   }
 
-  getPage(page: number, limit: number) {
-    throw new Error('Method not implemented.');
+  @Get('getPage')
+  @HttpCode(HttpStatus.OK)
+  async getPage(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return await this.productsService.getPage(page, limit);
   }
 
-  update(id: number, dto: UpdateProductDto) {
-    throw new Error('Method not implemented.');
+  @Patch('update')
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Query('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateProductDto,
+  ) {
+    return await this.productsService.update(id, dto);
   }
 
-  delete(id: number) {
-    throw new Error('Method not implemented.');
+  @Delete('delete/:id')
+  @HttpCode(HttpStatus.OK)
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return await this.productsService.delete(id);
   }
 }
