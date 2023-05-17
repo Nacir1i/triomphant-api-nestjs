@@ -1,7 +1,21 @@
-import { Controller } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  NotFoundException,
+  Body,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
+  Query,
+  Delete,
+  Param,
+} from '@nestjs/common';
 import { InvoiceCategoryService } from './invoiceCategory.service';
 import { ControllerInterface } from 'src/utils/interfaces';
 import { InvoiceCategoryDto, UpdateInvoiceCategory } from './dto';
+import { ParseStringPipe } from '../utils/customPipes';
 import { inventory_category } from '@prisma/client';
 
 @Controller('invoice-category')
@@ -17,28 +31,50 @@ export class InvoiceCategoryController
     private readonly invoiceCategoryService: InvoiceCategoryService,
   ) {}
 
-  create(dto: InvoiceCategoryDto) {
-    throw new Error('Method not implemented.');
+  @Post('create')
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() dto: InvoiceCategoryDto) {
+    return await this.invoiceCategoryService.create(dto);
   }
 
-  findOne(id: number) {
-    throw new Error('Method not implemented.');
+  @Get('findOne/:id')
+  @HttpCode(HttpStatus.OK)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const invoiceCategory = await this.invoiceCategoryService.findOne(id);
+
+    if (!invoiceCategory) {
+      throw new NotFoundException(`Invoice #${id} category not found`);
+    }
   }
 
-  findSearch(search: string) {
-    throw new Error('Method not implemented.');
+  @Get('findSearch/:search')
+  @HttpCode(HttpStatus.OK)
+  async findSearch(@Param('search', ParseStringPipe) search: string) {
+    return await this.invoiceCategoryService.findSearch(search);
   }
 
-  findAll() {
-    throw new Error('Method not implemented.');
+  @Get('findAll')
+  @HttpCode(HttpStatus.OK)
+  async findAll() {
+    return await this.invoiceCategoryService.findAll();
   }
 
-  getPage(page: number, limit: number) {
-    throw new Error('Method not implemented.');
+  @Get('getPage')
+  @HttpCode(HttpStatus.OK)
+  async getPage(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return await this.invoiceCategoryService.getPage(page, limit);
   }
 
-  update(id: number, dto: UpdateInvoiceCategory) {
-    throw new Error('Method not implemented.');
+  @Patch('update')
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Query('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateInvoiceCategory,
+  ) {
+    return await this.invoiceCategoryService.update(id, dto);
   }
 
   delete(id: number) {
