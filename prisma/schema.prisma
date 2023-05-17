@@ -177,9 +177,9 @@ model delivery_invoice_user {
 }
 
 model invoice_category {
-  id         Int       @id @default(autoincrement())
-  title      String?
-  created_at DateTime? @default(now())
+  id         Int      @id @default(autoincrement())
+  title      String
+  created_at DateTime @default(now())
 
   quotes       quote[]
   orders       order[]

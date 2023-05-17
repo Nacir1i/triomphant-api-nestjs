@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ServiceInterface } from '../utils/interfaces';
 import { InvoiceCategoryDto, UpdateInvoiceCategory } from './dto';
-import { invoice_category } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
+import { invoice_category, Prisma } from '@prisma/client';
 
 @Injectable()
 export class InvoiceCategoryService
@@ -12,28 +13,77 @@ export class InvoiceCategoryService
       invoice_category
     >
 {
-  create(dto: InvoiceCategoryDto): Promise<invoice_category> {
-    throw new Error('Method not implemented.');
+  constructor(private readonly prismaService: PrismaService) {}
+
+  async create(dto: InvoiceCategoryDto): Promise<invoice_category> {
+    return await this.prismaService.invoice_category.create({
+      data: {
+        title: dto.title,
+      },
+    });
   }
 
-  findOne(id: number): Promise<invoice_category> {
-    throw new Error('Method not implemented.');
+  async findOne(id: number): Promise<invoice_category> {
+    return await this.prismaService.invoice_category.findUnique({
+      where: {
+        id: id,
+      },
+    });
   }
 
-  findSearch(search: string): Promise<[] | invoice_category[]> {
-    throw new Error('Method not implemented.');
+  async findSearch(search: string): Promise<[] | invoice_category[]> {
+    return await this.prismaService.invoice_category.findMany({
+      where: {
+        title: {
+          contains: search,
+        },
+      },
+    });
   }
 
-  findAll(): Promise<[] | invoice_category[]> {
-    throw new Error('Method not implemented.');
+  async findAll(): Promise<[] | invoice_category[]> {
+    return await this.prismaService.invoice_category.findMany();
   }
 
-  getPage(page: number, limit: number): object {
-    throw new Error('Method not implemented.');
+  async getPage(page: number, limit: number): Promise<object> {
+    const startIndex = (page - 1) * limit;
+
+    const invoiceCategories =
+      await this.prismaService.inventory_category.findMany({
+        skip: startIndex,
+        take: limit,
+      });
+
+    const findAll = (await this.findAll()).length;
+
+    const pagesCount = findAll <= limit ? 1 : Math.ceil(findAll / limit);
+    const remainingPages = pagesCount - page >= 0 ? pagesCount - page : 0;
+
+    return { invoiceCategories, pagesCount, remainingPages };
   }
 
-  update(id: number, dto: UpdateInvoiceCategory): Promise<invoice_category> {
-    throw new Error('Method not implemented.');
+  async update(
+    id: number,
+    dto: UpdateInvoiceCategory,
+  ): Promise<invoice_category> {
+    try {
+      return await this.prismaService.invoice_category.update({
+        where: {
+          id: id,
+        },
+        data: {
+          title: dto.title,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(error.meta?.cause);
+        }
+      }
+
+      throw error;
+    }
   }
 
   delete(id: number): Promise<invoice_category> {
