@@ -18,7 +18,7 @@ import { InvoiceCategoryDto, UpdateInvoiceCategory } from './dto';
 import { ParseStringPipe } from '../utils/customPipes';
 import { inventory_category } from '@prisma/client';
 
-@Controller('invoice-category')
+@Controller('category/invoice')
 export class InvoiceCategoryController
   implements
     ControllerInterface<
