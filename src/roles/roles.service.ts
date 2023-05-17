@@ -59,7 +59,7 @@ export class RolesService
     return await this.prismaService.role.findMany();
   }
 
-  getPage(page: number, limit: number): object {
+  async getPage(page: number, limit: number): Promise<object> {
     return {};
   }
 

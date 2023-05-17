@@ -40,20 +40,20 @@ export class ProductDto {
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  readonly quantityThreshold: string;
+  readonly quantityThreshold: number;
 
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  readonly location_id: string;
+  readonly locationId: number;
 
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  readonly category_id: string;
+  readonly categoryId: number;
 
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  readonly vendor_invoice_id: string;
+  readonly vendor_invoiceId: number;
 }
