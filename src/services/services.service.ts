@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ServiceInterface } from 'src/utils/interfaces';
 import { ServiceDto, UpdateServiceDTO } from './dto';
-import { service } from '@prisma/client';
+import { service, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
@@ -10,31 +10,120 @@ export class ServicesService
 {
   constructor(private readonly prismaService: PrismaService) {}
 
-  create(dto: ServiceDto): Promise<service> {
-    throw new Error('Method not implemented.');
+  async create(dto: ServiceDto): Promise<service> {
+    return await this.prismaService.service.create({
+      data: {
+        title: dto.title,
+        description: dto.description,
+        cost: dto.cost,
+        price: dto.price,
+
+        category: {
+          connect: {
+            id: dto.categoryId,
+          },
+        },
+      },
+    });
   }
 
-  findOne(id: number): Promise<service> {
-    throw new Error('Method not implemented.');
+  async findOne(id: number): Promise<service> {
+    return await this.prismaService.service.findFirst({
+      where: {
+        AND: [
+          {
+            id: id,
+          },
+          {
+            is_deleted: false,
+          },
+        ],
+      },
+    });
   }
 
-  findSearch(search: string): Promise<[] | service[]> {
-    throw new Error('Method not implemented.');
+  async findSearch(search: string): Promise<[] | service[]> {
+    return await this.prismaService.service.findMany({
+      where: {
+        OR: [{}],
+        AND: {
+          is_deleted: false,
+        },
+      },
+    });
   }
 
-  findAll(): Promise<[] | service[]> {
-    throw new Error('Method not implemented.');
+  async findAll(): Promise<[] | service[]> {
+    return await this.prismaService.service.findMany();
   }
 
-  getPage(page: number, limit: number): Promise<object> {
-    throw new Error('Method not implemented.');
+  async getPage(page: number, limit: number): Promise<object> {
+    const startIndex = (page - 1) * limit;
+
+    const services = await this.prismaService.service.findMany({
+      skip: startIndex,
+      take: limit,
+      where: {
+        is_deleted: false,
+      },
+    });
+
+    const findAll = (await this.findAll()).length;
+
+    const pagesCount = findAll <= limit ? 1 : Math.ceil(findAll / limit);
+    const remainingPages = pagesCount - page >= 0 ? pagesCount - page : 0;
+
+    return { services, pagesCount, remainingPages };
   }
 
-  update(id: number, dto: UpdateServiceDTO): Promise<service> {
-    throw new Error('Method not implemented.');
+  async update(id: number, dto: UpdateServiceDTO): Promise<service> {
+    try {
+      return await this.prismaService.service.update({
+        where: {
+          id: id,
+        },
+        data: {
+          title: dto.title,
+          description: dto.description,
+          cost: dto.cost,
+          price: dto.price,
+
+          category: {
+            connect: {
+              id: dto.categoryId,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(error.meta?.cause);
+        }
+      }
+
+      throw error;
+    }
   }
 
-  delete(id: number): Promise<service> {
-    throw new Error('Method not implemented.');
+  async delete(id: number): Promise<service> {
+    try {
+      return await this.prismaService.service.update({
+        where: {
+          id: id,
+        },
+        data: {
+          is_deleted: true,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(error.meta?.cause);
+        }
+      }
+
+      throw error;
+    }
   }
 }
