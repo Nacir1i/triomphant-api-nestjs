@@ -11,6 +11,7 @@ import { InventoryModule } from './inventory/inventory.module';
 import { InvoiceCategoryModule } from './invoiceCategory/invoiceCategory.module';
 import { ProductsModule } from './products/products.module';
 import { ServicesModule } from './services/services.module';
+import { PackagesModule } from './packages/packages.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { ServicesModule } from './services/services.module';
     InvoiceCategoryModule,
     ProductsModule,
     ServicesModule,
+    PackagesModule,
   ],
 })
 export class AppModule {}
