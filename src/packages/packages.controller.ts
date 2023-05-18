@@ -1,4 +1,18 @@
-import { Controller } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  NotFoundException,
+  Body,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
+  Query,
+  Delete,
+  Param,
+} from '@nestjs/common';
+import { ParseStringPipe } from '../utils/customPipes';
 import { PackagesService } from './packages.service';
 import { PackageDto, UpdatePackageDto } from './dto';
 import { Renamedpackage } from '@prisma/client';
@@ -10,31 +24,57 @@ export class PackagesController
 {
   constructor(private readonly packagesService: PackagesService) {}
 
-  create(dto: PackageDto) {
-    throw new Error('Method not implemented.');
+  @Post('create')
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() dto: PackageDto) {
+    return await this.packagesService.create(dto);
   }
 
-  findOne(id: number) {
-    throw new Error('Method not implemented.');
+  @Get('findOne/:id')
+  @HttpCode(HttpStatus.OK)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const pack = await this.packagesService.findOne(id);
+
+    if (!pack) {
+      throw new NotFoundException(`Package ${id} not found`);
+    }
+
+    return pack;
   }
 
-  findSearch(search: string) {
-    throw new Error('Method not implemented.');
+  @Get('findSearch/:search')
+  @HttpCode(HttpStatus.OK)
+  async findSearch(@Param('search', ParseStringPipe) search: string) {
+    return await this.packagesService.findSearch(search);
   }
 
-  findAll() {
-    throw new Error('Method not implemented.');
+  @Get('findAll')
+  @HttpCode(HttpStatus.OK)
+  async findAll() {
+    return await this.packagesService.findAll();
   }
 
-  getPage(page: number, limit: number) {
-    throw new Error('Method not implemented.');
+  @Get('getPage')
+  @HttpCode(HttpStatus.OK)
+  async getPage(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return await this.packagesService.getPage(page, limit);
   }
 
-  update(id: number, dto: UpdatePackageDto) {
-    throw new Error('Method not implemented.');
+  @Patch('update')
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Query('id', ParseIntPipe) id: number,
+    @Body() dto: UpdatePackageDto,
+  ) {
+    return await this.packagesService.update(id, dto);
   }
 
-  delete(id: number) {
-    throw new Error('Method not implemented.');
+  @Delete('delete/:id')
+  @HttpCode(HttpStatus.OK)
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return await this.packagesService.delete(id);
   }
 }
