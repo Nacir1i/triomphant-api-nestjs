@@ -15,6 +15,11 @@ export class MaterialDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
+  readonly sku: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
   readonly description: string;
 
   @ApiProperty()
@@ -25,15 +30,15 @@ export class MaterialDto {
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly quantity_threshold: number;
+  readonly quantityThreshold: number;
 
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly category_id: number;
+  readonly categoryId: number;
 
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly location_id: number;
+  readonly locationId: number;
 }
