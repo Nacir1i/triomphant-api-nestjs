@@ -11,8 +11,8 @@ import { Type } from 'class-transformer';
 import {
   ProductObjectDto,
   ServiceObjectDto,
-  MaterialObjectDto,
-} from 'src/utils/common';
+  ManualPackageContentDto,
+} from '../../utils/common';
 
 export class PackageDto {
   @ApiProperty()
@@ -50,6 +50,6 @@ export class PackageDto {
   @IsArray()
   @IsOptional()
   @ValidateNested({ each: true })
-  @Type(() => MaterialObjectDto)
-  readonly materials: MaterialObjectDto[];
+  @Type(() => ManualPackageContentDto)
+  readonly manualContent: ManualPackageContentDto[];
 }

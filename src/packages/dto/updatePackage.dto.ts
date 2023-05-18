@@ -1,32 +1,29 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsArray, ValidateNested, IsOptional } from 'class-validator';
+import { ValidateNested, IsOptional } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
   UpdateProductCollectionDto,
   UpdateServiceCollectionDto,
-  UpdateMaterialCollectionDto,
+  UpdateManualContentDto,
 } from 'src/utils/common';
 import { PackageDto } from './package.dto';
 
 export class UpdatePackageDto extends PartialType(PackageDto) {
   @ApiProperty()
-  @IsArray()
   @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => UpdateProductCollectionDto)
-  readonly updateProducts: UpdateProductCollectionDto[];
+  readonly updateProducts: UpdateProductCollectionDto;
 
   @ApiProperty()
-  @IsArray()
   @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => UpdateServiceCollectionDto)
-  readonly updateService: UpdateServiceCollectionDto[];
+  readonly updateServices: UpdateServiceCollectionDto;
 
   @ApiProperty()
-  @IsArray()
   @IsOptional()
   @ValidateNested({ each: true })
-  @Type(() => UpdateMaterialCollectionDto)
-  readonly updateMaterials: UpdateMaterialCollectionDto[];
+  @Type(() => UpdateManualContentDto)
+  readonly updateManualContent: UpdateManualContentDto;
 }
