@@ -144,11 +144,11 @@ export class UpdateMaterialCollectionDto {
 export function constructUpdateMany(array: GenericObjectDto[], name: string) {
   return array.map((field: GenericObjectDto) => {
     const query = {
-      where: {},
+      where: {
+        [name]: field.id,
+      },
       data: { quantity: field.quantity },
     };
-
-    query.where[name] = field.id;
 
     return query;
   });
