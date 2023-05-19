@@ -1,4 +1,18 @@
-import { Controller } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  NotFoundException,
+  Body,
+  HttpCode,
+  HttpStatus,
+  ParseIntPipe,
+  Query,
+  Delete,
+  Param,
+} from '@nestjs/common';
+import { ParseStringPipe } from '../utils/customPipes';
 import { QuotesService } from './quotes.service';
 import { ControllerInterface } from '../utils/interfaces';
 import { QuoteDto, UpdateQuoteDto } from './dto';
@@ -10,31 +24,57 @@ export class QuotesController
 {
   constructor(private readonly quotesService: QuotesService) {}
 
-  create(dto: QuoteDto) {
-    throw new Error('Method not implemented.');
+  @Post('create')
+  @HttpCode(HttpStatus.CREATED)
+  async create(@Body() dto: QuoteDto) {
+    return await this.quotesService.create(dto);
   }
 
-  findOne(id: number) {
-    throw new Error('Method not implemented.');
+  @Get('findOne/:id')
+  @HttpCode(HttpStatus.OK)
+  async findOne(@Param('id', ParseIntPipe) id: number) {
+    const quote = await this.quotesService.findOne(id);
+
+    if (!quote) {
+      throw new NotFoundException(`Quotes ${id} was not found`);
+    }
+
+    return quote;
   }
 
-  findSearch(search: string) {
-    throw new Error('Method not implemented.');
+  @Get('findSearch/:search')
+  @HttpCode(HttpStatus.OK)
+  async findSearch(@Param('search', ParseStringPipe) search: string) {
+    return this.quotesService.findSearch(search);
   }
 
-  findAll() {
-    throw new Error('Method not implemented.');
+  @Get('findAll')
+  @HttpCode(HttpStatus.OK)
+  async findAll() {
+    return this.quotesService.findAll();
   }
 
-  getPage(page: number, limit: number) {
-    throw new Error('Method not implemented.');
+  @Get('getPage')
+  @HttpCode(HttpStatus.OK)
+  async getPage(
+    @Query('page', ParseIntPipe) page: number,
+    @Query('limit', ParseIntPipe) limit: number,
+  ) {
+    return await this.quotesService.getPage(page, limit);
   }
 
-  update(id: number, dto: UpdateQuoteDto) {
-    throw new Error('Method not implemented.');
+  @Patch('update')
+  @HttpCode(HttpStatus.OK)
+  async update(
+    @Query('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateQuoteDto,
+  ) {
+    return await this.quotesService.update(id, dto);
   }
 
-  delete(id: number) {
-    throw new Error('Method not implemented.');
+  @Delete('delete/:id')
+  @HttpCode(HttpStatus.OK)
+  async delete(@Param('id', ParseIntPipe) id: number) {
+    return await this.quotesService.delete(id);
   }
 }

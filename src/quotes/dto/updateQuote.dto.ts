@@ -10,32 +10,6 @@ import {
   ServiceObjectDto,
 } from '../../utils/common';
 
-export class UpdateQuoteDto extends PartialType(QuoteDto) {
-  @ApiProperty()
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => UpdateProductCollectionDto)
-  readonly updateProducts: UpdateProductCollectionDto;
-
-  @ApiProperty()
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => UpdateServiceCollectionDto)
-  readonly updateServices: UpdateServiceCollectionDto;
-
-  @ApiProperty()
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => UpdateManualContentDto)
-  readonly updateManualContent: UpdateManualContentDto;
-
-  @ApiProperty()
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => UpdatePackageCollectionDto)
-  readonly updatePackage: UpdatePackageCollectionDto;
-}
-
 class UpdatePackageCollectionDto {
   @ApiProperty()
   @IsArray()
@@ -91,4 +65,30 @@ class UpdateServiceCollectionDto {
   @IsArray()
   @IsOptional()
   readonly delete: { service_id: number; quote_id: number }[];
+}
+
+export class UpdateQuoteDto extends PartialType(QuoteDto) {
+  @ApiProperty()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateProductCollectionDto)
+  readonly updateProducts: UpdateProductCollectionDto;
+
+  @ApiProperty()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateServiceCollectionDto)
+  readonly updateServices: UpdateServiceCollectionDto;
+
+  @ApiProperty()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => UpdateManualContentDto)
+  readonly updateManualContent: UpdateManualContentDto;
+
+  @ApiProperty()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => UpdatePackageCollectionDto)
+  readonly updatePackage: UpdatePackageCollectionDto;
 }

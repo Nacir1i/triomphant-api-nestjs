@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { ServiceInterface } from '../utils/interfaces';
 import { QuoteDto, UpdateQuoteDto } from './dto';
-import { quote } from '@prisma/client';
+import { Prisma, quote } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { constructUpdateMany } from '../utils/common';
 
@@ -128,82 +128,102 @@ export class QuotesService
   }
 
   async update(id: number, dto: UpdateQuoteDto): Promise<quote> {
-    const updateManyProductQuery = constructUpdateMany(
-      dto.updateProducts.update,
-      'product_id',
-    );
-    const updateManyServiceQuery = constructUpdateMany(
-      dto.updateServices.update,
-      'service_id',
-    );
-    const updateManyPackageQuery = constructUpdateMany(
-      dto.updateServices.update,
-      'package_id',
-    );
-    const updateManyManualQuery = constructUpdateMany(
-      dto.updateManualContent.update,
-      'id',
-    );
+    try {
+      const updateManyProductQuery = constructUpdateMany(
+        dto.updateProducts.update,
+        'product_id',
+      );
+      const updateManyServiceQuery = constructUpdateMany(
+        dto.updateServices.update,
+        'service_id',
+      );
+      const updateManyPackageQuery = constructUpdateMany(
+        dto.updateServices.update,
+        'package_id',
+      );
+      const updateManyManualQuery = constructUpdateMany(
+        dto.updateManualContent.update,
+        'id',
+      );
 
-    return await this.prismaService.quote.update({
-      where: {
-        id: id,
-      },
-      data: {
-        title: dto.title,
-        price: dto.price,
-        note: dto.note,
-        address: dto.address,
-        ref: dto.ref,
-        due_date: dto.due_date,
-        status: dto.status,
+      return await this.prismaService.quote.update({
+        where: {
+          id: id,
+        },
+        data: {
+          title: dto.title,
+          price: dto.price,
+          note: dto.note,
+          address: dto.address,
+          ref: dto.ref,
+          due_date: dto.due_date,
+          status: dto.status,
 
-        customer: {
-          connect: {
-            id: dto.customerId,
+          customer: {
+            connect: {
+              id: dto.customerId,
+            },
+          },
+          category: {
+            connect: {
+              id: dto.categoryId,
+            },
+          },
+
+          cost_modifier: {
+            update: {
+              shipping: dto.costModifier.shipping,
+              discount: dto.costModifier.discount,
+              is_discount_percentage: dto.costModifier.is_discount_percentage,
+              tax: dto.costModifier.tax,
+            },
+          },
+          products: {
+            create: dto.updateProducts.add,
+            updateMany: updateManyProductQuery,
+            deleteMany: dto.updateProducts.delete,
+          },
+          services: {
+            create: dto.updateServices.add,
+            updateMany: updateManyServiceQuery,
+            deleteMany: dto.updateServices.delete,
+          },
+          packages: {
+            create: dto.updatePackage.add,
+            updateMany: updateManyPackageQuery,
+            deleteMany: dto.updatePackage.delete,
           },
         },
-        category: {
-          connect: {
-            id: dto.categoryId,
-          },
-        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(error.meta?.cause);
+        }
+      }
 
-        cost_modifier: {
-          update: {
-            shipping: dto.costModifier.shipping,
-            discount: dto.costModifier.discount,
-            is_discount_percentage: dto.costModifier.is_discount_percentage,
-            tax: dto.costModifier.tax,
-          },
-        },
-        products: {
-          create: dto.updateProducts.add,
-          updateMany: updateManyProductQuery,
-          deleteMany: dto.updateProducts.delete,
-        },
-        services: {
-          create: dto.updateServices.add,
-          updateMany: updateManyServiceQuery,
-          deleteMany: dto.updateServices.delete,
-        },
-        packages: {
-          create: dto.updatePackage.add,
-          updateMany: updateManyPackageQuery,
-          deleteMany: dto.updatePackage.delete,
-        },
-      },
-    });
+      throw error;
+    }
   }
 
   async delete(id: number): Promise<quote> {
-    return await this.prismaService.quote.update({
-      where: {
-        id: id,
-      },
-      data: {
-        is_deleted: true,
-      },
-    });
+    try {
+      return await this.prismaService.quote.update({
+        where: {
+          id: id,
+        },
+        data: {
+          is_deleted: true,
+        },
+      });
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === 'P2025') {
+          throw new NotFoundException(error.meta?.cause);
+        }
+      }
+
+      throw error;
+    }
   }
 }
