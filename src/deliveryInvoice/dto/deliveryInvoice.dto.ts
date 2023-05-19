@@ -30,14 +30,14 @@ export class MaterialsDto {
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  readonly materialId: number;
+  readonly material_id: number;
 }
 
 export class EmployeesDto {
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  readonly userId: number;
+  readonly user_id: number;
 }
 
 export class DeliveryInvoiceDto {

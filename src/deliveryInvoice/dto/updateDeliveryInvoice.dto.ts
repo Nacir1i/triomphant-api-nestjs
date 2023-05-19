@@ -49,17 +49,17 @@ export class UpdateDeliveryInvoiceDto extends PartialType(DeliveryInvoiceDto) {
   @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => UpdateMaterialDto)
-  readonly updateMaterial: UpdateMaterialDto[];
+  readonly updateMaterial: UpdateMaterialDto;
 
   @IsArray()
   @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => UpdateEmployeeDto)
-  readonly updateEmployee: UpdateEmployeeDto[];
+  readonly updateEmployee: UpdateEmployeeDto;
 
   @IsArray()
   @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => UpdateManualContentDto)
-  readonly updateManualContent: UpdateManualContentDto[];
+  readonly updateManualContent: UpdateManualContentDto;
 }
