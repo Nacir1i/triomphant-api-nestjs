@@ -19,7 +19,7 @@ export class UserService
   }
 
   async findOne(id: number): Promise<user> {
-    return await this.prismaService.user.findFirst({
+    const user = await this.prismaService.user.findFirst({
       where: {
         AND: [
           {
@@ -33,6 +33,25 @@ export class UserService
       include: {
         contact_information: true,
         bank_information: true,
+      },
+    });
+
+    delete user.password;
+
+    return user;
+  }
+
+  async findByUserName(userName: string): Promise<user> {
+    return await this.prismaService.user.findFirst({
+      where: {
+        AND: [
+          {
+            username: userName,
+          },
+          {
+            is_deleted: false,
+          },
+        ],
       },
     });
   }

@@ -27,15 +27,17 @@ export class UserController
 
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
-  async findOne(id: number) {
+  async findOne(@Param('id', ParseIntPipe) id: number) {
     const user = await this.userService.findOne(id);
 
     if (!user) {
       throw new NotFoundException(`User#${id} not found`);
     }
+
+    return user;
   }
 
-  @Get('findOne/:search')
+  @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {
     return await this.userService.findSearch(search);

@@ -14,16 +14,13 @@ import * as argon from 'argon2';
 @Injectable()
 export class AuthService {
   constructor(
-    private jwtService: JwtService,
-    private prismaService: PrismaService,
+    private readonly jwtService: JwtService,
+    private readonly prismaService: PrismaService,
+    private readonly userService: UserService,
   ) {}
 
   async login(dto: LoginDto): Promise<object | null> {
-    const user = await this.prismaService.user.findFirst({
-      where: {
-        username: dto.password,
-      },
-    });
+    const user = await this.userService.findByUserName(dto.username);
 
     if (!user) {
       throw new UnauthorizedException('Credentials provided are wrong');
