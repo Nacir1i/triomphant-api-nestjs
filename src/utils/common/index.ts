@@ -7,6 +7,7 @@ import {
   IsNumber,
   IsArray,
   ValidateNested,
+  IsBoolean,
 } from 'class-validator';
 import { Type } from 'class-transformer';
 
@@ -53,6 +54,13 @@ export class ServiceObjectDto extends BaseObjectDto {
   @IsNumber()
   @IsNotEmpty()
   readonly service_id: number;
+}
+
+export class PackageContentDto extends BaseObjectDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly packageId: number;
 }
 
 export class ManualPackageContentDto extends BaseManualContentDto {
@@ -139,6 +147,28 @@ export class UpdateMaterialCollectionDto {
   @IsArray()
   @IsOptional()
   readonly delete: number[];
+}
+
+export class CostModifierDto {
+  @ApiProperty()
+  @IsNumber()
+  @IsNotEmpty()
+  readonly shipping: number;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsNotEmpty()
+  readonly discount: number;
+
+  @ApiProperty()
+  @IsBoolean()
+  @IsNotEmpty()
+  readonly is_discount_percentage: boolean;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsNotEmpty()
+  readonly tax: number;
 }
 
 export function constructUpdateMany(array: GenericObjectDto[], name: string) {
