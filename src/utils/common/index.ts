@@ -67,14 +67,21 @@ export class ManualPackageContentDto extends BaseManualContentDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly packageId: number;
+  readonly package_id: number;
 }
 
 export class ManualQuoteContentDto extends BaseManualContentDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly quoteId: number;
+  readonly quote_id: number;
+}
+
+export class ManualOrderContentDto extends BaseManualContentDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly order_id: number;
 }
 
 export class MaterialObjectDto extends BaseManualContentDto {
