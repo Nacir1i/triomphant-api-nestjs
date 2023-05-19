@@ -13,6 +13,7 @@ import {
   ServiceObjectDto,
   ManualOrderContentDto,
   CostModifierDto,
+  PackageObjectDto,
 } from '../../utils/common';
 
 export class OrderDto {
@@ -64,6 +65,11 @@ export class OrderDto {
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
+  readonly quoteId: number;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsNotEmpty()
   readonly categoryId: number;
 
   @ApiProperty()
@@ -83,6 +89,13 @@ export class OrderDto {
   @ValidateNested({ each: true })
   @Type(() => ServiceObjectDto)
   readonly services: ServiceObjectDto[];
+
+  @ApiProperty()
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => PackageObjectDto)
+  readonly packages: PackageObjectDto[];
 
   @IsArray()
   @IsOptional()

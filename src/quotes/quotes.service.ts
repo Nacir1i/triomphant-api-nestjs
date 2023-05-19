@@ -116,6 +116,7 @@ export class QuotesService
         services: true,
         packages: true,
         manual_content: true,
+        category: true,
       },
     });
 
@@ -192,6 +193,11 @@ export class QuotesService
             create: dto.updatePackage.add,
             updateMany: updateManyPackageQuery,
             deleteMany: dto.updatePackage.delete,
+          },
+          manual_content: {
+            create: dto.updateManualContent.add,
+            updateMany: updateManyManualQuery,
+            deleteMany: dto.updateManualContent.delete,
           },
         },
       });
