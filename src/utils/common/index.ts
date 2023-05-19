@@ -56,11 +56,11 @@ export class ServiceObjectDto extends BaseObjectDto {
   readonly service_id: number;
 }
 
-export class PackageContentDto extends BaseObjectDto {
+export class PackageObjectDto extends BaseObjectDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly packageId: number;
+  readonly package_id: number;
 }
 
 export class ManualPackageContentDto extends BaseManualContentDto {
@@ -68,6 +68,13 @@ export class ManualPackageContentDto extends BaseManualContentDto {
   @IsString()
   @IsNotEmpty()
   readonly packageId: number;
+}
+
+export class ManualQuoteContentDto extends BaseManualContentDto {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly quoteId: number;
 }
 
 export class MaterialObjectDto extends BaseManualContentDto {
@@ -93,42 +100,6 @@ export class UpdateManualContentDto {
   @IsArray()
   @IsOptional()
   readonly delete: { id: number; package_id: number }[];
-}
-
-export class UpdateProductCollectionDto {
-  @IsArray()
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => ProductObjectDto)
-  readonly add: ProductObjectDto[];
-
-  @IsArray()
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => GenericObjectDto)
-  readonly update: GenericObjectDto[];
-
-  @IsArray()
-  @IsOptional()
-  readonly delete: { product_id: number; package_id: number }[];
-}
-
-export class UpdateServiceCollectionDto {
-  @IsArray()
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => ServiceObjectDto)
-  readonly add: ServiceObjectDto[];
-
-  @IsArray()
-  @IsOptional()
-  @ValidateNested({ each: true })
-  @Type(() => GenericObjectDto)
-  readonly update: GenericObjectDto[];
-
-  @IsArray()
-  @IsOptional()
-  readonly delete: { service_id: number; package_id: number }[];
 }
 
 export class UpdateMaterialCollectionDto {

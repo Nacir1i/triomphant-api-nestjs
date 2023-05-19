@@ -12,7 +12,8 @@ import {
   CostModifierDto,
   GenericObjectDto,
   ManualPackageContentDto,
-  PackageContentDto,
+  ManualQuoteContentDto,
+  PackageObjectDto,
   ProductObjectDto,
   ServiceObjectDto,
 } from '../../utils/common';
@@ -32,6 +33,11 @@ export class QuoteDto {
   @IsString()
   @IsOptional()
   readonly note: string;
+
+  @ApiProperty()
+  @IsString()
+  @IsOptional()
+  readonly ref: string;
 
   @ApiProperty()
   @IsString()
@@ -59,11 +65,10 @@ export class QuoteDto {
   readonly categoryId: number;
 
   @ApiProperty()
-  @IsArray()
   @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => CostModifierDto)
-  readonly costModifier: CostModifierDto[];
+  readonly costModifier: CostModifierDto;
 
   @ApiProperty()
   @IsArray()
@@ -83,6 +88,13 @@ export class QuoteDto {
   @IsArray()
   @IsOptional()
   @ValidateNested({ each: true })
-  @Type(() => PackageContentDto)
-  readonly packageContent: PackageContentDto[];
+  @Type(() => PackageObjectDto)
+  readonly packages: PackageObjectDto[];
+
+  @ApiProperty()
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => ManualQuoteContentDto)
+  readonly manualContent: ManualQuoteContentDto[];
 }

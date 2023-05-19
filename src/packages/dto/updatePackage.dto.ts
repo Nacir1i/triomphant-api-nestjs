@@ -1,9 +1,10 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { ValidateNested, IsOptional } from 'class-validator';
+import { ValidateNested, IsOptional, IsArray } from 'class-validator';
 import { Type } from 'class-transformer';
 import {
-  UpdateProductCollectionDto,
-  UpdateServiceCollectionDto,
+  GenericObjectDto,
+  ProductObjectDto,
+  ServiceObjectDto,
   UpdateManualContentDto,
 } from 'src/utils/common';
 import { PackageDto } from './package.dto';
@@ -26,4 +27,40 @@ export class UpdatePackageDto extends PartialType(PackageDto) {
   @ValidateNested({ each: true })
   @Type(() => UpdateManualContentDto)
   readonly updateManualContent: UpdateManualContentDto;
+}
+
+export class UpdateProductCollectionDto {
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => ProductObjectDto)
+  readonly add: ProductObjectDto[];
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => GenericObjectDto)
+  readonly update: GenericObjectDto[];
+
+  @IsArray()
+  @IsOptional()
+  readonly delete: { product_id: number; package_id: number }[];
+}
+
+export class UpdateServiceCollectionDto {
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceObjectDto)
+  readonly add: ServiceObjectDto[];
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => GenericObjectDto)
+  readonly update: GenericObjectDto[];
+
+  @IsArray()
+  @IsOptional()
+  readonly delete: { service_id: number; package_id: number }[];
 }

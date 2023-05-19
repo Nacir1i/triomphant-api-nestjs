@@ -4,10 +4,10 @@ import { QuoteDto } from './quote.dto';
 import { Type } from 'class-transformer';
 import {
   GenericObjectDto,
-  PackageContentDto,
-  UpdateServiceCollectionDto,
-  UpdateProductCollectionDto,
+  PackageObjectDto,
   UpdateManualContentDto,
+  ProductObjectDto,
+  ServiceObjectDto,
 } from '../../utils/common';
 
 export class UpdateQuoteDto extends PartialType(QuoteDto) {
@@ -33,16 +33,16 @@ export class UpdateQuoteDto extends PartialType(QuoteDto) {
   @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => UpdatePackageCollectionDto)
-  readonly updatePackageContent: UpdatePackageCollectionDto;
+  readonly updatePackage: UpdatePackageCollectionDto;
 }
 
-export class UpdatePackageCollectionDto {
+class UpdatePackageCollectionDto {
   @ApiProperty()
   @IsArray()
   @IsOptional()
   @ValidateNested({ each: true })
-  @Type(() => PackageContentDto)
-  readonly add: PackageContentDto[];
+  @Type(() => PackageObjectDto)
+  readonly add: PackageObjectDto[];
 
   @ApiProperty()
   @IsArray()
@@ -55,4 +55,40 @@ export class UpdatePackageCollectionDto {
   @IsArray()
   @IsOptional()
   readonly delete: { quote_id: number; package_id: number }[];
+}
+
+class UpdateProductCollectionDto {
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => ProductObjectDto)
+  readonly add: ProductObjectDto[];
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => GenericObjectDto)
+  readonly update: GenericObjectDto[];
+
+  @IsArray()
+  @IsOptional()
+  readonly delete: { product_id: number; quote_id: number }[];
+}
+
+class UpdateServiceCollectionDto {
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => ServiceObjectDto)
+  readonly add: ServiceObjectDto[];
+
+  @IsArray()
+  @IsOptional()
+  @ValidateNested({ each: true })
+  @Type(() => GenericObjectDto)
+  readonly update: GenericObjectDto[];
+
+  @IsArray()
+  @IsOptional()
+  readonly delete: { service_id: number; quote_id: number }[];
 }
