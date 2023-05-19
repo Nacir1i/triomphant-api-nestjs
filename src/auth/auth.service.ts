@@ -4,15 +4,11 @@ import {
   NotFoundException,
   UnauthorizedException,
 } from '@nestjs/common';
-
-//Services:
 import { Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
-//DTO:
 import { SignupDto, LoginDto } from './dto';
-//3rd party:
 import * as argon from 'argon2';
 
 @Injectable()
@@ -20,7 +16,6 @@ export class AuthService {
   constructor(
     private jwtService: JwtService,
     private prismaService: PrismaService,
-    private userService: UserService,
   ) {}
 
   async login(dto: LoginDto): Promise<object | null> {
