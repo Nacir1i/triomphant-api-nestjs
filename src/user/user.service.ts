@@ -42,7 +42,7 @@ export class UserService
   }
 
   async findByUserName(userName: string): Promise<user> {
-    const user = await this.prismaService.user.findFirst({
+    return await this.prismaService.user.findFirst({
       where: {
         AND: [
           {
@@ -54,10 +54,6 @@ export class UserService
         ],
       },
     });
-
-    delete user.password;
-
-    return user;
   }
 
   async findSearch(search: string): Promise<[] | user[]> {

@@ -17,6 +17,9 @@ import { QuotesModule } from './quotes/quotes.module';
 import { OrdersModule } from './orders/orders.module';
 import { DeliveryInvoiceModule } from './deliveryInvoice/deliveryInvoice.module';
 import { AppointmentsModule } from './appointments/appointments.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AuthGuard } from './auth/auth.guard';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [
@@ -40,6 +43,13 @@ import { AppointmentsModule } from './appointments/appointments.module';
     OrdersModule,
     DeliveryInvoiceModule,
     AppointmentsModule,
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+    UserService,
   ],
 })
 export class AppModule {}
