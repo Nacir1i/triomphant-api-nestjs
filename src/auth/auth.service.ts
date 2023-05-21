@@ -38,61 +38,50 @@ export class AuthService {
   }
 
   async signup(dto: SignupDto): Promise<object | null> {
-    try {
-      const hash = await argon.hash(dto.password);
+    const hash = await argon.hash(dto.password);
 
-      const user = await this.prismaService.user.create({
-        data: {
-          username: dto.username,
-          password: hash,
-          first_name: dto.firstName,
-          last_name: dto.lastName,
-          image_url: dto.imageUrl,
-          recruited_at: dto.recruitedAt,
-          birth_date: dto.birthDate,
-          salary: dto.salary,
-          status: dto.status,
+    const user = await this.prismaService.user.create({
+      data: {
+        username: dto.username,
+        password: hash,
+        first_name: dto.firstName,
+        last_name: dto.lastName,
+        image_url: dto.imageUrl,
+        recruited_at: dto.recruitedAt,
+        birth_date: dto.birthDate,
+        salary: dto.salary,
+        status: dto.status,
 
-          role: {
-            connect: {
-              id: dto.roleId,
-            },
-          },
-          contact_information: {
-            create: dto.contactInformation,
-          },
-          bank_information: {
-            create: dto.bankInformation,
-          },
-          logs: {
-            create: {
-              title: 'User created successfully',
-            },
+        role: {
+          connect: {
+            id: dto.roleId,
           },
         },
-        select: {
-          username: true,
-          first_name: true,
-          last_name: true,
-          role: true,
-          contact_information: true,
-          bank_information: true,
+        contact_information: {
+          create: dto.contactInformation,
         },
-      });
+        bank_information: {
+          create: dto.bankInformation,
+        },
+        logs: {
+          create: {
+            title: 'User created successfully',
+          },
+        },
+      },
+      select: {
+        username: true,
+        first_name: true,
+        last_name: true,
+        role: true,
+        contact_information: true,
+        bank_information: true,
+      },
+    });
 
-      const token: string = await this.jwtService.signAsync(user);
+    const token: string = await this.jwtService.signAsync(user);
 
-      return { user, token };
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2002') {
-          throw new ForbiddenException('Credentials taken');
-        } else if (error.code === 'P2025') {
-          throw new NotFoundException('Role was not found');
-        }
-      }
-      throw error;
-    }
+    return { user, token };
   }
 
   async assignJwtToken(object: object) {

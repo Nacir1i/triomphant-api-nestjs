@@ -122,75 +122,56 @@ export class UserService
   }
 
   async update(id: number, dto: PartialTypedUser): Promise<user> {
-    try {
-      return await this.prismaService.user.update({
-        where: {
-          id: id,
+    return await this.prismaService.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        first_name: dto.firstName,
+        last_name: dto.lastName,
+        contact_information: {
+          update: {
+            email: dto.email,
+            phone: dto.phone,
+            address: dto.address,
+            honorific: dto.honorific,
+            emergency: dto.emergency,
+          },
         },
-        data: {
-          first_name: dto.firstName,
-          last_name: dto.lastName,
-          contact_information: {
+        bank_information: {
+          upsert: {
+            create: {
+              name: dto.name,
+              number: dto.number,
+              rib: dto.rib,
+              swift: dto.swift,
+              ice: dto.ice,
+            },
             update: {
-              email: dto.email,
-              phone: dto.phone,
-              address: dto.address,
-              honorific: dto.honorific,
-              emergency: dto.emergency,
-            },
-          },
-          bank_information: {
-            upsert: {
-              create: {
-                name: dto.name,
-                number: dto.number,
-                rib: dto.rib,
-                swift: dto.swift,
-                ice: dto.ice,
-              },
-              update: {
-                name: dto.name,
-                number: dto.number,
-                rib: dto.rib,
-                swift: dto.swift,
-                ice: dto.ice,
-              },
+              name: dto.name,
+              number: dto.number,
+              rib: dto.rib,
+              swift: dto.swift,
+              ice: dto.ice,
             },
           },
         },
-        include: {
-          contact_information: true,
-          bank_information: true,
-        },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+      },
+      include: {
+        contact_information: true,
+        bank_information: true,
+      },
+    });
   }
 
   async delete(id: number): Promise<user> {
-    try {
-      return await this.prismaService.user.update({
-        where: {
-          id: id,
-        },
-        data: {
-          is_deleted: true,
-        },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-      throw error;
-    }
+    return await this.prismaService.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
   }
 }

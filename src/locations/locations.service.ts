@@ -67,25 +67,15 @@ export class LocationsService
   }
 
   async update(id: number, dto: UpdateLocationDto): Promise<location> {
-    try {
-      return await this.prismaService.location.update({
-        where: {
-          id: id,
-        },
-        data: {
-          title: dto.title,
-          address: dto.address,
-        },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+    return await this.prismaService.location.update({
+      where: {
+        id: id,
+      },
+      data: {
+        title: dto.title,
+        address: dto.address,
+      },
+    });
   }
 
   delete(id: number): Promise<location> {

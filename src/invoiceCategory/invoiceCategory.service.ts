@@ -66,24 +66,14 @@ export class InvoiceCategoryService
     id: number,
     dto: UpdateInvoiceCategory,
   ): Promise<invoice_category> {
-    try {
-      return await this.prismaService.invoice_category.update({
-        where: {
-          id: id,
-        },
-        data: {
-          title: dto.title,
-        },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+    return await this.prismaService.invoice_category.update({
+      where: {
+        id: id,
+      },
+      data: {
+        title: dto.title,
+      },
+    });
   }
 
   delete(id: number): Promise<invoice_category> {

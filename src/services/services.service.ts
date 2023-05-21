@@ -77,53 +77,33 @@ export class ServicesService
   }
 
   async update(id: number, dto: UpdateServiceDTO): Promise<service> {
-    try {
-      return await this.prismaService.service.update({
-        where: {
-          id: id,
-        },
-        data: {
-          title: dto.title,
-          description: dto.description,
-          cost: dto.cost,
-          price: dto.price,
+    return await this.prismaService.service.update({
+      where: {
+        id: id,
+      },
+      data: {
+        title: dto.title,
+        description: dto.description,
+        cost: dto.cost,
+        price: dto.price,
 
-          category: {
-            connect: {
-              id: dto.categoryId,
-            },
+        category: {
+          connect: {
+            id: dto.categoryId,
           },
         },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+      },
+    });
   }
 
   async delete(id: number): Promise<service> {
-    try {
-      return await this.prismaService.service.update({
-        where: {
-          id: id,
-        },
-        data: {
-          is_deleted: true,
-        },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+    return await this.prismaService.service.update({
+      where: {
+        id: id,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
   }
 }

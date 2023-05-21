@@ -111,67 +111,47 @@ export class ProductsService
   }
 
   async update(id: number, dto: UpdateProductDto): Promise<product> {
-    try {
-      return await this.prismaService.product.update({
-        where: {
-          id: id,
-        },
-        data: {
-          cost: dto.cost,
-          price: dto.price,
-          title: dto.title,
-          description: dto.description,
-          barcode: dto.barcode,
-          sku: dto.sku,
-          quantity: dto.quantity,
-          quantity_threshold: dto.quantityThreshold,
+    return await this.prismaService.product.update({
+      where: {
+        id: id,
+      },
+      data: {
+        cost: dto.cost,
+        price: dto.price,
+        title: dto.title,
+        description: dto.description,
+        barcode: dto.barcode,
+        sku: dto.sku,
+        quantity: dto.quantity,
+        quantity_threshold: dto.quantityThreshold,
 
-          location: {
-            connect: {
-              id: dto.locationId,
-            },
-          },
-          category: {
-            connect: {
-              id: dto.categoryId,
-            },
-          },
-          vendor_invoice: {
-            connect: {
-              id: dto.vendor_invoiceId,
-            },
+        location: {
+          connect: {
+            id: dto.locationId,
           },
         },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+        category: {
+          connect: {
+            id: dto.categoryId,
+          },
+        },
+        vendor_invoice: {
+          connect: {
+            id: dto.vendor_invoiceId,
+          },
+        },
+      },
+    });
   }
 
   async delete(id: number): Promise<product> {
-    try {
-      return await this.prismaService.product.update({
-        where: {
-          id: id,
-        },
-        data: {
-          is_deleted: true,
-        },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+    return await this.prismaService.product.update({
+      where: {
+        id: id,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
   }
 }

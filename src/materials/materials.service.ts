@@ -95,60 +95,40 @@ export class MaterialsService
   }
 
   async update(id: number, dto: UpdateMaterialDto): Promise<material> {
-    try {
-      return await this.prismaService.material.update({
-        where: {
-          id: id,
-        },
-        data: {
-          title: dto.title,
-          price: dto.price,
-          sku: dto.sku,
-          description: dto.description,
-          quantity: dto.quantity,
-          quantity_threshold: dto.quantityThreshold,
+    return await this.prismaService.material.update({
+      where: {
+        id: id,
+      },
+      data: {
+        title: dto.title,
+        price: dto.price,
+        sku: dto.sku,
+        description: dto.description,
+        quantity: dto.quantity,
+        quantity_threshold: dto.quantityThreshold,
 
-          category: {
-            connect: {
-              id: dto.categoryId,
-            },
-          },
-          location: {
-            connect: {
-              id: dto.locationId,
-            },
+        category: {
+          connect: {
+            id: dto.categoryId,
           },
         },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+        location: {
+          connect: {
+            id: dto.locationId,
+          },
+        },
+      },
+    });
   }
 
   async delete(id: number): Promise<material> {
-    try {
-      return await this.prismaService.material.update({
-        where: {
-          id: id,
-        },
-        data: {
-          is_deleted: true,
-        },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+    return await this.prismaService.material.update({
+      where: {
+        id: id,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
   }
 }

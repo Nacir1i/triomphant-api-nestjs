@@ -125,69 +125,49 @@ export class VendorService
   }
 
   async update(id: number, dto: PartialTypedVendor): Promise<vendor> {
-    try {
-      return await this.prismaService.vendor.update({
-        where: {
-          id: id,
-        },
-        data: {
-          first_name: dto.firstName,
-          last_name: dto.lastName,
-          company_name: dto.companyName,
-          contact_information: {
-            create: {
-              email: dto.email,
-              phone: dto.phone,
-              address: dto.address,
-              honorific: dto.honorific,
-              emergency: dto.emergency,
-            },
-          },
-          bank_information: {
-            create: {
-              name: dto.name,
-              number: dto.number,
-              rib: dto.rib,
-              swift: dto.swift,
-              ice: dto.ice,
-            },
-          },
-          logs: {
-            create: {
-              title: 'Vendor updated successfully',
-            },
+    return await this.prismaService.vendor.update({
+      where: {
+        id: id,
+      },
+      data: {
+        first_name: dto.firstName,
+        last_name: dto.lastName,
+        company_name: dto.companyName,
+        contact_information: {
+          create: {
+            email: dto.email,
+            phone: dto.phone,
+            address: dto.address,
+            honorific: dto.honorific,
+            emergency: dto.emergency,
           },
         },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+        bank_information: {
+          create: {
+            name: dto.name,
+            number: dto.number,
+            rib: dto.rib,
+            swift: dto.swift,
+            ice: dto.ice,
+          },
+        },
+        logs: {
+          create: {
+            title: 'Vendor updated successfully',
+          },
+        },
+      },
+    });
   }
 
   async delete(id: number) {
-    try {
-      return await this.prismaService.vendor.update({
-        where: {
-          id: id,
-        },
-        data: {
-          is_deleted: true,
-        },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+    return await this.prismaService.vendor.update({
+      where: {
+        id: id,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
   }
 }

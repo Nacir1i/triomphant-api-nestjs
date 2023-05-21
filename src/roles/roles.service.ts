@@ -64,44 +64,19 @@ export class RolesService
   }
 
   async update(id: number, dto: PartialTypedRoleDto) {
-    try {
-      const role = await this.prismaService.role.update({
-        where: {
-          id: id,
-        },
-        data: {
-          title: dto.title,
-        },
-      });
+    const role = await this.prismaService.role.update({
+      where: {
+        id: id,
+      },
+      data: {
+        title: dto.title,
+      },
+    });
 
-      return role;
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException('Role was not found');
-        }
-      }
-      throw error;
-    }
+    return role;
   }
 
-  async delete(id: number) {
-    try {
-      const role = await this.prismaService.role.update({
-        where: {
-          id: id,
-        },
-        data: {},
-      });
-
-      return role;
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException('Role was not found');
-        }
-      }
-      throw error;
-    }
+  delete(id: number): Promise<role> {
+    throw new Error('Method not implemented.');
   }
 }

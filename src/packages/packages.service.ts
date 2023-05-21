@@ -111,68 +111,48 @@ export class PackagesService
       'id',
     );
 
-    try {
-      return await this.prismaService.renamedpackage.update({
-        where: {
-          id: id,
-        },
-        data: {
-          title: dto.title,
-          description: dto.description,
-          price: dto.price,
+    return await this.prismaService.renamedpackage.update({
+      where: {
+        id: id,
+      },
+      data: {
+        title: dto.title,
+        description: dto.description,
+        price: dto.price,
 
-          category: {
-            connect: {
-              id: dto.categoryId,
-            },
-          },
-
-          products: {
-            create: dto.updateProducts.add,
-            updateMany: updateManyProductQuery,
-            deleteMany: dto.updateProducts.delete,
-          },
-          services: {
-            create: dto.updateServices.add,
-            updateMany: updateManyServiceQuery,
-            deleteMany: dto.updateServices.delete,
-          },
-          manual_content: {
-            create: dto.updateManualContent.add,
-            updateMany: updateManyManualQuery,
-            deleteMany: dto.updateManualContent.delete,
+        category: {
+          connect: {
+            id: dto.categoryId,
           },
         },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
 
-      throw error;
-    }
+        products: {
+          create: dto.updateProducts.add,
+          updateMany: updateManyProductQuery,
+          deleteMany: dto.updateProducts.delete,
+        },
+        services: {
+          create: dto.updateServices.add,
+          updateMany: updateManyServiceQuery,
+          deleteMany: dto.updateServices.delete,
+        },
+        manual_content: {
+          create: dto.updateManualContent.add,
+          updateMany: updateManyManualQuery,
+          deleteMany: dto.updateManualContent.delete,
+        },
+      },
+    });
   }
 
   async delete(id: number): Promise<Renamedpackage> {
-    try {
-      return await this.prismaService.renamedpackage.update({
-        where: {
-          id: id,
-        },
-        data: {
-          is_deleted: true,
-        },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+    return await this.prismaService.renamedpackage.update({
+      where: {
+        id: id,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
   }
 }

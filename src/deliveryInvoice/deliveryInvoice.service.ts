@@ -106,80 +106,60 @@ export class DeliveryInvoiceService
     id: number,
     dto: UpdateDeliveryInvoiceDto,
   ): Promise<delivery_invoice> {
-    try {
-      const updateManyManualQuery = constructUpdateMany(
-        dto.updateManualContent.update,
-        'id',
-      );
-      const updateMaterialQuery = constructUpdateMany(
-        dto.updateManualContent.update,
-        'id',
-      );
-      const updateEmployeeQuery = constructUpdateMany(
-        dto.updateManualContent.update,
-        'user_id',
-      );
-      return await this.prismaService.delivery_invoice.update({
-        where: {
-          id: id,
-        },
-        data: {
-          title: dto.title,
-          note: dto.note,
-          status: dto.status,
+    const updateManyManualQuery = constructUpdateMany(
+      dto.updateManualContent.update,
+      'id',
+    );
+    const updateMaterialQuery = constructUpdateMany(
+      dto.updateManualContent.update,
+      'id',
+    );
+    const updateEmployeeQuery = constructUpdateMany(
+      dto.updateManualContent.update,
+      'user_id',
+    );
+    return await this.prismaService.delivery_invoice.update({
+      where: {
+        id: id,
+      },
+      data: {
+        title: dto.title,
+        note: dto.note,
+        status: dto.status,
 
-          orders: {
-            connect: {
-              id: dto.orderId,
-            },
-          },
-
-          materials: {
-            create: dto.updateMaterial.add,
-            updateMany: updateMaterialQuery,
-            deleteMany: dto.updateMaterial.delete,
-          },
-          manual_content: {
-            create: dto.updateManualContent.add,
-            updateMany: updateManyManualQuery,
-            deleteMany: dto.updateManualContent.delete,
-          },
-          employees: {
-            create: dto.updateEmployee.add,
-            updateMany: updateEmployeeQuery,
-            deleteMany: dto.updateEmployee.delete,
+        orders: {
+          connect: {
+            id: dto.orderId,
           },
         },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
 
-      throw error;
-    }
+        materials: {
+          create: dto.updateMaterial.add,
+          updateMany: updateMaterialQuery,
+          deleteMany: dto.updateMaterial.delete,
+        },
+        manual_content: {
+          create: dto.updateManualContent.add,
+          updateMany: updateManyManualQuery,
+          deleteMany: dto.updateManualContent.delete,
+        },
+        employees: {
+          create: dto.updateEmployee.add,
+          updateMany: updateEmployeeQuery,
+          deleteMany: dto.updateEmployee.delete,
+        },
+      },
+    });
   }
 
   async delete(id: number): Promise<delivery_invoice> {
-    try {
-      return await this.prismaService.delivery_invoice.update({
-        where: {
-          id: id,
-        },
-        data: {
-          is_deleted: true,
-        },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+    return await this.prismaService.delivery_invoice.update({
+      where: {
+        id: id,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
   }
 }
