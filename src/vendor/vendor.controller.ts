@@ -10,6 +10,7 @@ import {
   HttpCode,
   HttpStatus,
   NotFoundException,
+  UseInterceptors,
 } from '@nestjs/common';
 import { VendorService } from './vendor.service';
 import { VendorDto, PartialTypedVendor } from './dto';
@@ -17,6 +18,7 @@ import { ParseIntPipe } from '@nestjs/common/pipes';
 import { ParseStringPipe } from '../utils/customPipes';
 import { ControllerInterface } from '../utils/interfaces';
 import { vendor } from '@prisma/client';
+import { FindSearchInterceptor } from '../utils/interceptors';
 
 @Controller('agent/vendor')
 export class VendorController
@@ -42,6 +44,7 @@ export class VendorController
     return vendor;
   }
 
+  @UseInterceptors(FindSearchInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   findSearch(@Param('search', ParseStringPipe) search: string) {

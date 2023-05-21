@@ -9,7 +9,7 @@ import {
   HttpStatus,
   ParseIntPipe,
   Query,
-  Delete,
+  UseInterceptors,
   Param,
 } from '@nestjs/common';
 import { InvoiceCategoryService } from './invoiceCategory.service';
@@ -17,6 +17,7 @@ import { ControllerInterface } from '../utils/interfaces';
 import { InvoiceCategoryDto, UpdateInvoiceCategory } from './dto';
 import { ParseStringPipe } from '../utils/customPipes';
 import { inventory_category } from '@prisma/client';
+import { FindSearchInterceptor } from '../utils/interceptors';
 
 @Controller('category/invoice')
 export class InvoiceCategoryController
@@ -47,6 +48,7 @@ export class InvoiceCategoryController
     }
   }
 
+  @UseInterceptors(FindSearchInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

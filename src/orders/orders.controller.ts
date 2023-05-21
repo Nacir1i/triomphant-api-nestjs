@@ -11,12 +11,14 @@ import {
   Query,
   Delete,
   Param,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ParseStringPipe } from '../utils/customPipes';
 import { OrdersService } from './orders.service';
 import { ControllerInterface } from '../utils/interfaces';
 import { OrderDto, UpdateOrderDto } from './dto';
 import { order } from '@prisma/client';
+import { FindSearchInterceptor } from '../utils/interceptors';
 
 @Controller('orders')
 export class OrdersController
@@ -37,6 +39,7 @@ export class OrdersController
     if (!order) throw new NotFoundException(`Order #${id} not found`);
   }
 
+  @UseInterceptors(FindSearchInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

@@ -10,6 +10,7 @@ import {
   ParseIntPipe,
   Query,
   Param,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ParseStringPipe } from '../utils/customPipes';
 import { InventoryService } from './inventory.service';
@@ -17,6 +18,7 @@ import { ControllerInterface } from '../utils/interfaces';
 import { InventoryDto, updateInventoryDto } from './dto';
 import { inventory_category } from '@prisma/client';
 import { UpdateLocationDto } from '../locations/dto';
+import { FindSearchInterceptor } from '../utils/interceptors';
 
 @Controller('category/inventory')
 export class InventoryController
@@ -43,6 +45,7 @@ export class InventoryController
     return inventoryCategory;
   }
 
+  @UseInterceptors(FindSearchInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

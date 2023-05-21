@@ -11,12 +11,14 @@ import {
   Query,
   Delete,
   Param,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ParseStringPipe } from '../utils/customPipes';
 import { PackagesService } from './packages.service';
 import { PackageDto, UpdatePackageDto } from './dto';
 import { Renamedpackage } from '@prisma/client';
 import { ControllerInterface } from '../utils/interfaces';
+import { FindSearchInterceptor } from '../utils/interceptors';
 
 @Controller('packages')
 export class PackagesController
@@ -42,6 +44,7 @@ export class PackagesController
     return pack;
   }
 
+  @UseInterceptors(FindSearchInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

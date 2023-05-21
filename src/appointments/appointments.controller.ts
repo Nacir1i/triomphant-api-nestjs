@@ -10,12 +10,14 @@ import {
   Query,
   Delete,
   Param,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ParseStringPipe } from '../utils/customPipes';
 import { AppointmentsService } from './appointments.service';
 import { ControllerInterface } from '../utils/interfaces';
 import { AppointmentDto, UpdateAppointmentDto } from './dto';
 import { appointment } from '@prisma/client';
+import { FindSearchInterceptor } from '../utils/interceptors';
 
 @Controller('appointments')
 export class AppointmentsController
@@ -36,6 +38,7 @@ export class AppointmentsController
     return await this.appointmentsService.findOne(id);
   }
 
+  @UseInterceptors(FindSearchInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

@@ -11,12 +11,14 @@ import {
   Query,
   Delete,
   Param,
+  UseInterceptors,
 } from '@nestjs/common';
 import { ParseStringPipe } from '../utils/customPipes';
 import { QuotesService } from './quotes.service';
 import { ControllerInterface } from '../utils/interfaces';
 import { QuoteDto, UpdateQuoteDto } from './dto';
 import { quote } from '@prisma/client';
+import { FindSearchInterceptor } from '../utils/interceptors';
 
 @Controller('quotes')
 export class QuotesController
@@ -42,6 +44,7 @@ export class QuotesController
     return quote;
   }
 
+  @UseInterceptors(FindSearchInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

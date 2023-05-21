@@ -10,12 +10,14 @@ import {
   ParseIntPipe,
   Query,
   Param,
+  UseInterceptors,
 } from '@nestjs/common';
 import { LocationsService } from './locations.service';
 import { ControllerInterface } from '../utils/interfaces';
 import { LocationDto, UpdateLocationDto } from './dto';
 import { location } from '@prisma/client';
 import { ParseStringPipe } from '../utils/customPipes';
+import { FindSearchInterceptor } from '../utils/interceptors';
 
 @Controller('category/locations')
 export class LocationsController
@@ -41,6 +43,7 @@ export class LocationsController
     return location;
   }
 
+  @UseInterceptors(FindSearchInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

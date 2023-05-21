@@ -11,12 +11,14 @@ import {
   HttpStatus,
   NotFoundException,
   ParseIntPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { RolesService } from './roles.service';
 import { ParseStringPipe } from '../utils/customPipes';
 import { RoleDto, PartialTypedRoleDto } from './dto';
 import { ControllerInterface } from '../utils/interfaces';
 import { role } from '@prisma/client';
+import { FindSearchInterceptor } from '../utils/interceptors';
 
 @Controller('role')
 export class RolesController
@@ -44,6 +46,7 @@ export class RolesController
     return role;
   }
 
+  @UseInterceptors(FindSearchInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {
