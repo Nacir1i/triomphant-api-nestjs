@@ -13,12 +13,19 @@ import {
   Param,
   UseInterceptors,
 } from '@nestjs/common';
+import {
+  CreateInterceptor,
+  DeleteInterceptor,
+  FindManyInterceptor,
+  FindOneInterceptor,
+  PageInterceptor,
+  UpdateInterceptor,
+} from '../utils/interceptors';
 import { ParseStringPipe } from '../utils/customPipes';
 import { QuotesService } from './quotes.service';
 import { ControllerInterface } from '../utils/interfaces';
 import { QuoteDto, UpdateQuoteDto } from './dto';
 import { quote } from '@prisma/client';
-import { FindManyInterceptor } from '../utils/interceptors';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiBearerAuth('JWT-auth')
@@ -28,12 +35,14 @@ export class QuotesController
 {
   constructor(private readonly quotesService: QuotesService) {}
 
+  @UseInterceptors(CreateInterceptor)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: QuoteDto) {
     return await this.quotesService.create(dto);
   }
 
+  @UseInterceptors(FindOneInterceptor)
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -53,12 +62,14 @@ export class QuotesController
     return this.quotesService.findSearch(search);
   }
 
+  @UseInterceptors(FindManyInterceptor)
   @Get('findAll')
   @HttpCode(HttpStatus.OK)
   async findAll() {
     return this.quotesService.findAll();
   }
 
+  @UseInterceptors(PageInterceptor)
   @Get('getPage')
   @HttpCode(HttpStatus.OK)
   async getPage(
@@ -68,6 +79,7 @@ export class QuotesController
     return await this.quotesService.getPage(page, limit);
   }
 
+  @UseInterceptors(UpdateInterceptor)
   @Patch('update')
   @HttpCode(HttpStatus.OK)
   async update(
@@ -77,6 +89,7 @@ export class QuotesController
     return await this.quotesService.update(id, dto);
   }
 
+  @UseInterceptors(DeleteInterceptor)
   @Delete('delete/:id')
   @HttpCode(HttpStatus.OK)
   async delete(@Param('id', ParseIntPipe) id: number) {

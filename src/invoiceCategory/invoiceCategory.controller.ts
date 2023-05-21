@@ -12,12 +12,18 @@ import {
   UseInterceptors,
   Param,
 } from '@nestjs/common';
+import {
+  CreateInterceptor,
+  FindOneInterceptor,
+  FindManyInterceptor,
+  UpdateInterceptor,
+  PageInterceptor,
+} from '../utils/interceptors';
 import { InvoiceCategoryService } from './invoiceCategory.service';
 import { ControllerInterface } from '../utils/interfaces';
 import { InvoiceCategoryDto, UpdateInvoiceCategory } from './dto';
 import { ParseStringPipe } from '../utils/customPipes';
 import { inventory_category } from '@prisma/client';
-import { FindManyInterceptor } from '../utils/interceptors';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiBearerAuth('JWT-auth')
@@ -34,12 +40,14 @@ export class InvoiceCategoryController
     private readonly invoiceCategoryService: InvoiceCategoryService,
   ) {}
 
+  @UseInterceptors(CreateInterceptor)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: InvoiceCategoryDto) {
     return await this.invoiceCategoryService.create(dto);
   }
 
+  @UseInterceptors(FindOneInterceptor)
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -57,12 +65,14 @@ export class InvoiceCategoryController
     return await this.invoiceCategoryService.findSearch(search);
   }
 
+  @UseInterceptors(FindManyInterceptor)
   @Get('findAll')
   @HttpCode(HttpStatus.OK)
   async findAll() {
     return await this.invoiceCategoryService.findAll();
   }
 
+  @UseInterceptors(PageInterceptor)
   @Get('getPage')
   @HttpCode(HttpStatus.OK)
   async getPage(
@@ -72,6 +82,7 @@ export class InvoiceCategoryController
     return await this.invoiceCategoryService.getPage(page, limit);
   }
 
+  @UseInterceptors(UpdateInterceptor)
   @Patch('update')
   @HttpCode(HttpStatus.OK)
   async update(

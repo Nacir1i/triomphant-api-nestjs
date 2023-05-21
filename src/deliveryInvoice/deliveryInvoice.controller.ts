@@ -12,13 +12,22 @@ import {
   Param,
   UseInterceptors,
 } from '@nestjs/common';
+import {
+  CreateInterceptor,
+  DeleteInterceptor,
+  FindOneInterceptor,
+  FindManyInterceptor,
+  UpdateInterceptor,
+  PageInterceptor,
+} from '../utils/interceptors';
 import { ParseStringPipe } from '../utils/customPipes';
 import { DeliveryInvoiceService } from './deliveryInvoice.service';
 import { DeliveryInvoiceDto, UpdateDeliveryInvoiceDto } from './dto';
 import { delivery_invoice } from '@prisma/client';
 import { ControllerInterface } from '../utils/interfaces';
-import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('delivery-invoice')
 export class DeliveryInvoiceController
   implements
@@ -32,12 +41,14 @@ export class DeliveryInvoiceController
     private readonly deliveryInvoiceService: DeliveryInvoiceService,
   ) {}
 
+  @UseInterceptors(CreateInterceptor)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: DeliveryInvoiceDto) {
     return this.deliveryInvoiceService.create(dto);
   }
 
+  @UseInterceptors(FindOneInterceptor)
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -51,12 +62,14 @@ export class DeliveryInvoiceController
     return this.deliveryInvoiceService.findSearch(search);
   }
 
+  @UseInterceptors(FindManyInterceptor)
   @Get('findAll')
   @HttpCode(HttpStatus.OK)
   async findAll() {
     return this.deliveryInvoiceService.findAll();
   }
 
+  @UseInterceptors(PageInterceptor)
   @Get('getPage')
   @HttpCode(HttpStatus.OK)
   async getPage(
@@ -66,6 +79,7 @@ export class DeliveryInvoiceController
     return this.deliveryInvoiceService.getPage(page, limit);
   }
 
+  @UseInterceptors(UpdateInterceptor)
   @Patch('update')
   @HttpCode(HttpStatus.OK)
   async update(
@@ -75,6 +89,7 @@ export class DeliveryInvoiceController
     return this.deliveryInvoiceService.update(id, dto);
   }
 
+  @UseInterceptors(DeleteInterceptor)
   @Delete('delete/:id')
   @HttpCode(HttpStatus.OK)
   async delete(@Param('id', ParseIntPipe) id: number) {

@@ -13,12 +13,18 @@ import {
   ParseIntPipe,
   UseInterceptors,
 } from '@nestjs/common';
+import {
+  CreateInterceptor,
+  DeleteInterceptor,
+  FindManyInterceptor,
+  FindOneInterceptor,
+  UpdateInterceptor,
+} from '../utils/interceptors';
 import { RolesService } from './roles.service';
 import { ParseStringPipe } from '../utils/customPipes';
 import { RoleDto, PartialTypedRoleDto } from './dto';
 import { ControllerInterface } from '../utils/interfaces';
 import { role } from '@prisma/client';
-import { FindManyInterceptor } from '../utils/interceptors';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiBearerAuth('JWT-auth')
@@ -28,6 +34,7 @@ export class RolesController
 {
   constructor(private readonly rolesService: RolesService) {}
 
+  @UseInterceptors(CreateInterceptor)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: RoleDto) {
@@ -36,6 +43,7 @@ export class RolesController
     return role;
   }
 
+  @UseInterceptors(FindOneInterceptor)
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -57,6 +65,7 @@ export class RolesController
     return roles;
   }
 
+  @UseInterceptors(FindManyInterceptor)
   @Get('findAll')
   @HttpCode(HttpStatus.OK)
   async findAll() {
@@ -65,6 +74,7 @@ export class RolesController
 
   async getPage() {}
 
+  @UseInterceptors(UpdateInterceptor)
   @Patch('update')
   @HttpCode(HttpStatus.OK)
   async update(
@@ -74,6 +84,7 @@ export class RolesController
     return await this.rolesService.update(id, dto);
   }
 
+  @UseInterceptors(DeleteInterceptor)
   @Delete('delete')
   @HttpCode(HttpStatus.OK)
   async delete(@Query('id', ParseIntPipe) id: number) {

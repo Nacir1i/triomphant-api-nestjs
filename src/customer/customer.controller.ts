@@ -13,12 +13,19 @@ import {
   Param,
   UseInterceptors,
 } from '@nestjs/common';
+import {
+  CreateInterceptor,
+  DeleteInterceptor,
+  FindOneInterceptor,
+  FindManyInterceptor,
+  UpdateInterceptor,
+  PageInterceptor,
+} from '../utils/interceptors';
 import { ParseStringPipe } from '../utils/customPipes';
 import { CustomerService } from './customer.service';
 import { CustomerDto, PartialTypedCustomer } from './dto';
 import { ControllerInterface } from '../utils/interfaces';
 import { customer } from '@prisma/client';
-import { FindManyInterceptor } from '../utils/interceptors';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiBearerAuth('JWT-auth')
@@ -28,12 +35,14 @@ export class CustomerController
 {
   constructor(private customerService: CustomerService) {}
 
+  @UseInterceptors(CreateInterceptor)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: CustomerDto) {
     return this.customerService.create(dto);
   }
 
+  @UseInterceptors(FindOneInterceptor)
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -55,12 +64,14 @@ export class CustomerController
     return customers;
   }
 
+  @UseInterceptors(FindManyInterceptor)
   @Get('findAll')
   @HttpCode(HttpStatus.OK)
   async findAll() {
     return await this.customerService.findAll();
   }
 
+  @UseInterceptors(PageInterceptor)
   @Get('getPage')
   @HttpCode(HttpStatus.OK)
   async getPage(
@@ -70,6 +81,7 @@ export class CustomerController
     return this.customerService.getPage(page, limit);
   }
 
+  @UseInterceptors(UpdateInterceptor)
   @Patch('update')
   @HttpCode(HttpStatus.OK)
   async update(
@@ -81,6 +93,7 @@ export class CustomerController
     return updated;
   }
 
+  @UseInterceptors(DeleteInterceptor)
   @Delete('delete/:id')
   @HttpCode(HttpStatus.OK)
   async delete(@Param('id', ParseIntPipe) id: number) {

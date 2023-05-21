@@ -13,12 +13,19 @@ import {
   Param,
   UseInterceptors,
 } from '@nestjs/common';
+import {
+  CreateInterceptor,
+  FindOneInterceptor,
+  FindManyInterceptor,
+  UpdateInterceptor,
+  PageInterceptor,
+  DeleteInterceptor,
+} from '../utils/interceptors';
 import { ParseStringPipe } from '../utils/customPipes';
 import { MaterialsService } from './materials.service';
 import { ControllerInterface } from '../utils/interfaces';
 import { MaterialDto, UpdateMaterialDto } from './dto';
 import { material } from '@prisma/client';
-import { FindManyInterceptor } from '../utils/interceptors';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiBearerAuth('JWT-auth')
@@ -28,12 +35,14 @@ export class MaterialsController
 {
   constructor(private readonly materialsService: MaterialsService) {}
 
+  @UseInterceptors(CreateInterceptor)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: MaterialDto) {
     return await this.materialsService.create(dto);
   }
 
+  @UseInterceptors(FindOneInterceptor)
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -51,12 +60,14 @@ export class MaterialsController
     return await this.findSearch(search);
   }
 
+  @UseInterceptors(FindManyInterceptor)
   @Get('findAll')
   @HttpCode(HttpStatus.OK)
   async findAll() {
     return await this.findAll();
   }
 
+  @UseInterceptors(PageInterceptor)
   @Get('getPage')
   @HttpCode(HttpStatus.OK)
   async getPage(
@@ -66,6 +77,7 @@ export class MaterialsController
     return await this.materialsService.getPage(page, limit);
   }
 
+  @UseInterceptors(UpdateInterceptor)
   @Patch('update')
   @HttpCode(HttpStatus.OK)
   async update(
@@ -75,6 +87,7 @@ export class MaterialsController
     return await this.materialsService.update(id, dto);
   }
 
+  @UseInterceptors(DeleteInterceptor)
   @Delete('delete/:id')
   @HttpCode(HttpStatus.OK)
   async delete(@Param('id', ParseIntPipe) id: number) {

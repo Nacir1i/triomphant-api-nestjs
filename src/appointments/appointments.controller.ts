@@ -12,13 +12,22 @@ import {
   Param,
   UseInterceptors,
 } from '@nestjs/common';
+import {
+  CreateInterceptor,
+  DeleteInterceptor,
+  FindOneInterceptor,
+  FindManyInterceptor,
+  UpdateInterceptor,
+  PageInterceptor,
+} from '../utils/interceptors';
 import { ParseStringPipe } from '../utils/customPipes';
 import { AppointmentsService } from './appointments.service';
 import { ControllerInterface } from '../utils/interfaces';
 import { AppointmentDto, UpdateAppointmentDto } from './dto';
 import { appointment } from '@prisma/client';
-import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('appointments')
 export class AppointmentsController
   implements
@@ -26,12 +35,14 @@ export class AppointmentsController
 {
   constructor(private readonly appointmentsService: AppointmentsService) {}
 
+  @UseInterceptors(CreateInterceptor)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: AppointmentDto) {
     return await this.appointmentsService.create(dto);
   }
 
+  @UseInterceptors(FindOneInterceptor)
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -45,12 +56,14 @@ export class AppointmentsController
     return await this.appointmentsService.findSearch(search);
   }
 
+  @UseInterceptors(FindManyInterceptor)
   @Get('findAll')
   @HttpCode(HttpStatus.OK)
   async findAll() {
     return await this.appointmentsService.findAll();
   }
 
+  @UseInterceptors(PageInterceptor)
   @Get('getPage')
   @HttpCode(HttpStatus.OK)
   async getPage(
@@ -60,6 +73,7 @@ export class AppointmentsController
     return await this.appointmentsService.getPage(page, limit);
   }
 
+  @UseInterceptors(UpdateInterceptor)
   @Patch('update')
   @HttpCode(HttpStatus.OK)
   async update(
@@ -69,6 +83,7 @@ export class AppointmentsController
     return await this.appointmentsService.update(id, dto);
   }
 
+  @UseInterceptors(DeleteInterceptor)
   @Delete('delete/:id')
   @HttpCode(HttpStatus.OK)
   async delete(@Param('id', ParseIntPipe) id: number) {

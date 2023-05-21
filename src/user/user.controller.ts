@@ -12,12 +12,18 @@ import {
   ParseIntPipe,
   UseInterceptors,
 } from '@nestjs/common';
+import {
+  DeleteInterceptor,
+  FindManyInterceptor,
+  FindOneInterceptor,
+  PageInterceptor,
+  UpdateInterceptor,
+} from '../utils/interceptors';
 import { UserService } from './user.service';
 import { UserDto, PartialTypedUser } from './dto';
 import { ControllerInterface } from '../utils/interfaces';
 import { user } from '@prisma/client';
 import { ParseStringPipe } from '../utils/customPipes';
-import { FindManyInterceptor } from '../utils/interceptors';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiBearerAuth('JWT-auth')
@@ -29,6 +35,7 @@ export class UserController
 
   create(dto: UserDto) {}
 
+  @UseInterceptors(FindOneInterceptor)
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -48,12 +55,14 @@ export class UserController
     return await this.userService.findSearch(search);
   }
 
+  @UseInterceptors(FindManyInterceptor)
   @Get('findAll')
   @HttpCode(HttpStatus.OK)
   async findAll() {
     return await this.userService.findAll();
   }
 
+  @UseInterceptors(PageInterceptor)
   @Get('getPage')
   @HttpCode(HttpStatus.OK)
   async getPage(
@@ -63,6 +72,7 @@ export class UserController
     return await this.userService.getPage(page, limit);
   }
 
+  @UseInterceptors(UpdateInterceptor)
   @Patch('update')
   @HttpCode(HttpStatus.OK)
   async update(
@@ -72,6 +82,7 @@ export class UserController
     return await this.userService.update(id, dto);
   }
 
+  @UseInterceptors(DeleteInterceptor)
   @Delete('delete/:id')
   @HttpCode(HttpStatus.OK)
   async delete(@Param('id', ParseIntPipe) id: number) {

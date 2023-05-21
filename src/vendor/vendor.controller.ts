@@ -12,13 +12,20 @@ import {
   NotFoundException,
   UseInterceptors,
 } from '@nestjs/common';
+import {
+  CreateInterceptor,
+  DeleteInterceptor,
+  FindManyInterceptor,
+  FindOneInterceptor,
+  PageInterceptor,
+  UpdateInterceptor,
+} from '../utils/interceptors';
 import { VendorService } from './vendor.service';
 import { VendorDto, PartialTypedVendor } from './dto';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { ParseStringPipe } from '../utils/customPipes';
 import { ControllerInterface } from '../utils/interfaces';
 import { vendor } from '@prisma/client';
-import { FindManyInterceptor } from '../utils/interceptors';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiBearerAuth('JWT-auth')
@@ -28,12 +35,14 @@ export class VendorController
 {
   constructor(private readonly vendorService: VendorService) {}
 
+  @UseInterceptors(CreateInterceptor)
   @Post('create')
   @HttpCode(HttpStatus.CREATED)
   create(@Body() dto: VendorDto) {
     return this.vendorService.create(dto);
   }
 
+  @UseInterceptors(FindOneInterceptor)
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
@@ -53,12 +62,14 @@ export class VendorController
     return this.vendorService.findSearch(search);
   }
 
+  @UseInterceptors(FindManyInterceptor)
   @Get('findAll')
   @HttpCode(HttpStatus.OK)
   findAll() {
     return this.vendorService.findAll();
   }
 
+  @UseInterceptors(PageInterceptor)
   @Get('getPage')
   @HttpCode(HttpStatus.OK)
   async getPage(
@@ -68,6 +79,7 @@ export class VendorController
     return this.vendorService.getPage(page, limit);
   }
 
+  @UseInterceptors(UpdateInterceptor)
   @Patch('update/:id')
   @HttpCode(HttpStatus.OK)
   update(
@@ -79,6 +91,7 @@ export class VendorController
     return vendor;
   }
 
+  @UseInterceptors(DeleteInterceptor)
   @Delete('delete/:id')
   @HttpCode(HttpStatus.OK)
   delete(@Param('id', ParseIntPipe) id: number) {
