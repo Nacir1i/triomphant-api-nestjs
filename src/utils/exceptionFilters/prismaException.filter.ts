@@ -1,41 +1,47 @@
-import { ExceptionFilter, Catch, ArgumentsHost } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Catch, ArgumentsHost, HttpStatus } from '@nestjs/common';
+import { Response, Request } from 'express';
+import { BaseExceptionFilter } from '@nestjs/core';
 import { Prisma } from '@prisma/client';
 
 @Catch(Prisma.PrismaClientKnownRequestError)
-export class PrismaExceptionFilter implements ExceptionFilter {
-  constructor() {}
-
+export class PrismaExceptionFilter extends BaseExceptionFilter {
   catch(exception: Prisma.PrismaClientKnownRequestError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
     const request = ctx.getRequest<Request>();
+    const { meta } = exception;
 
-    let message: string = 'Prisma error';
-    let status: number = 400;
+    console.log(exception);
+
+    let status = 500;
+    let messageError = 'Unexpected error occurred while processing request';
 
     switch (exception.code) {
-      case 'P1000':
-        status = 500;
-        message =
-          'Authentication failed against database server, Invalid credentials';
+      case 'P2000': {
+        status = HttpStatus.BAD_REQUEST;
+        messageError = 'Invalid request data.';
         break;
-      case 'P1001':
-        status = 500;
-        message = "Can't reach database server";
+      }
+      case 'P2002': {
+        status = HttpStatus.CONFLICT;
+        messageError = `Duplicate entry error : ${meta?.target}`;
         break;
-      case 'P1017':
-        status = 500;
-        message = 'Server has closed the connection.';
+      }
+      case 'P2025': {
+        status = HttpStatus.NOT_FOUND;
+        messageError = `${meta?.cause}`;
         break;
+      }
       default:
-        status = 404;
-        message = `${exception.message} ${exception.meta?.cause}`;
+        super.catch(exception, host);
         break;
     }
 
-    response.status(status).send({
-      message,
+    response.status(status).json({
+      message: messageError,
+      statusCode: status,
+      timestamp: new Date().toISOString(),
+      path: request.url,
       success: false,
     });
   }

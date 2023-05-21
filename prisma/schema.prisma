@@ -576,7 +576,7 @@ model quote_service {
 
 model role {
   id         Int      @id @default(autoincrement())
-  title      String
+  title      String   @unique
   created_at DateTime @default(now())
 
   employees user[]
@@ -616,7 +616,7 @@ model service_log {
 
 model user {
   id                     Int       @id @default(autoincrement())
-  username               String
+  username               String    @unique
   password               String
   first_name             String
   last_name              String
