@@ -2,7 +2,9 @@ import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { Public } from '../utils/decorators';
 import { AuthService } from './auth.service';
 import { SignupDto, LoginDto } from './dto';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
@@ -14,7 +16,6 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
-  @Public()
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
   async signup(@Body() dto: SignupDto) {

@@ -19,7 +19,9 @@ import { InventoryDto, updateInventoryDto } from './dto';
 import { inventory_category } from '@prisma/client';
 import { UpdateLocationDto } from '../locations/dto';
 import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('category/inventory')
 export class InventoryController
   implements

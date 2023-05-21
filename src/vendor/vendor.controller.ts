@@ -19,7 +19,9 @@ import { ParseStringPipe } from '../utils/customPipes';
 import { ControllerInterface } from '../utils/interfaces';
 import { vendor } from '@prisma/client';
 import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('agent/vendor')
 export class VendorController
   implements ControllerInterface<VendorDto, PartialTypedVendor, vendor>

@@ -19,7 +19,9 @@ import { ControllerInterface } from '../utils/interfaces';
 import { ProductDto, UpdateProductDto } from './dto';
 import { product } from '@prisma/client';
 import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('products')
 export class ProductsController
   implements ControllerInterface<ProductDto, UpdateProductDto, product>

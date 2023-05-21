@@ -19,7 +19,9 @@ import { RoleDto, PartialTypedRoleDto } from './dto';
 import { ControllerInterface } from '../utils/interfaces';
 import { role } from '@prisma/client';
 import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('role')
 export class RolesController
   implements ControllerInterface<RoleDto, PartialTypedRoleDto, role>

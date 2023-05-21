@@ -19,7 +19,9 @@ import { ControllerInterface } from '../utils/interfaces';
 import { OrderDto, UpdateOrderDto } from './dto';
 import { order } from '@prisma/client';
 import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('orders')
 export class OrdersController
   implements ControllerInterface<OrderDto, UpdateOrderDto, order>

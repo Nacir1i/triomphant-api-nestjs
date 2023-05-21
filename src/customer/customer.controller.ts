@@ -19,7 +19,9 @@ import { CustomerDto, PartialTypedCustomer } from './dto';
 import { ControllerInterface } from '../utils/interfaces';
 import { customer } from '@prisma/client';
 import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('agent/customer')
 export class CustomerController
   implements ControllerInterface<CustomerDto, PartialTypedCustomer, customer>

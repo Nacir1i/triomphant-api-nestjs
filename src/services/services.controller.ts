@@ -19,7 +19,9 @@ import { ControllerInterface } from '../utils/interfaces';
 import { ServiceDto, UpdateServiceDTO } from './dto';
 import { service } from '@prisma/client';
 import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('services')
 export class ServicesController
   implements ControllerInterface<ServiceDto, UpdateServiceDTO, service>

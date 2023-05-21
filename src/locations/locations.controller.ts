@@ -18,7 +18,9 @@ import { LocationDto, UpdateLocationDto } from './dto';
 import { location } from '@prisma/client';
 import { ParseStringPipe } from '../utils/customPipes';
 import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('category/locations')
 export class LocationsController
   implements ControllerInterface<LocationDto, UpdateLocationDto, location>

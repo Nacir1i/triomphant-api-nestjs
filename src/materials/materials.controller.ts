@@ -19,7 +19,9 @@ import { ControllerInterface } from '../utils/interfaces';
 import { MaterialDto, UpdateMaterialDto } from './dto';
 import { material } from '@prisma/client';
 import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('materials')
 export class MaterialsController
   implements ControllerInterface<MaterialDto, UpdateMaterialDto, material>

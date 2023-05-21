@@ -19,7 +19,9 @@ import { ControllerInterface } from '../utils/interfaces';
 import { QuoteDto, UpdateQuoteDto } from './dto';
 import { quote } from '@prisma/client';
 import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('quotes')
 export class QuotesController
   implements ControllerInterface<QuoteDto, UpdateQuoteDto, quote>

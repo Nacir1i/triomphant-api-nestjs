@@ -18,7 +18,9 @@ import { InvoiceCategoryDto, UpdateInvoiceCategory } from './dto';
 import { ParseStringPipe } from '../utils/customPipes';
 import { inventory_category } from '@prisma/client';
 import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('category/invoice')
 export class InvoiceCategoryController
   implements

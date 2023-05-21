@@ -19,7 +19,9 @@ import { PackageDto, UpdatePackageDto } from './dto';
 import { Renamedpackage } from '@prisma/client';
 import { ControllerInterface } from '../utils/interfaces';
 import { FindManyInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('packages')
 export class PackagesController
   implements ControllerInterface<PackageDto, UpdatePackageDto, Renamedpackage>
