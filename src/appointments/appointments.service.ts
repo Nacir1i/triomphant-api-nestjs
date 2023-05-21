@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ServiceInterface } from 'src/utils/interfaces';
+import { Injectable } from '@nestjs/common';
+import { ServiceInterface } from '../utils/interfaces';
 import { AppointmentDto, UpdateAppointmentDto } from './dto';
-import { Prisma, appointment } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { appointment } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class AppointmentsService
@@ -102,52 +102,32 @@ export class AppointmentsService
   }
 
   async update(id: number, dto: UpdateAppointmentDto): Promise<appointment> {
-    try {
-      return await this.prismaService.appointment.update({
-        where: {
-          id: id,
-        },
-        data: {
-          title: dto.title,
-          status: dto.status,
-          due_date: dto.due_date,
+    return await this.prismaService.appointment.update({
+      where: {
+        id: id,
+      },
+      data: {
+        title: dto.title,
+        status: dto.status,
+        due_date: dto.due_date,
 
-          category: {
-            connect: {
-              id: dto.categoryId,
-            },
+        category: {
+          connect: {
+            id: dto.categoryId,
           },
         },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+      },
+    });
   }
 
   async delete(id: number): Promise<appointment> {
-    try {
-      return await this.prismaService.appointment.update({
-        where: {
-          id: id,
-        },
-        data: {
-          is_deleted: true,
-        },
-      });
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2025') {
-          throw new NotFoundException(error.meta?.cause);
-        }
-      }
-
-      throw error;
-    }
+    return await this.prismaService.appointment.update({
+      where: {
+        id: id,
+      },
+      data: {
+        is_deleted: true,
+      },
+    });
   }
 }

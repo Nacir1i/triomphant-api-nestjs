@@ -753,27 +753,25 @@ describe('App e2e testing', () => {
     });
 
     describe('GET: agent/employee/findSearch', () => {
-      describe('GET: agent/employee/findSearch', () => {
-        it('should throw bad request exception (missing search)', () => {
-          return pactum
-            .spec()
-            .get('/agent/employee/findSearch/{findSearch}')
-            .expectStatus(400);
-        });
-        it('should throw bad request exception (search type error)', () => {
-          return pactum
-            .spec()
-            .get('/agent/employee/findSearch/{findSearch}')
-            .withPathParams('findSearch', 'test')
-            .expectStatus(400);
-        });
-        it('should return array of employees objects', () => {
-          return pactum
-            .spec()
-            .get('/agent/employee/findSearch/{findSearch}')
-            .withPathParams('findSearch', 'admin')
-            .expectStatus(200);
-        });
+      it('should throw bad request exception (missing search)', () => {
+        return pactum
+          .spec()
+          .get('/agent/employee/findSearch/{findSearch}')
+          .expectStatus(400);
+      });
+      it('should throw bad request exception (search type error)', () => {
+        return pactum
+          .spec()
+          .get('/agent/employee/findSearch/{findSearch}')
+          .withPathParams('findSearch', 'test')
+          .expectStatus(400);
+      });
+      it('should return array of employees objects', () => {
+        return pactum
+          .spec()
+          .get('/agent/employee/findSearch/{findSearch}')
+          .withPathParams('findSearch', 'admin')
+          .expectStatus(200);
       });
     });
 

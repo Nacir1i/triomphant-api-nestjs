@@ -13,7 +13,7 @@ import {
   Param,
 } from '@nestjs/common';
 import { InvoiceCategoryService } from './invoiceCategory.service';
-import { ControllerInterface } from 'src/utils/interfaces';
+import { ControllerInterface } from '../utils/interfaces';
 import { InvoiceCategoryDto, UpdateInvoiceCategory } from './dto';
 import { ParseStringPipe } from '../utils/customPipes';
 import { inventory_category } from '@prisma/client';

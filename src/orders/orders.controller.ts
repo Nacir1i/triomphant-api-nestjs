@@ -33,7 +33,8 @@ export class OrdersController
   @Get('findOne/:id')
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
-    return await this.ordersService.findOne(id);
+    const order = await this.ordersService.findOne(id);
+    if (!order) throw new NotFoundException(`Order #${id} not found`);
   }
 
   @Get('findSearch/:search')

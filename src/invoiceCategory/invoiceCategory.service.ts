@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ServiceInterface } from '../utils/interfaces';
 import { InvoiceCategoryDto, UpdateInvoiceCategory } from './dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { invoice_category, Prisma } from '@prisma/client';
+import { invoice_category } from '@prisma/client';
 
 @Injectable()
 export class InvoiceCategoryService

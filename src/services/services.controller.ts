@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { ParseStringPipe } from '../utils/customPipes';
 import { ServicesService } from './services.service';
-import { ControllerInterface } from 'src/utils/interfaces';
+import { ControllerInterface } from '../utils/interfaces';
 import { ServiceDto, UpdateServiceDTO } from './dto';
 import { service } from '@prisma/client';
 

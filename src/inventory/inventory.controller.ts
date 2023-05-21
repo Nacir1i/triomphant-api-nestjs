@@ -9,15 +9,14 @@ import {
   HttpStatus,
   ParseIntPipe,
   Query,
-  Delete,
   Param,
 } from '@nestjs/common';
 import { ParseStringPipe } from '../utils/customPipes';
 import { InventoryService } from './inventory.service';
-import { ControllerInterface } from 'src/utils/interfaces';
+import { ControllerInterface } from '../utils/interfaces';
 import { InventoryDto, updateInventoryDto } from './dto';
 import { inventory_category } from '@prisma/client';
-import { UpdateLocationDto } from 'src/locations/dto';
+import { UpdateLocationDto } from '../locations/dto';
 
 @Controller('category/inventory')
 export class InventoryController

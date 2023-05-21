@@ -6,7 +6,7 @@ import {
   ProductObjectDto,
   ServiceObjectDto,
   UpdateManualContentDto,
-} from 'src/utils/common';
+} from '../../utils/common';
 import { PackageDto } from './package.dto';
 
 class UpdateProductCollectionDto {

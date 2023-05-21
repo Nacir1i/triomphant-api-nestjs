@@ -1,7 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ServiceInterface } from '../utils/interfaces';
 import { QuoteDto, UpdateQuoteDto } from './dto';
-import { Prisma, quote } from '@prisma/client';
+import { quote } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { constructUpdateMany } from '../utils/common';
 

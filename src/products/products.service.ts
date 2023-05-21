@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { ServiceInterface } from 'src/utils/interfaces';
+import { Injectable } from '@nestjs/common';
+import { ServiceInterface } from '../utils/interfaces';
 import { ProductDto, UpdateProductDto } from './dto';
-import { product, Prisma } from '@prisma/client';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { product } from '@prisma/client';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class ProductsService

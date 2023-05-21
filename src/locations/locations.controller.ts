@@ -9,14 +9,13 @@ import {
   HttpStatus,
   ParseIntPipe,
   Query,
-  Delete,
   Param,
 } from '@nestjs/common';
 import { LocationsService } from './locations.service';
-import { ControllerInterface } from 'src/utils/interfaces';
+import { ControllerInterface } from '../utils/interfaces';
 import { LocationDto, UpdateLocationDto } from './dto';
 import { location } from '@prisma/client';
-import { ParseStringPipe } from 'src/utils/customPipes';
+import { ParseStringPipe } from '../utils/customPipes';
 
 @Controller('category/locations')
 export class LocationsController

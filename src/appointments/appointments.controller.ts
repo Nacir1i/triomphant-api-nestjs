@@ -3,7 +3,6 @@ import {
   Post,
   Get,
   Patch,
-  NotFoundException,
   Body,
   HttpCode,
   HttpStatus,
@@ -14,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ParseStringPipe } from '../utils/customPipes';
 import { AppointmentsService } from './appointments.service';
-import { ControllerInterface } from 'src/utils/interfaces';
+import { ControllerInterface } from '../utils/interfaces';
 import { AppointmentDto, UpdateAppointmentDto } from './dto';
 import { appointment } from '@prisma/client';
 

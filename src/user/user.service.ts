@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { UserDto, PartialTypedUser } from './dto';
 import { ServiceInterface } from '../utils/interfaces';
 import { JwtService } from '@nestjs/jwt';
-import { user, Prisma } from '@prisma/client';
+import { user } from '@prisma/client';
 
 @Injectable()
 export class UserService
