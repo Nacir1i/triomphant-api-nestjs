@@ -1,1 +1,1 @@
-export * from './findSearch.interceptor';
+export * from './findMany.interceptor';

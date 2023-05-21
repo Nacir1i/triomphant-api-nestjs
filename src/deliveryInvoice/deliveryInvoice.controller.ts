@@ -17,7 +17,7 @@ import { DeliveryInvoiceService } from './deliveryInvoice.service';
 import { DeliveryInvoiceDto, UpdateDeliveryInvoiceDto } from './dto';
 import { delivery_invoice } from '@prisma/client';
 import { ControllerInterface } from '../utils/interfaces';
-import { FindSearchInterceptor } from '../utils/interceptors';
+import { FindManyInterceptor } from '../utils/interceptors';
 
 @Controller('delivery-invoice')
 export class DeliveryInvoiceController
@@ -44,7 +44,7 @@ export class DeliveryInvoiceController
     return this.deliveryInvoiceService.findOne(id);
   }
 
-  @UseInterceptors(FindSearchInterceptor)
+  @UseInterceptors(FindManyInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

@@ -18,7 +18,7 @@ import { OrdersService } from './orders.service';
 import { ControllerInterface } from '../utils/interfaces';
 import { OrderDto, UpdateOrderDto } from './dto';
 import { order } from '@prisma/client';
-import { FindSearchInterceptor } from '../utils/interceptors';
+import { FindManyInterceptor } from '../utils/interceptors';
 
 @Controller('orders')
 export class OrdersController
@@ -39,7 +39,7 @@ export class OrdersController
     if (!order) throw new NotFoundException(`Order #${id} not found`);
   }
 
-  @UseInterceptors(FindSearchInterceptor)
+  @UseInterceptors(FindManyInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

@@ -18,7 +18,7 @@ import { ParseStringPipe } from '../utils/customPipes';
 import { RoleDto, PartialTypedRoleDto } from './dto';
 import { ControllerInterface } from '../utils/interfaces';
 import { role } from '@prisma/client';
-import { FindSearchInterceptor } from '../utils/interceptors';
+import { FindManyInterceptor } from '../utils/interceptors';
 
 @Controller('role')
 export class RolesController
@@ -46,7 +46,7 @@ export class RolesController
     return role;
   }
 
-  @UseInterceptors(FindSearchInterceptor)
+  @UseInterceptors(FindManyInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

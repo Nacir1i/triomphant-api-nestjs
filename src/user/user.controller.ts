@@ -17,7 +17,7 @@ import { UserDto, PartialTypedUser } from './dto';
 import { ControllerInterface } from '../utils/interfaces';
 import { user } from '@prisma/client';
 import { ParseStringPipe } from '../utils/customPipes';
-import { FindSearchInterceptor } from '../utils/interceptors';
+import { FindManyInterceptor } from '../utils/interceptors';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 @ApiBearerAuth('JWT-auth')
@@ -41,7 +41,7 @@ export class UserController
     return user;
   }
 
-  @UseInterceptors(FindSearchInterceptor)
+  @UseInterceptors(FindManyInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

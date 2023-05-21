@@ -18,7 +18,7 @@ import { CustomerService } from './customer.service';
 import { CustomerDto, PartialTypedCustomer } from './dto';
 import { ControllerInterface } from '../utils/interfaces';
 import { customer } from '@prisma/client';
-import { FindSearchInterceptor } from '../utils/interceptors';
+import { FindManyInterceptor } from '../utils/interceptors';
 
 @Controller('agent/customer')
 export class CustomerController
@@ -44,7 +44,7 @@ export class CustomerController
     return customer;
   }
 
-  @UseInterceptors(FindSearchInterceptor)
+  @UseInterceptors(FindManyInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

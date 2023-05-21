@@ -18,7 +18,7 @@ import { MaterialsService } from './materials.service';
 import { ControllerInterface } from '../utils/interfaces';
 import { MaterialDto, UpdateMaterialDto } from './dto';
 import { material } from '@prisma/client';
-import { FindSearchInterceptor } from '../utils/interceptors';
+import { FindManyInterceptor } from '../utils/interceptors';
 
 @Controller('materials')
 export class MaterialsController
@@ -42,7 +42,7 @@ export class MaterialsController
     }
   }
 
-  @UseInterceptors(FindSearchInterceptor)
+  @UseInterceptors(FindManyInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

@@ -17,7 +17,7 @@ import { ControllerInterface } from '../utils/interfaces';
 import { LocationDto, UpdateLocationDto } from './dto';
 import { location } from '@prisma/client';
 import { ParseStringPipe } from '../utils/customPipes';
-import { FindSearchInterceptor } from '../utils/interceptors';
+import { FindManyInterceptor } from '../utils/interceptors';
 
 @Controller('category/locations')
 export class LocationsController
@@ -43,7 +43,7 @@ export class LocationsController
     return location;
   }
 
-  @UseInterceptors(FindSearchInterceptor)
+  @UseInterceptors(FindManyInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

@@ -18,7 +18,7 @@ import { ControllerInterface } from '../utils/interfaces';
 import { InventoryDto, updateInventoryDto } from './dto';
 import { inventory_category } from '@prisma/client';
 import { UpdateLocationDto } from '../locations/dto';
-import { FindSearchInterceptor } from '../utils/interceptors';
+import { FindManyInterceptor } from '../utils/interceptors';
 
 @Controller('category/inventory')
 export class InventoryController
@@ -45,7 +45,7 @@ export class InventoryController
     return inventoryCategory;
   }
 
-  @UseInterceptors(FindSearchInterceptor)
+  @UseInterceptors(FindManyInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {

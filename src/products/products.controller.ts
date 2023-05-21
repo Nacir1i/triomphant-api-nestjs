@@ -18,7 +18,7 @@ import { ProductsService } from './products.service';
 import { ControllerInterface } from '../utils/interfaces';
 import { ProductDto, UpdateProductDto } from './dto';
 import { product } from '@prisma/client';
-import { FindSearchInterceptor } from '../utils/interceptors';
+import { FindManyInterceptor } from '../utils/interceptors';
 
 @Controller('products')
 export class ProductsController
@@ -42,7 +42,7 @@ export class ProductsController
     }
   }
 
-  @UseInterceptors(FindSearchInterceptor)
+  @UseInterceptors(FindManyInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {
