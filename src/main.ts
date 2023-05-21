@@ -14,6 +14,17 @@ async function bootstrap() {
     .setTitle('MyTraiteurApi')
     .setDescription('Node js API for MyTraiteur developed by Triomphant')
     .setVersion('2.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-auth',
+    )
     .build();
 
   app.useGlobalFilters(new HttpExceptionFilter(), new PrismaExceptionFilter());

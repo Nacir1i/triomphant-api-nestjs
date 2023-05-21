@@ -10,13 +10,17 @@ import {
   Delete,
   NotFoundException,
   ParseIntPipe,
+  UseInterceptors,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UserDto, PartialTypedUser } from './dto';
 import { ControllerInterface } from '../utils/interfaces';
 import { user } from '@prisma/client';
 import { ParseStringPipe } from '../utils/customPipes';
+import { FindSearchInterceptor } from '../utils/interceptors';
+import { ApiBearerAuth } from '@nestjs/swagger';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('user')
 export class UserController
   implements ControllerInterface<UserDto, PartialTypedUser, user>
@@ -37,6 +41,7 @@ export class UserController
     return user;
   }
 
+  @UseInterceptors(FindSearchInterceptor)
   @Get('findSearch/:search')
   @HttpCode(HttpStatus.OK)
   async findSearch(@Param('search', ParseStringPipe) search: string) {
