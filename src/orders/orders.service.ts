@@ -25,17 +25,17 @@ export class OrdersService
 
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
         customer: {
           connect: {
-            id: dto.customerId,
+            id: dto.customer_id,
           },
         },
         quote: {
           connect: {
-            id: dto.quoteId,
+            id: dto.quote_id,
           },
         },
 
@@ -163,17 +163,17 @@ export class OrdersService
 
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
         customer: {
           connect: {
-            id: dto.customerId,
+            id: dto.customer_id,
           },
         },
         quote: {
           connect: {
-            id: dto.quoteId,
+            id: dto.quote_id,
           },
         },
 

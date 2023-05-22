@@ -20,7 +20,7 @@ export class PackagesService
 
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
 
@@ -122,7 +122,7 @@ export class PackagesService
 
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
 

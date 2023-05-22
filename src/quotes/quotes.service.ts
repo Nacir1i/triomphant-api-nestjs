@@ -24,12 +24,12 @@ export class QuotesService
 
         customer: {
           connect: {
-            id: dto.customerId,
+            id: dto.customer_id,
           },
         },
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
 
@@ -161,12 +161,12 @@ export class QuotesService
 
         customer: {
           connect: {
-            id: dto.customerId,
+            id: dto.customer_id,
           },
         },
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
 

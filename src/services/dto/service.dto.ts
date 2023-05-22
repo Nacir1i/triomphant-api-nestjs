@@ -25,5 +25,5 @@ export class ServiceDto {
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly categoryId: number;
+  readonly category_id: number;
 }

@@ -20,22 +20,22 @@ export class AppointmentsService
 
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
         customer: {
           connect: {
-            id: dto.customerId,
+            id: dto.customer_id,
           },
         },
         order: {
           connect: {
-            id: dto.orderId,
+            id: dto.order_id,
           },
         },
         delivery_invoice: {
           connect: {
-            id: dto.deliveryInvoiceId,
+            id: dto.deliveryInvoice_id,
           },
         },
       },
@@ -113,7 +113,7 @@ export class AppointmentsService
 
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
       },

@@ -22,12 +22,12 @@ export class MaterialsService
 
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
         location: {
           connect: {
-            id: dto.locationId,
+            id: dto.location_id,
           },
         },
       },
@@ -109,12 +109,12 @@ export class MaterialsService
 
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
         location: {
           connect: {
-            id: dto.locationId,
+            id: dto.location_id,
           },
         },
       },

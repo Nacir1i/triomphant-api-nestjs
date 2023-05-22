@@ -24,17 +24,17 @@ export class ProductsService
 
         location: {
           connect: {
-            id: dto.locationId,
+            id: dto.location_id,
           },
         },
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
         vendor_invoice: {
           connect: {
-            id: dto.vendor_invoiceId,
+            id: dto.vendor_invoice_id,
           },
         },
       },
@@ -127,17 +127,17 @@ export class ProductsService
 
         location: {
           connect: {
-            id: dto.locationId,
+            id: dto.location_id,
           },
         },
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
         vendor_invoice: {
           connect: {
-            id: dto.vendor_invoiceId,
+            id: dto.vendor_invoice_id,
           },
         },
       },

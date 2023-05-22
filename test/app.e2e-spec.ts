@@ -165,7 +165,7 @@ describe('App e2e testing', () => {
         password: 'admin',
         firstName: 'lol',
         lastName: 'lmao',
-        roleId: 1,
+        role_id: 1,
         imageUrl: '1',
         recruitedAt: '2023-04-26T00:26:01.344Z',
         birthDate: '2023-04-26T00:26:01.344Z',
@@ -195,7 +195,7 @@ describe('App e2e testing', () => {
             password: signupDto.password,
             firstName: signupDto.firstName,
             lastName: signupDto.lastName,
-            roleId: signupDto.roleId,
+            role_id: signupDto.role_id,
           })
           .expectStatus(400);
       });
@@ -208,7 +208,7 @@ describe('App e2e testing', () => {
             password: signupDto.password,
             firstName: signupDto.firstName,
             lastName: signupDto.lastName,
-            roleId: signupDto.roleId,
+            role_id: signupDto.role_id,
             contactInformation: {
               phone: signupDto.contactInformation.phone,
               email: signupDto.contactInformation.email,
@@ -225,7 +225,7 @@ describe('App e2e testing', () => {
             password: signupDto.password,
             firstName: signupDto.firstName,
             lastName: signupDto.lastName,
-            roleId: signupDto.roleId,
+            role_id: signupDto.role_id,
             contactInformation: {
               phone: signupDto.contactInformation.phone,
               email: signupDto.contactInformation.email,
@@ -812,7 +812,7 @@ describe('App e2e testing', () => {
         password: 'admin',
         firstName: 'Updated',
         lastName: 'Updated',
-        roleId: 1,
+        role_id: 1,
         imageUrl: '1',
         recruitedAt: '2023-04-26T00:26:01.344Z',
         birthDate: '2023-04-26T00:26:01.344Z',

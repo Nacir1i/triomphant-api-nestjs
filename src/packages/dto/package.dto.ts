@@ -28,7 +28,7 @@ export class PackageDto {
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  readonly categoryId: number;
+  readonly category_id: number;
 
   @ApiProperty()
   @IsNumber()

@@ -25,7 +25,7 @@ export class DeliveryInvoiceService
 
         orders: {
           connect: {
-            id: dto.orderId,
+            id: dto.order_id,
           },
         },
         materials: {
@@ -129,7 +129,7 @@ export class DeliveryInvoiceService
 
         orders: {
           connect: {
-            id: dto.orderId,
+            id: dto.order_id,
           },
         },
 

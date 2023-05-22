@@ -57,12 +57,12 @@ export class QuoteDto {
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  readonly customerId: number;
+  readonly customer_id: number;
 
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  readonly categoryId: number;
+  readonly category_id: number;
 
   @ApiProperty()
   @IsOptional()

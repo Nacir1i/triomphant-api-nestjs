@@ -20,7 +20,7 @@ export class ServicesService
 
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
       },
@@ -89,7 +89,7 @@ export class ServicesService
 
         category: {
           connect: {
-            id: dto.categoryId,
+            id: dto.category_id,
           },
         },
       },

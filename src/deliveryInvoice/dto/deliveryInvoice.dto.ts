@@ -59,7 +59,7 @@ export class DeliveryInvoiceDto {
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  readonly orderId: number;
+  readonly order_id: number;
 
   @ApiProperty()
   @IsOptional()

@@ -45,15 +45,15 @@ export class ProductDto {
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly locationId: number;
+  readonly location_id: number;
 
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  readonly categoryId: number;
+  readonly category_id: number;
 
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly vendor_invoiceId: number;
+  readonly vendor_invoice_id: number;
 }

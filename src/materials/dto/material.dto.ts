@@ -35,10 +35,10 @@ export class MaterialDto {
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly categoryId: number;
+  readonly category_id: number;
 
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly locationId: number;
+  readonly location_id: number;
 }

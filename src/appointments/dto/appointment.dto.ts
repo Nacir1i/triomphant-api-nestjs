@@ -20,20 +20,20 @@ export class AppointmentDto {
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly categoryId: number;
+  readonly category_id: number;
 
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly orderId: number;
+  readonly order_id: number;
 
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly customerId: number;
+  readonly customer_id: number;
 
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly deliveryInvoiceId: number;
+  readonly deliveryInvoice_id: number;
 }
