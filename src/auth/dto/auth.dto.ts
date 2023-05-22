@@ -23,12 +23,12 @@ export class ContactInfoDto {
 
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   readonly address: string;
 
   @ApiProperty()
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   readonly honorific: string;
 
   @ApiProperty()
@@ -90,32 +90,31 @@ export class SignupDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly firstName: string;
+  readonly first_name: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly lastName: string;
+  readonly last_name: string;
 
   @ApiProperty()
   @IsNumber()
   @IsNotEmpty()
-  readonly roleId: number;
+  readonly role_id: number;
+
+  @ApiProperty()
+  @IsString()
+  readonly image_url: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly imageUrl: string;
+  readonly recruited_at: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly recruitedAt: string;
-
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  readonly birthDate: string;
+  readonly birth_date: string;
 
   @ApiProperty()
   @IsNumber()
@@ -131,9 +130,9 @@ export class SignupDto {
   @IsNotEmpty()
   @Type(() => ContactInfoDto)
   @ValidateNested()
-  readonly contactInformation: ContactInfoDto;
+  readonly contact_information: ContactInfoDto;
 
   @Type(() => BankInfoDto)
   @ValidateNested()
-  readonly bankInformation: BankInfoDto | undefined;
+  readonly bank_information: BankInfoDto | undefined;
 }

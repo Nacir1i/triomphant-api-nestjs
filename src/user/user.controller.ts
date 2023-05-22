@@ -20,7 +20,7 @@ import {
   UpdateInterceptor,
 } from '../utils/interceptors';
 import { UserService } from './user.service';
-import { UserDto, PartialTypedUser } from './dto';
+import { UserDto, PartialTypedUser, ChangePasswordUser } from './dto';
 import { ControllerInterface } from '../utils/interfaces';
 import { user } from '@prisma/client';
 import { ParseStringPipe } from '../utils/customPipes';
@@ -80,6 +80,15 @@ export class UserController
     @Body() dto: PartialTypedUser,
   ) {
     return await this.userService.update(id, dto);
+  }
+
+  @Patch('password_reset')
+  @HttpCode(HttpStatus.OK)
+  async password_reset(
+    @Query('id', ParseIntPipe) id: number,
+    @Body() dto: ChangePasswordUser,
+  ) {
+    return await this.userService.password_reset(id, dto)
   }
 
   @UseInterceptors(DeleteInterceptor)

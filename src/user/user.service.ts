@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { UserDto, PartialTypedUser } from './dto';
 import { ServiceInterface } from '../utils/interfaces';
+import { ChangePasswordUser, UserDto, PartialTypedUser } from './dto';
 import { JwtService } from '@nestjs/jwt';
 import { user } from '@prisma/client';
+
+import { hash as argon_hash, verify as argon_verify } from 'argon2';
 
 @Injectable()
 export class UserService
@@ -12,7 +14,7 @@ export class UserService
   constructor(
     private prismaService: PrismaService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async create(dto: UserDto): Promise<user> {
     throw new Error('Method not implemented.');
@@ -122,38 +124,23 @@ export class UserService
   }
 
   async update(id: number, dto: PartialTypedUser): Promise<user> {
+    const bank_information = { name: dto.name, number: dto.number, rib: dto.rib, swift: dto.swift, ice: dto.ice }
+    const contact_information = { email: dto.email, phone: dto.phone, address: dto.address, honorific: dto.honorific, emergency: dto.emergency }
+
     return await this.prismaService.user.update({
-      where: {
-        id: id,
-      },
+      where: { id },
       data: {
-        first_name: dto.firstName,
-        last_name: dto.lastName,
+        first_name: dto.first_name,
+        last_name: dto.last_name,
+        image_url: dto.image_url,
+        is_deleted: dto.is_deleted,
         contact_information: {
-          update: {
-            email: dto.email,
-            phone: dto.phone,
-            address: dto.address,
-            honorific: dto.honorific,
-            emergency: dto.emergency,
-          },
+          update: contact_information,
         },
         bank_information: {
           upsert: {
-            create: {
-              name: dto.name,
-              number: dto.number,
-              rib: dto.rib,
-              swift: dto.swift,
-              ice: dto.ice,
-            },
-            update: {
-              name: dto.name,
-              number: dto.number,
-              rib: dto.rib,
-              swift: dto.swift,
-              ice: dto.ice,
-            },
+            create: bank_information,
+            update: bank_information,
           },
         },
       },
@@ -164,14 +151,30 @@ export class UserService
     });
   }
 
+  async password_reset(id: number, dto: ChangePasswordUser): Promise<Object> {
+    const { new_password, old_password } = dto
+    const user = await this.prismaService.user.findUnique({ where: { id } })
+    if (!(await argon_verify(user.password, old_password))) {
+      throw new UnauthorizedException('Credentials provided are wrong');
+    }
+
+    const new_hash = await argon_hash(new_password)
+    await this.prismaService.user.update({
+      where: { id },
+      data: { password: new_hash },
+    })
+    const signable = { username: user.username, password: new_hash }
+    const token: string = await this.jwtService.signAsync(signable)
+    {
+      const { password, ..._user } = user
+      return { token, user: _user }
+    }
+  }
+
   async delete(id: number): Promise<user> {
     return await this.prismaService.user.update({
-      where: {
-        id: id,
-      },
-      data: {
-        is_deleted: true,
-      },
+      where: { id },
+      data: { is_deleted: true },
     });
   }
 }

@@ -15,32 +15,32 @@ export class UserDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly firstName: string;
+  readonly first_name: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly lastName: string;
+  readonly last_name: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly roleId: number;
+  readonly role_id: number;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  readonly imageUrl: string;
+  readonly image_url: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  readonly recruitedAt: string;
+  readonly recruited_at: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  readonly birthDate: string;
+  readonly birth_date: string;
 
   @ApiProperty()
   @IsString()

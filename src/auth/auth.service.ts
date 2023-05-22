@@ -17,11 +17,10 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
     private readonly userService: UserService,
-  ) {}
+  ) { }
 
-  async login(dto: LoginDto): Promise<object | null> {
+  async login(dto: LoginDto): Promise<object> {
     const user = await this.userService.findByUserName(dto.username);
-
     if (!user) {
       throw new UnauthorizedException('Credentials provided are wrong');
     }
@@ -30,7 +29,8 @@ export class AuthService {
       throw new UnauthorizedException('Credentials provided are wrong');
     }
 
-    const token: string = await this.jwtService.signAsync(user);
+    const signable = { username: user.username, password: user.password }
+    const token: string = await this.jwtService.signAsync(signable);
 
     const { password, ...rest } = user;
 
@@ -44,24 +44,24 @@ export class AuthService {
       data: {
         username: dto.username,
         password: hash,
-        first_name: dto.firstName,
-        last_name: dto.lastName,
-        image_url: dto.imageUrl,
-        recruited_at: dto.recruitedAt,
-        birth_date: dto.birthDate,
+        first_name: dto.first_name,
+        last_name: dto.last_name,
+        image_url: dto.image_url,
+        recruited_at: dto.recruited_at,
+        birth_date: dto.birth_date,
         salary: dto.salary,
         status: dto.status,
 
         role: {
           connect: {
-            id: dto.roleId,
+            id: dto.role_id,
           },
         },
         contact_information: {
-          create: dto.contactInformation,
+          create: dto.contact_information,
         },
         bank_information: {
-          create: dto.bankInformation,
+          create: dto.bank_information,
         },
         logs: {
           create: {
@@ -79,12 +79,9 @@ export class AuthService {
       },
     });
 
-    const token: string = await this.jwtService.signAsync(user);
+    const signable = { username: user.username, password: hash }
+    const token: string = await this.jwtService.signAsync(signable);
 
     return { user, token };
-  }
-
-  async assignJwtToken(object: object) {
-    return await this.jwtService.signAsync(object);
   }
 }
