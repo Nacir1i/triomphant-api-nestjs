@@ -35,10 +35,10 @@ export class QuotesService
 
         cost_modifier: {
           create: {
-            shipping: dto.costModifier.shipping,
-            discount: dto.costModifier.discount,
-            is_discount_percentage: dto.costModifier.is_discount_percentage,
-            tax: dto.costModifier.tax,
+            shipping: dto.cost_modifier.shipping,
+            discount: dto.cost_modifier.discount,
+            is_discount_percentage: dto.cost_modifier.is_discount_percentage,
+            tax: dto.cost_modifier.tax,
           },
         },
         products: {
@@ -172,10 +172,10 @@ export class QuotesService
 
         cost_modifier: {
           update: {
-            shipping: dto.costModifier.shipping,
-            discount: dto.costModifier.discount,
-            is_discount_percentage: dto.costModifier.is_discount_percentage,
-            tax: dto.costModifier.tax,
+            shipping: dto.cost_modifier.shipping,
+            discount: dto.cost_modifier.discount,
+            is_discount_percentage: dto.cost_modifier.is_discount_percentage,
+            tax: dto.cost_modifier.tax,
           },
         },
         products: {

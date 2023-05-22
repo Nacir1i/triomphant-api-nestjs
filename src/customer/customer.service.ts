@@ -13,8 +13,8 @@ export class CustomerService
   async create(dto: CustomerDto): Promise<customer> {
     const customer = await this.prismaService.customer.create({
       data: {
-        first_name: dto.firstName,
-        last_name: dto.lastName,
+        first_name: dto.first_name,
+        last_name: dto.last_name,
         contact_information: {
           create: {
             email: dto.email,
@@ -149,8 +149,8 @@ export class CustomerService
         id: id,
       },
       data: {
-        first_name: dto.firstName,
-        last_name: dto.lastName,
+        first_name: dto.first_name,
+        last_name: dto.last_name,
         contact_information: {
           update: {
             email: dto.email,

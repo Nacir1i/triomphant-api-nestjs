@@ -163,12 +163,12 @@ describe('App e2e testing', () => {
       const signupDto: SignupDto = {
         username: 'admin',
         password: 'admin',
-        firstName: 'lol',
-        lastName: 'lmao',
+        first_name: 'lol',
+        last_name: 'lmao',
         role_id: 1,
         imageUrl: '1',
         recruitedAt: '2023-04-26T00:26:01.344Z',
-        birthDate: '2023-04-26T00:26:01.344Z',
+        birth_date: '2023-04-26T00:26:01.344Z',
         salary: 69420,
         status: 1,
         contactInformation: {
@@ -193,8 +193,8 @@ describe('App e2e testing', () => {
           .withBody({
             username: signupDto.username,
             password: signupDto.password,
-            firstName: signupDto.firstName,
-            lastName: signupDto.lastName,
+            first_name: signupDto.first_name,
+            last_name: signupDto.last_name,
             role_id: signupDto.role_id,
           })
           .expectStatus(400);
@@ -206,8 +206,8 @@ describe('App e2e testing', () => {
           .withBody({
             username: signupDto.username,
             password: signupDto.password,
-            firstName: signupDto.firstName,
-            lastName: signupDto.lastName,
+            first_name: signupDto.first_name,
+            last_name: signupDto.last_name,
             role_id: signupDto.role_id,
             contactInformation: {
               phone: signupDto.contactInformation.phone,
@@ -223,8 +223,8 @@ describe('App e2e testing', () => {
           .withBody({
             username: signupDto.username,
             password: signupDto.password,
-            firstName: signupDto.firstName,
-            lastName: signupDto.lastName,
+            first_name: signupDto.first_name,
+            last_name: signupDto.last_name,
             role_id: signupDto.role_id,
             contactInformation: {
               phone: signupDto.contactInformation.phone,
@@ -285,8 +285,8 @@ describe('App e2e testing', () => {
   describe('Customer', () => {
     describe('POST: agent/customer/create', () => {
       const customerDto: CustomerDto = {
-        firstName: 'customer1',
-        lastName: 'customer1',
+        first_name: 'customer1',
+        last_name: 'customer1',
         email: 'customer@email.bob',
         phone: '0666666666',
         address: 'Customer address N°47',
@@ -311,8 +311,8 @@ describe('App e2e testing', () => {
           .spec()
           .post('/agent/customer/create')
           .withBody({
-            firstName: customerDto.firstName,
-            lastName: customerDto.lastName,
+            first_name: customerDto.first_name,
+            last_name: customerDto.last_name,
           })
           .expectStatus(400);
       });
@@ -413,8 +413,8 @@ describe('App e2e testing', () => {
     describe('PATCH: agent/customer/update/{id}', () => {
       const customerDto: PartialTypedCustomer = {
         id: 1,
-        firstName: 'updatedCustomer',
-        lastName: 'updatedCustomer',
+        first_name: 'updatedCustomer',
+        last_name: 'updatedCustomer',
         email: 'customer@email.bob',
         phone: '0666666666',
         address: 'Customer address N°47',
@@ -488,9 +488,9 @@ describe('App e2e testing', () => {
   describe('Vendor', () => {
     describe('POST: agent/vendor/create', () => {
       const vendor1: VendorDto = {
-        firstName: 'vendor1',
-        lastName: 'vendor1',
-        companyName: 'Company',
+        first_name: 'vendor1',
+        last_name: 'vendor1',
+        company_name: 'Company',
         email: 'vendor@email.bob',
         phone: '0666666666',
         address: 'Customer address N°47',
@@ -503,9 +503,9 @@ describe('App e2e testing', () => {
         ice: 'XXXXXXXXXXX',
       };
       const vendor2: VendorDto = {
-        firstName: 'vendor2',
-        lastName: 'vendor2',
-        companyName: 'Company',
+        first_name: 'vendor2',
+        last_name: 'vendor2',
+        company_name: 'Company',
         email: 'vendor@email.bob',
         phone: '0666666666',
         address: 'Customer address N°47',
@@ -533,8 +533,8 @@ describe('App e2e testing', () => {
           .spec()
           .post('/agent/vendor/create')
           .withBody({
-            firstName: 'test',
-            lastName: 'test',
+            first_name: 'test',
+            last_name: 'test',
           })
           .expectStatus(400);
       });
@@ -643,9 +643,9 @@ describe('App e2e testing', () => {
 
     describe('PATCH: agent/vendor/update/{id}', () => {
       const vendor: PartialTypedVendor = {
-        firstName: 'updatedVendor',
-        lastName: 'updatedVendor',
-        companyName: 'Company',
+        first_name: 'updatedVendor',
+        last_name: 'updatedVendor',
+        company_name: 'Company',
         email: 'vendor@email.bob',
         phone: '0666666666',
         address: 'Customer address N°47',
@@ -810,12 +810,12 @@ describe('App e2e testing', () => {
       const signupDto: SignupDto = {
         username: 'admin',
         password: 'admin',
-        firstName: 'Updated',
-        lastName: 'Updated',
+        first_name: 'Updated',
+        last_name: 'Updated',
         role_id: 1,
         imageUrl: '1',
         recruitedAt: '2023-04-26T00:26:01.344Z',
-        birthDate: '2023-04-26T00:26:01.344Z',
+        birth_date: '2023-04-26T00:26:01.344Z',
         salary: 69420,
         status: 1,
         contactInformation: {

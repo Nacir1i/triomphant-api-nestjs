@@ -18,7 +18,7 @@ export class MaterialsService
         sku: dto.sku,
         description: dto.description,
         quantity: dto.quantity,
-        quantity_threshold: dto.quantityThreshold,
+        quantity_threshold: dto.quantity_threshold,
 
         category: {
           connect: {
@@ -105,7 +105,7 @@ export class MaterialsService
         sku: dto.sku,
         description: dto.description,
         quantity: dto.quantity,
-        quantity_threshold: dto.quantityThreshold,
+        quantity_threshold: dto.quantity_threshold,
 
         category: {
           connect: {

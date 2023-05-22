@@ -35,7 +35,7 @@ export class AppointmentsService
         },
         delivery_invoice: {
           connect: {
-            id: dto.deliveryInvoice_id,
+            id: dto.delivery_invoice_id,
           },
         },
       },

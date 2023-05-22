@@ -45,12 +45,12 @@ export class OrderDto {
   @ApiProperty()
   @IsString()
   @IsOptional()
-  readonly deliveryAddress: string;
+  readonly delivery_address: string;
 
   @ApiProperty()
   @IsString()
   @IsOptional()
-  readonly dueDate: string;
+  readonly due_date: string;
 
   @ApiProperty()
   @IsNumber()
@@ -76,7 +76,7 @@ export class OrderDto {
   @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => CostModifierDto)
-  readonly costModifier: CostModifierDto;
+  readonly cost_modifier: CostModifierDto;
 
   @IsArray()
   @IsOptional()

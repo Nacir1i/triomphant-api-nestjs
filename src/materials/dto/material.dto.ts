@@ -30,7 +30,7 @@ export class MaterialDto {
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly quantityThreshold: number;
+  readonly quantity_threshold: number;
 
   @ApiProperty()
   @IsNumber()

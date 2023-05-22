@@ -5,12 +5,12 @@ export class CustomerDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly firstName: string;
+  readonly first_name: string;
 
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly lastName: string;
+  readonly last_name: string;
 
   @ApiProperty()
   @IsEmail()

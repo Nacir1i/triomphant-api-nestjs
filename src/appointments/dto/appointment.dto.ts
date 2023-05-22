@@ -35,5 +35,5 @@ export class AppointmentDto {
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly deliveryInvoice_id: number;
+  readonly delivery_invoice_id: number;
 }

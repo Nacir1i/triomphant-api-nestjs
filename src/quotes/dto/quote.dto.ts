@@ -68,7 +68,7 @@ export class QuoteDto {
   @IsOptional()
   @ValidateNested({ each: true })
   @Type(() => CostModifierDto)
-  readonly costModifier: CostModifierDto;
+  readonly cost_modifier: CostModifierDto;
 
   @ApiProperty()
   @IsArray()

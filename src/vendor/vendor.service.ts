@@ -13,9 +13,9 @@ export class VendorService
   async create(dto: VendorDto): Promise<vendor> {
     return await this.prismaService.vendor.create({
       data: {
-        first_name: dto.firstName,
-        last_name: dto.lastName,
-        company_name: dto.companyName,
+        first_name: dto.first_name,
+        last_name: dto.last_name,
+        company_name: dto.company_name,
         contact_information: {
           create: {
             email: dto.email,
@@ -36,7 +36,7 @@ export class VendorService
         },
         logs: {
           create: {
-            title: `Vendor ${dto.firstName} ${dto.lastName} create successfully`,
+            title: `Vendor ${dto.first_name} ${dto.last_name} create successfully`,
           },
         },
       },
@@ -130,9 +130,9 @@ export class VendorService
         id: id,
       },
       data: {
-        first_name: dto.firstName,
-        last_name: dto.lastName,
-        company_name: dto.companyName,
+        first_name: dto.first_name,
+        last_name: dto.last_name,
+        company_name: dto.company_name,
         contact_information: {
           create: {
             email: dto.email,

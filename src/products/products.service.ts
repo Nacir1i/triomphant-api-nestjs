@@ -20,7 +20,7 @@ export class ProductsService
         barcode: dto.barcode,
         sku: dto.sku,
         quantity: dto.quantity,
-        quantity_threshold: dto.quantityThreshold,
+        quantity_threshold: dto.quantity_threshold,
 
         location: {
           connect: {
@@ -123,7 +123,7 @@ export class ProductsService
         barcode: dto.barcode,
         sku: dto.sku,
         quantity: dto.quantity,
-        quantity_threshold: dto.quantityThreshold,
+        quantity_threshold: dto.quantity_threshold,
 
         location: {
           connect: {
