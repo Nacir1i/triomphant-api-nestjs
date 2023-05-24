@@ -20,6 +20,7 @@ import { AppointmentsModule } from './appointments/appointments.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { UserService } from './user/user.service';
+import { WebsocketModule } from './websocket/websocket.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import { UserService } from './user/user.service';
     OrdersModule,
     DeliveryInvoiceModule,
     AppointmentsModule,
+    WebsocketModule,
   ],
   providers: [
     {
