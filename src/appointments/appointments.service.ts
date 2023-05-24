@@ -3,6 +3,7 @@ import { ServiceInterface } from '../utils/interfaces';
 import { AppointmentDto, UpdateAppointmentDto } from './dto';
 import { appointment } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import dayjs, { Dayjs } from 'dayjs';
 
 @Injectable()
 export class AppointmentsService
@@ -72,6 +73,28 @@ export class AppointmentsService
     });
   }
 
+  async findCurrentMonth(): Promise<[] | appointment[]> {
+    const startOfMonth = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth(),
+      1,
+    );
+    const endOfMonth = new Date(
+      new Date().getFullYear(),
+      new Date().getMonth() + 1,
+      0,
+    );
+
+    return await this.prismaService.appointment.findMany({
+      where: {
+        due_date: {
+          gte: startOfMonth,
+          lte: endOfMonth,
+        },
+      },
+    });
+  }
+
   async findAll(): Promise<[] | appointment[]> {
     return await this.prismaService.appointment.findMany();
   }
@@ -99,6 +122,54 @@ export class AppointmentsService
     const remainingPages = pagesCount - page >= 0 ? pagesCount - page : 0;
 
     return { appointments, pagesCount, remainingPages };
+  }
+
+  async getCalendarPage(date: string) {
+    const appointments = await this.findCurrentMonth();
+
+    const currentDate: Dayjs = dayjs(date);
+    const daysInMonth: number = currentDate.daysInMonth();
+    let week: Array<Object | null> = [];
+    let month: Array<typeof week> = [];
+
+    for (let i = 1; i <= daysInMonth; i++) {
+      const dateStart: Dayjs = dayjs(currentDate).date(i).startOf('day');
+
+      const day: string = dateStart.format('dddd');
+      const date: Dayjs = dateStart.set('date', i).startOf('day');
+      const dayOfMonth: number = dateStart.date();
+      const index: number = dateStart.day();
+
+      const matchedDates = appointments.filter((appointment: appointment) =>
+        date.isSame(appointment.due_date, 'day'),
+      );
+
+      week = [...week, { index: dayOfMonth, day, date, data: matchedDates }];
+      if (index === 6 || i >= daysInMonth) {
+        month = [...month, week];
+        week = [];
+      }
+    }
+
+    const firstWeek: (Object | null)[] = month[0];
+    const missingFirstWeeksDays: number = 7 - firstWeek.length;
+
+    for (let j = 0; j < missingFirstWeeksDays; j++) {
+      firstWeek.unshift(null);
+    }
+
+    const lastWeek: (Object | null)[] = month[month.length - 1];
+    const missingLastWeeksDays: number = 7 - lastWeek.length;
+
+    for (let j = 0; j < missingLastWeeksDays; j++) {
+      lastWeek.push(null);
+    }
+
+    if (6 - month.length) {
+      month.push([null, null, null, null, null, null, null]);
+    }
+
+    return month;
   }
 
   async update(id: number, dto: UpdateAppointmentDto): Promise<appointment> {
