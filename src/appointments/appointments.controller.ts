@@ -20,13 +20,16 @@ import {
   UpdateInterceptor,
   PageInterceptor,
 } from '../utils/interceptors';
-import { ParseStringPipe } from '../utils/customPipes';
+import { ParseStringPipe, ParseIsoDatePipe } from '../utils/customPipes';
 import { AppointmentsService } from './appointments.service';
 import { ControllerInterface } from '../utils/interfaces';
 import { AppointmentDto, UpdateAppointmentDto } from './dto';
 import { appointment } from '@prisma/client';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
+import { Public } from 'src/utils/decorators';
+
+@Public()
 @ApiBearerAuth('JWT-auth')
 @Controller('appointments')
 export class AppointmentsController
@@ -56,6 +59,12 @@ export class AppointmentsController
     return await this.appointmentsService.findSearch(search);
   }
 
+  @Get('findMonth')
+  @HttpCode(HttpStatus.OK)
+  async findMonth(@Query('date', ParseIsoDatePipe) date: string) {
+    return await this.appointmentsService.findMonth(date);
+  }
+
   @UseInterceptors(FindManyInterceptor)
   @Get('findAll')
   @HttpCode(HttpStatus.OK)
@@ -71,6 +80,12 @@ export class AppointmentsController
     @Query('limit', ParseIntPipe) limit: number,
   ) {
     return await this.appointmentsService.getPage(page, limit);
+  }
+
+  @Get('getCalendarPage')
+  @HttpCode(HttpStatus.OK)
+  async getCalendarPage(@Query('date', ParseIsoDatePipe) date: string) {
+    return this.appointmentsService.getCalendarPage(date);
   }
 
   @UseInterceptors(UpdateInterceptor)

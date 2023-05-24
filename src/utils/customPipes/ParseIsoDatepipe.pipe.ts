@@ -1,7 +1,7 @@
 import { PipeTransform, Injectable, BadRequestException } from '@nestjs/common';
 
 @Injectable()
-export class ParseStringPipe implements PipeTransform<string, string> {
+export class ParseIsoDatePipe implements PipeTransform<string, string> {
   private readonly regexPattern: RegExp;
 
   constructor() {
@@ -9,7 +9,7 @@ export class ParseStringPipe implements PipeTransform<string, string> {
   }
 
   transform(value: string): string {
-    if (!this.regexPattern.test(value) || !value) {
+    if (value != null && !this.regexPattern.test(value)) {
       throw new BadRequestException(
         'Validation failed (valid date string is expected)',
       );

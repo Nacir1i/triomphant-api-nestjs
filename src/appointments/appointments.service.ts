@@ -3,7 +3,7 @@ import { ServiceInterface } from '../utils/interfaces';
 import { AppointmentDto, UpdateAppointmentDto } from './dto';
 import { appointment } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
-import dayjs, { Dayjs } from 'dayjs';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class AppointmentsService
@@ -73,15 +73,17 @@ export class AppointmentsService
     });
   }
 
-  async findCurrentMonth(): Promise<[] | appointment[]> {
+  async findMonth(
+    date: string = new Date().toISOString(),
+  ): Promise<[] | appointment[]> {
     const startOfMonth = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth(),
+      new Date(date).getFullYear(),
+      new Date(date).getMonth(),
       1,
     );
     const endOfMonth = new Date(
-      new Date().getFullYear(),
-      new Date().getMonth() + 1,
+      new Date(date).getFullYear(),
+      new Date(date).getMonth() + 1,
       0,
     );
 
@@ -125,18 +127,18 @@ export class AppointmentsService
   }
 
   async getCalendarPage(date: string) {
-    const appointments = await this.findCurrentMonth();
+    const appointments = await this.findMonth(date);
 
-    const currentDate: Dayjs = dayjs(date);
+    const currentDate: dayjs.Dayjs = dayjs(date);
     const daysInMonth: number = currentDate.daysInMonth();
     let week: Array<Object | null> = [];
     let month: Array<typeof week> = [];
 
     for (let i = 1; i <= daysInMonth; i++) {
-      const dateStart: Dayjs = dayjs(currentDate).date(i).startOf('day');
+      const dateStart: dayjs.Dayjs = dayjs(currentDate).date(i).startOf('day');
 
       const day: string = dateStart.format('dddd');
-      const date: Dayjs = dateStart.set('date', i).startOf('day');
+      const date: dayjs.Dayjs = dateStart.set('date', i).startOf('day');
       const dayOfMonth: number = dateStart.date();
       const index: number = dateStart.day();
 
