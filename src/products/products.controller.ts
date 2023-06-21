@@ -51,6 +51,8 @@ export class ProductsController
     if (!product) {
       throw new NotFoundException(`Product ${id} not found`);
     }
+
+    return product;
   }
 
   @UseInterceptors(FindManyInterceptor)

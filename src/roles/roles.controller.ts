@@ -72,7 +72,7 @@ export class RolesController
     return await this.rolesService.findAll();
   }
 
-  async getPage() {}
+  getPage() {}
 
   @UseInterceptors(UpdateInterceptor)
   @Patch('update')

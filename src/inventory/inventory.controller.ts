@@ -89,7 +89,5 @@ export class InventoryController
     return this.inventoryService.update(id, dto);
   }
 
-  delete(id: number) {
-    throw new Error('Method not implemented.');
-  }
+  delete(id: number) {}
 }

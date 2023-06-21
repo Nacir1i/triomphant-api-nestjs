@@ -56,6 +56,8 @@ export class InvoiceCategoryController
     if (!invoiceCategory) {
       throw new NotFoundException(`Invoice #${id} category not found`);
     }
+
+    return invoiceCategory;
   }
 
   @UseInterceptors(FindManyInterceptor)
@@ -92,7 +94,5 @@ export class InvoiceCategoryController
     return await this.invoiceCategoryService.update(id, dto);
   }
 
-  delete(id: number) {
-    throw new Error('Method not implemented.');
-  }
+  delete(id: number) {}
 }

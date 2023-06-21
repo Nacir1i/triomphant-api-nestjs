@@ -51,6 +51,8 @@ export class MaterialsController
     if (!material) {
       throw new NotFoundException(`Material ${id} not found`);
     }
+
+    return material;
   }
 
   @UseInterceptors(FindManyInterceptor)

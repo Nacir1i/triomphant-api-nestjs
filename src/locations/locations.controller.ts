@@ -88,6 +88,6 @@ export class LocationsController
   }
 
   delete(id: number) {
-    throw new Error('Method not implemented.');
+    return this.locationsService.delete(id);
   }
 }

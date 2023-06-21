@@ -47,7 +47,10 @@ export class OrdersController
   @HttpCode(HttpStatus.OK)
   async findOne(@Param('id', ParseIntPipe) id: number) {
     const order = await this.ordersService.findOne(id);
+
     if (!order) throw new NotFoundException(`Order #${id} not found`);
+
+    return order;
   }
 
   @UseInterceptors(FindManyInterceptor)
