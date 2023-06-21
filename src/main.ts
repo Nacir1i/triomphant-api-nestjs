@@ -6,6 +6,7 @@ import {
   HttpExceptionFilter,
   PrismaExceptionFilter,
 } from './utils/exceptionFilters';
+import helmet from 'helmet';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -27,6 +28,7 @@ async function bootstrap() {
     )
     .build();
 
+  app.use(helmet());
   app.useGlobalFilters(new HttpExceptionFilter(), new PrismaExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({

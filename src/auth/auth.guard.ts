@@ -8,7 +8,6 @@ import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
 import { UserService } from '../user/user.service';
 import { user } from '@prisma/client';
-import * as argon from 'argon2';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC_KEY } from '../utils/decorators';
 
@@ -34,8 +33,6 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      console.log('no token');
-
       throw new UnauthorizedException();
     }
 

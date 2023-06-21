@@ -14,7 +14,7 @@ export class UserService
   constructor(
     private prismaService: PrismaService,
     private jwtService: JwtService,
-  ) { }
+  ) {}
 
   async create(dto: UserDto): Promise<user> {
     throw new Error('Method not implemented.');
@@ -37,8 +37,6 @@ export class UserService
         bank_information: true,
       },
     });
-
-    delete user.password;
 
     return user;
   }
@@ -124,8 +122,20 @@ export class UserService
   }
 
   async update(id: number, dto: PartialTypedUser): Promise<user> {
-    const bank_information = { name: dto.name, number: dto.number, rib: dto.rib, swift: dto.swift, ice: dto.ice }
-    const contact_information = { email: dto.email, phone: dto.phone, address: dto.address, honorific: dto.honorific, emergency: dto.emergency }
+    const bank_information = {
+      name: dto.name,
+      number: dto.number,
+      rib: dto.rib,
+      swift: dto.swift,
+      ice: dto.ice,
+    };
+    const contact_information = {
+      email: dto.email,
+      phone: dto.phone,
+      address: dto.address,
+      honorific: dto.honorific,
+      emergency: dto.emergency,
+    };
 
     return await this.prismaService.user.update({
       where: { id },
@@ -152,22 +162,22 @@ export class UserService
   }
 
   async password_reset(id: number, dto: ChangePasswordUser): Promise<Object> {
-    const { new_password, old_password } = dto
-    const user = await this.prismaService.user.findUnique({ where: { id } })
+    const { new_password, old_password } = dto;
+    const user = await this.prismaService.user.findUnique({ where: { id } });
     if (!(await argon_verify(user.password, old_password))) {
       throw new UnauthorizedException('Credentials provided are wrong');
     }
 
-    const new_hash = await argon_hash(new_password)
+    const new_hash = await argon_hash(new_password);
     await this.prismaService.user.update({
       where: { id },
       data: { password: new_hash },
-    })
-    const signable = { username: user.username, password: new_hash }
-    const token: string = await this.jwtService.signAsync(signable)
+    });
+    const signable = { username: user.username, password: new_hash };
+    const token: string = await this.jwtService.signAsync(signable);
     {
-      const { password, ..._user } = user
-      return { token, user: _user }
+      const { password, ..._user } = user;
+      return { token, user: _user };
     }
   }
 
