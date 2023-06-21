@@ -15,22 +15,11 @@ export class RolesService
   constructor(private prismaService: PrismaService) {}
 
   async create(dto: RoleDto): Promise<role> {
-    try {
-      const role = await this.prismaService.role.create({
-        data: {
-          title: dto.title,
-        },
-      });
-
-      return role;
-    } catch (error) {
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
-        if (error.code === 'P2002') {
-          throw new ForbiddenException('Role already exists');
-        }
-      }
-      throw error;
-    }
+    return await this.prismaService.role.create({
+      data: {
+        title: dto.title,
+      },
+    });
   }
 
   async findOne(id: number): Promise<role | null> {

@@ -5,6 +5,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import {
   HttpExceptionFilter,
   PrismaExceptionFilter,
+  PrismaValidationExceptionFilter,
 } from './utils/exceptionFilters';
 import helmet from 'helmet';
 
@@ -29,7 +30,11 @@ async function bootstrap() {
     .build();
 
   app.use(helmet());
-  app.useGlobalFilters(new HttpExceptionFilter(), new PrismaExceptionFilter());
+  app.useGlobalFilters(
+    new HttpExceptionFilter(),
+    new PrismaExceptionFilter(),
+    new PrismaValidationExceptionFilter(),
+  );
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

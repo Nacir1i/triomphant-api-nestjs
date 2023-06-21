@@ -40,8 +40,6 @@ export class AuthGuard implements CanActivate {
       const claimedUser: user = await this.jwtService.verifyAsync(token);
 
       const user = await this.userService.findByUserName(claimedUser.username);
-      console.log('claimed password', claimedUser.password);
-      console.log('user password', user.password);
 
       if (!user) {
         console.log('no user');
