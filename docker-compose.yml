@@ -2,18 +2,17 @@ version: '3.9'
 
 services:
   dev-db:
-    image: postgres:13
+    image: mysql
     ports:
-      - 5434:5432
+      - 3306:3306
+    restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: dev-db
+      MYSQL_ROOT_PASSWORD: example
+
   test-db:
-    image: postgres:13
+    image: mysql
     ports:
-      - 5435:5432
+      - 3307:3306
+    restart: always
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: 123
-      POSTGRES_DB: test-db
+      MYSQL_ROOT_PASSWORD: example

@@ -19,8 +19,11 @@ async function main() {
   await prisma.role.createMany({
     data: roles.map((title) => ({ title })),
   });
-  const user = await prisma.user.create({
-    data: {
+  const user = await prisma.user.upsert({
+    where: {
+      id: 1,
+    },
+    create: {
       role: {
         connect: {
           id: 1,
@@ -53,6 +56,7 @@ async function main() {
         },
       },
     },
+    update: {},
   });
 }
 
