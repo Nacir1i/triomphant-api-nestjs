@@ -33,7 +33,7 @@ export class AuthGuard implements CanActivate {
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('No authentication token was provided');
     }
 
     try {
@@ -42,20 +42,16 @@ export class AuthGuard implements CanActivate {
       const user = await this.userService.findByUserName(claimedUser.username);
 
       if (!user) {
-        console.log('no user');
-        throw new UnauthorizedException();
+        throw new UnauthorizedException('Claimed user was not found');
       }
 
       if (user.password !== claimedUser.password) {
-        console.log('no password');
-        throw new UnauthorizedException();
+        throw new UnauthorizedException('Claimed user password is incorrect');
       }
 
       request['user'] = claimedUser;
     } catch (error) {
-      console.log(error);
-
-      throw new UnauthorizedException();
+      throw new UnauthorizedException('Invalid authentication token');
     }
     return true;
   }
