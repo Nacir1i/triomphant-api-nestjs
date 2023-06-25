@@ -17,7 +17,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
     private readonly prismaService: PrismaService,
     private readonly userService: UserService,
-  ) { }
+  ) {}
 
   async login(dto: LoginDto): Promise<object> {
     const user = await this.userService.findByUserName(dto.username);
@@ -29,7 +29,7 @@ export class AuthService {
       throw new UnauthorizedException('Credentials provided are wrong');
     }
 
-    const signable = { username: user.username, password: user.password }
+    const signable = { username: user.username, password: user.password };
     const token: string = await this.jwtService.signAsync(signable);
 
     const { password, ...rest } = user;
@@ -65,7 +65,7 @@ export class AuthService {
         },
         logs: {
           create: {
-            title: 'User created successfully',
+            content: 'User created successfully',
           },
         },
       },
@@ -79,7 +79,7 @@ export class AuthService {
       },
     });
 
-    const signable = { username: user.username, password: hash }
+    const signable = { username: user.username, password: hash };
     const token: string = await this.jwtService.signAsync(signable);
 
     return { user, token };
