@@ -21,6 +21,7 @@ import { APP_GUARD } from '@nestjs/core';
 import { AuthGuard } from './auth/auth.guard';
 import { UserService } from './user/user.service';
 import { WebsocketModule } from './websocket/websocket.module';
+import { PingModule } from './ping/ping.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { WebsocketModule } from './websocket/websocket.module';
     DeliveryInvoiceModule,
     AppointmentsModule,
     WebsocketModule,
+    PingModule,
   ],
   providers: [
     {

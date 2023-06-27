@@ -20,7 +20,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "prestart:dev": "npm run db:dev:restart",
-    "start:dev": "nest start --watch",
+    "start:dev": "start http://localhost:3000/api && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
