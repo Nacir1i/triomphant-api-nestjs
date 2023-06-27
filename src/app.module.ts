@@ -22,6 +22,7 @@ import { AuthGuard } from './auth/auth.guard';
 import { UserService } from './user/user.service';
 import { WebsocketModule } from './websocket/websocket.module';
 import { PingModule } from './ping/ping.module';
+import { TaxedInvoiceModule } from './taxedInvoice/taxedInvoice.module';
 
 @Module({
   imports: [
@@ -46,6 +47,7 @@ import { PingModule } from './ping/ping.module';
     DeliveryInvoiceModule,
     AppointmentsModule,
     WebsocketModule,
+    TaxedInvoiceModule,
     PingModule,
   ],
   providers: [
