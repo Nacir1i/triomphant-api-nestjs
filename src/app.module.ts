@@ -23,6 +23,7 @@ import { UserService } from './user/user.service';
 import { WebsocketModule } from './websocket/websocket.module';
 import { PingModule } from './ping/ping.module';
 import { TaxedInvoiceModule } from './taxedInvoice/taxedInvoice.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { TaxedInvoiceModule } from './taxedInvoice/taxedInvoice.module';
     WebsocketModule,
     TaxedInvoiceModule,
     PingModule,
+    NotificationsModule,
   ],
   providers: [
     {
