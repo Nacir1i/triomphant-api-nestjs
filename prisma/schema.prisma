@@ -523,7 +523,8 @@ model role {
   title      String
   created_at DateTime @default(now())
 
-  employees user[]
+  employees     user[]
+  notifications notification_role[]
 }
 
 model service {
@@ -580,7 +581,7 @@ model user {
   dev_contact           dev_contact[]
   contact_messages      contact_message[]
 
-  notifications notification[]
+  notifications notification_user[]
 
   @@index([role_id])
   @@index([contact_information_id])
@@ -900,10 +901,32 @@ model notification {
   metadata   Bytes
   created_at DateTime @default(now())
 
-  employee    user @relation(fields: [employee_id], references: [id])
-  employee_id Int
+  employees notification_user[]
+  roles     notification_role[]
+}
 
-  @@index([employee_id])
+model notification_user {
+  id              Int @id @default(autoincrement())
+  notification_id Int
+  user_id         Int
+
+  notification notification @relation(fields: [notification_id], references: [id])
+  user         user         @relation(fields: [user_id], references: [id])
+
+  @@index([notification_id])
+  @@index([user_id])
+}
+
+model notification_role {
+  id              Int @id @default(autoincrement())
+  notification_id Int
+  role_id         Int
+
+  notification notification @relation(fields: [notification_id], references: [id])
+  role         role         @relation(fields: [role_id], references: [id])
+
+  @@index([notification_id])
+  @@index([role_id])
 }
 
 model taxed_invoice {
