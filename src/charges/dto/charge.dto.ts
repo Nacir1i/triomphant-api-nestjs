@@ -1,12 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { charge_state, frequency } from '@prisma/client';
+import {
+  charge_payment_method,
+  charge_state,
+  charge_type,
+  frequency,
+} from '@prisma/client';
 import { IsString, IsOptional, IsNotEmpty, IsNumber } from 'class-validator';
 
 export interface ChargePayment {
   title: string;
   paid_at: Date;
   amount: number;
-  method: string;
+  method: charge_payment_method;
 }
 
 export class ChargeDto {
@@ -23,7 +28,7 @@ export class ChargeDto {
   @ApiProperty()
   @IsString()
   @IsNotEmpty()
-  readonly type: charge_state;
+  readonly type: charge_type;
 
   @ApiProperty()
   @IsString()

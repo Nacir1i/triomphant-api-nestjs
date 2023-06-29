@@ -1,4 +1,4 @@
 import { PartialType } from '@nestjs/swagger';
 import { ChargeDto } from './index';
 
-export class UpdateAppointmentDto extends PartialType(ChargeDto) {}
+export class UpdateChargeDto extends PartialType(ChargeDto) {}
