@@ -24,12 +24,14 @@ import { WebsocketModule } from './websocket/websocket.module';
 import { PingModule } from './ping/ping.module';
 import { TaxedInvoiceModule } from './taxedInvoice/taxedInvoice.module';
 import { NotificationsModule } from './notifications/notifications.module';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    EventEmitterModule.forRoot(),
     AuthModule,
     UserModule,
     PrismaModule,
