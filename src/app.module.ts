@@ -25,6 +25,7 @@ import { PingModule } from './ping/ping.module';
 import { TaxedInvoiceModule } from './taxedInvoice/taxedInvoice.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ChargesModule } from './charges/charges.module';
 
 @Module({
   imports: [
@@ -53,6 +54,7 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
     TaxedInvoiceModule,
     PingModule,
     NotificationsModule,
+    ChargesModule,
   ],
   providers: [
     {
