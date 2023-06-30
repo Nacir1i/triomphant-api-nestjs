@@ -28,11 +28,6 @@ import { ChargeDto, UpdateChargeDto } from './dto';
 import { charge, charge_state, charge_type } from '@prisma/client';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
-enum ChargeType {
-  AUTO,
-  MANUAL,
-}
-
 @ApiBearerAuth('JWT-auth')
 @Controller('charges')
 export class ChargesController
@@ -71,7 +66,7 @@ export class ChargesController
   @Get('findByType/:type')
   @HttpCode(HttpStatus.OK)
   async findByType(
-    @Param('type', new ParseCustomEnumPipe(ChargeType)) type: charge_type,
+    @Param('type', new ParseCustomEnumPipe(charge_type)) type: charge_type,
   ) {
     return await this.chargesService.findByType(type);
   }

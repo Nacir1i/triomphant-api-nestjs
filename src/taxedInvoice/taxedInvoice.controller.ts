@@ -28,6 +28,7 @@ import { ApiBearerAuth } from '@nestjs/swagger';
 import { TaxedInvoiceDto, UpdateTaxedInvoiceDto } from './dto';
 import { taxed_invoice } from '@prisma/client';
 
+@ApiBearerAuth('JWT-auth')
 @Controller('taxed-invoice')
 export class TaxedInvoiceController
   implements

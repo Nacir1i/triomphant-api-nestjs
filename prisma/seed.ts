@@ -2,13 +2,6 @@ import * as argon from 'argon2';
 import { PrismaClient } from '@prisma/client';
 const prisma = new PrismaClient();
 
-// const genHash = async (string: string) => {
-//   const salt: string = await argon.genSalt();
-//   const hash: string = await argon.hash(string, salt);
-
-//   return hash;
-// };
-
 async function main() {
   const roles = [
     'Developpeur',
@@ -19,7 +12,7 @@ async function main() {
   await prisma.role.createMany({
     data: roles.map((title) => ({ title })),
   });
-  const user = await prisma.user.upsert({
+  await prisma.user.upsert({
     where: {
       id: 1,
     },
