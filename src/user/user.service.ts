@@ -53,6 +53,9 @@ export class UserService
           },
         ],
       },
+      include: {
+        role: true,
+      },
     });
   }
 
