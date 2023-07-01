@@ -49,7 +49,7 @@ export class AuthGuard implements CanActivate {
         throw new UnauthorizedException('Claimed user password is incorrect');
       }
 
-      request['user'] = claimedUser;
+      request['user'] = user;
     } catch (error) {
       throw new UnauthorizedException('Invalid authentication token');
     }
