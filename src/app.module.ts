@@ -26,6 +26,7 @@ import { TaxedInvoiceModule } from './taxedInvoice/taxedInvoice.module';
 import { NotificationsModule } from './notifications/notifications.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ChargesModule } from './charges/charges.module';
+import { RolesGuard } from './auth/role.guard';
 
 @Module({
   imports: [
@@ -60,6 +61,10 @@ import { ChargesModule } from './charges/charges.module';
     {
       provide: APP_GUARD,
       useClass: AuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
     UserService,
   ],

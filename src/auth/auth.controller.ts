@@ -6,11 +6,12 @@ import {
   Post,
   UseInterceptors,
 } from '@nestjs/common';
-import { Public } from '../utils/decorators';
+import { Public, Role } from '../utils/decorators';
 import { AuthService } from './auth.service';
 import { SignupDto, LoginDto } from './dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { CreateInterceptor } from '../utils/interceptors';
+import { RoleAccessLevel } from './role.guard';
 
 @UseInterceptors(CreateInterceptor)
 @Controller('auth')
@@ -24,6 +25,7 @@ export class AuthController {
     return this.authService.login(dto);
   }
 
+  @Role(RoleAccessLevel.AGENT_STOCK)
   @ApiBearerAuth('JWT-auth')
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
