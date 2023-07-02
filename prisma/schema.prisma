@@ -338,7 +338,6 @@ model order_service {
   id         Int @id @default(autoincrement())
   cost       Int @default(0)
   price      Int @default(0)
-  quantity   Int
   order_id   Int
   service_id Int
 
@@ -388,7 +387,6 @@ model package_product {
 
 model package_service {
   id         Int   @id @default(autoincrement())
-  quantity   Int   @default(1)
   service_id Int
   package_id Int
   price      Float @default(0)
@@ -505,7 +503,6 @@ model quote_product {
 
 model quote_service {
   id         Int   @id @default(autoincrement())
-  quantity   Int
   quote_id   Int
   service_id Int
   price      Float @default(0)
@@ -1031,7 +1028,6 @@ model taxed_invoice_service {
   id               Int @id @default(autoincrement())
   cost             Int @default(0)
   price            Int @default(0)
-  quantity         Int
   service_id       Int
   taxed_invoice_id Int
 
@@ -1151,6 +1147,8 @@ enum charge_type {
 
 enum charge_payment_method {
   CASH
+  CHEQUE
+  VIREMENT
 }
 
 enum frequency {
