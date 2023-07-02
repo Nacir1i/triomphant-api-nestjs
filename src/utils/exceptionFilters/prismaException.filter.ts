@@ -55,6 +55,6 @@ export class PrismaExceptionFilter extends BaseExceptionFilter {
       return `The provided '${relatedEntity}' was not found for '${mainEntity}'.`;
     }
 
-    return 'Invalid request data.';
+    return message;
   }
 }
