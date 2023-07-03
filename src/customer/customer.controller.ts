@@ -23,7 +23,12 @@ import {
 } from '../utils/interceptors';
 import { ParseStringPipe } from '../utils/customPipes';
 import { CustomerService } from './customer.service';
-import { CustomerDto, PartialTypedCustomer } from './dto';
+import {
+  CustomerCommentDto,
+  CustomerCommentNoteDto,
+  CustomerDto,
+  PartialTypedCustomer,
+} from './dto';
 import { ControllerInterface } from '../utils/interfaces';
 import { customer } from '@prisma/client';
 import { ApiBearerAuth } from '@nestjs/swagger';
@@ -91,6 +96,27 @@ export class CustomerController
     const updated = await this.customerService.update(id, dto);
 
     return updated;
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Post('comment/create')
+  @HttpCode(HttpStatus.CREATED)
+  async createComment(@Body() dto: CustomerCommentDto) {
+    return await this.customerService.createComment(dto);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Get('comment/:id')
+  @HttpCode(HttpStatus.CREATED)
+  async findCustomerComments(@Param('id', ParseIntPipe) id: number) {
+    return await this.customerService.findCustomerComments(id);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Post('comment/note/create')
+  @HttpCode(HttpStatus.CREATED)
+  async createCommentNote(@Body() dto: CustomerCommentNoteDto) {
+    return this.customerService.createCommentNote(dto);
   }
 
   @UseInterceptors(DeleteInterceptor)
