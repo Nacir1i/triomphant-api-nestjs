@@ -1,7 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { CustomerDto, PartialTypedCustomer } from './dto';
-import { customer } from '@prisma/client';
+import {
+  CustomerCommentDto,
+  CustomerCommentNoteDto,
+  CustomerDto,
+  PartialTypedCustomer,
+} from './dto';
+import {
+  customer,
+  customer_comment,
+  customer_comment_note,
+} from '@prisma/client';
 import { ServiceInterface } from '../utils/interfaces';
 
 interface DashboardStats {
@@ -216,6 +225,56 @@ export class CustomerService
       },
       data: {
         is_deleted: true,
+      },
+    });
+  }
+
+  async createComment(dto: CustomerCommentDto): Promise<customer_comment> {
+    return await this.prismaService.customer_comment.create({
+      data: {
+        content: dto.content,
+        metadata: Buffer.from(dto.metadata),
+        is_system: dto.is_system,
+        notification_id: dto.notification_id,
+
+        customer: {
+          connect: {
+            id: dto.commenter_id,
+          },
+        },
+        commenter: {
+          connect: {
+            id: dto.commenter_id,
+          },
+        },
+      },
+    });
+  }
+
+  async findCustomerComments(id: number): Promise<[] | customer_comment[]> {
+    return await this.prismaService.customer_comment.findMany({
+      where: {
+        customer_id: id,
+      },
+      include: {
+        notes: true,
+      },
+    });
+  }
+
+  async createCommentNote(
+    dto: CustomerCommentNoteDto,
+  ): Promise<customer_comment_note> {
+    return await this.prismaService.customer_comment_note.create({
+      data: {
+        content: dto.content,
+        notification_id: dto.notification_id,
+
+        comment: {
+          connect: {
+            id: dto.comment_id,
+          },
+        },
       },
     });
   }
