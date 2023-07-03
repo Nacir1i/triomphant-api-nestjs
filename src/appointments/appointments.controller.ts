@@ -28,6 +28,7 @@ import { appointment } from '@prisma/client';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
 import { Public } from 'src/utils/decorators';
+import BaseInterceptor from 'src/utils/interceptors/baseInterceptor';
 
 @Public()
 @ApiBearerAuth('JWT-auth')
@@ -59,10 +60,18 @@ export class AppointmentsController
     return await this.appointmentsService.findSearch(search);
   }
 
+  @UseInterceptors(new BaseInterceptor('Appointment month'))
   @Get('findMonth')
   @HttpCode(HttpStatus.OK)
   async findMonth(@Query('date', ParseIsoDatePipe) date: string) {
     return await this.appointmentsService.findMonth(date);
+  }
+
+  @UseInterceptors(new BaseInterceptor('Appointment stats'))
+  @Get('getStats')
+  @HttpCode(HttpStatus.OK)
+  async getStats() {
+    return await this.appointmentsService.getStats();
   }
 
   @UseInterceptors(FindManyInterceptor)

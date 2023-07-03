@@ -10,6 +10,8 @@ export class AppointmentsService
   implements
     ServiceInterface<AppointmentDto, UpdateAppointmentDto, appointment>
 {
+  private readonly MONTH_TIME = 86_400_000;
+
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(dto: AppointmentDto): Promise<appointment> {
@@ -131,8 +133,8 @@ export class AppointmentsService
 
     const currentDate: dayjs.Dayjs = dayjs(date);
     const daysInMonth: number = currentDate.daysInMonth();
-    let week: Array<Object | null> = [];
-    let month: Array<typeof week> = [];
+    let week: Object[] | null = [];
+    let month: (typeof week)[] = [];
 
     for (let i = 1; i <= daysInMonth; i++) {
       const dateStart: dayjs.Dayjs = dayjs(currentDate).date(i).startOf('day');
@@ -172,6 +174,30 @@ export class AppointmentsService
     }
 
     return month;
+  }
+
+  async getStats(): Promise<null | object> {
+    const date_origin = Date.now();
+    const date_minimum = date_origin - this.MONTH_TIME;
+
+    const appointments = await this.prismaService.appointment.findMany({
+      where: {
+        is_deleted: false,
+        created_at: {
+          gte: new Date(date_minimum),
+        },
+      },
+    });
+
+    return {
+      meta: {
+        date_origin,
+        date_minimum,
+      },
+      stats: {
+        total: appointments.length,
+      },
+    };
   }
 
   async update(id: number, dto: UpdateAppointmentDto): Promise<appointment> {
