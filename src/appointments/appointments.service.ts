@@ -5,6 +5,12 @@ import { appointment } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import * as dayjs from 'dayjs';
 
+interface DashboardStats {
+  total: number;
+  done: number;
+  running: number;
+}
+
 @Injectable()
 export class AppointmentsService
   implements
@@ -197,6 +203,34 @@ export class AppointmentsService
       stats: {
         total: appointments.length,
       },
+    };
+  }
+
+  async getDashboardStats(dateMinimum: number): Promise<DashboardStats> {
+    const dateStart = new Date(dateMinimum);
+    const appointments = await this.prismaService.appointment.findMany({
+      where: {
+        AND: [{ is_deleted: false }, { created_at: { gte: dateStart } }],
+      },
+      select: {
+        status: true,
+        due_date: true,
+      },
+    });
+
+    let [counter_appointments_done, counter_appointments_running] = [0, 0];
+    appointments.forEach((appointment) => {
+      if (appointment.status === 3) {
+        counter_appointments_done += 1;
+      } else {
+        counter_appointments_running += 1;
+      }
+    });
+
+    return {
+      done: counter_appointments_done,
+      running: counter_appointments_running,
+      total: appointments.length,
     };
   }
 
