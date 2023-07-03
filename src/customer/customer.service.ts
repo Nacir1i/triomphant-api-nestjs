@@ -16,8 +16,6 @@ export class CustomerService
   implements ServiceInterface<CustomerDto, PartialTypedCustomer, customer>
 {
   private readonly DAY_MS = 86_400_000;
-  private readonly MONTH_MS = this.DAY_MS * 31;
-  private readonly BI_WEEK_MS = this.DAY_MS * 14;
 
   constructor(private prismaService: PrismaService) {}
 
@@ -116,6 +114,20 @@ export class CustomerService
     return customers;
   }
 
+  async findDate(dateMinimum: number): Promise<[] | customer[]> {
+    return await this.prismaService.customer.findMany({
+      where: {
+        is_deleted: false,
+        created_at: {
+          gte: new Date(dateMinimum),
+        },
+      },
+      include: {
+        orders: true,
+      },
+    });
+  }
+
   async findAll(): Promise<customer[] | []> {
     return await this.prismaService.customer.findMany({
       where: {
@@ -149,45 +161,6 @@ export class CustomerService
     const remainingPages = pagesCount - page >= 0 ? pagesCount - page : 0;
 
     return { customers, pagesCount, remainingPages };
-  }
-
-  async getDashboardStats(
-    date_minimum: number,
-    date_origin: number,
-  ): Promise<DashboardStats> {
-    const customers = await this.prismaService.customer.findMany({
-      where: { is_deleted: false, created_at: { gte: new Date(date_minimum) } },
-      include: { orders: true },
-    });
-
-    const frequencies = new Map();
-    for (let frequency_index = 0; frequency_index < 14; frequency_index++) {
-      const date_object = new Date(date_origin - this.DAY_MS * frequency_index);
-      const month = (date_object.getMonth() + 1).toFixed(0).padStart(2, '0');
-      const day_of_month = date_object.getDate().toFixed(0).padStart(2, '0');
-      const frequency_key = `${month}/${day_of_month}`;
-      frequencies.set(frequency_key, 0);
-    }
-
-    let [counter_customers_repeating, counter_customers_unique] = [0, 0];
-    customers.forEach((customer) => {
-      const date_object = new Date(customer.created_at);
-      const month = (date_object.getMonth() + 1).toFixed(0).padStart(2, '0');
-      const day_of_month = date_object.getDate().toFixed(0).padStart(2, '0');
-      const frequency_key = `${month}/${day_of_month}`;
-
-      const old_frequency = frequencies.get(frequency_key) ?? 0;
-      frequencies.set(frequency_key, old_frequency + 1);
-      // ---
-      if (customer.orders.length > 1) counter_customers_repeating += 1;
-      else counter_customers_unique += 1;
-    });
-    return {
-      frequencies: Object.fromEntries(frequencies),
-      repeating: counter_customers_repeating,
-      unique: counter_customers_unique,
-      total: customers.length,
-    };
   }
 
   async update(
