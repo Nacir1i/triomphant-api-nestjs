@@ -1,7 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ServiceInterface } from '../utils/interfaces';
 import { OrderDto, UpdateOrderDto } from './dto';
-import { order } from '@prisma/client';
+import {
+  Renamedpackage,
+  cost_modifier,
+  manual_order_content,
+  order,
+  order_package,
+  order_payment,
+  order_product,
+  order_service,
+} from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { constructUpdateMany } from '../utils/common';
 
@@ -98,7 +107,7 @@ export class OrdersService
     });
   }
 
-  async findDate(dateMinimum: number): Promise<[] | order[]> {
+  async findDate(dateMinimum: number): Promise<any[]> {
     return await this.prismaService.order.findMany({
       where: {
         created_at: {

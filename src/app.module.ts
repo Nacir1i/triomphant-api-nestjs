@@ -27,6 +27,7 @@ import { NotificationsModule } from './notifications/notifications.module';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ChargesModule } from './charges/charges.module';
 import { RolesGuard } from './auth/role.guard';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @Module({
   imports: [
@@ -56,6 +57,7 @@ import { RolesGuard } from './auth/role.guard';
     PingModule,
     NotificationsModule,
     ChargesModule,
+    DashboardModule,
   ],
   providers: [
     {

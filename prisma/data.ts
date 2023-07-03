@@ -279,7 +279,7 @@ function createRandomOrder() {
     ref: faker.string.uuid(),
     title: faker.commerce.productName(),
     paid: Number(faker.commerce.price({ min: 50, max: 100 })),
-    price: Number(faker.commerce.price({ min: 50, max: 100 })),
+    price: Number(faker.commerce.price({ min: 1000, max: 10000 })),
     note: faker.commerce.productDescription(),
     delivery_address: faker.location.streetAddress(true),
     due_date: faker.date.future(),
