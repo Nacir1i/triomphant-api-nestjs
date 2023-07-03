@@ -98,6 +98,24 @@ export class OrdersService
     });
   }
 
+  async findDate(dateMinimum: number): Promise<[] | order[]> {
+    return await this.prismaService.order.findMany({
+      where: {
+        created_at: {
+          gte: new Date(dateMinimum),
+        },
+      },
+      include: {
+        packages: true,
+        payments: true,
+        products: true,
+        services: true,
+        cost_modifier: true,
+        manual_content: true,
+      },
+    });
+  }
+
   async findAll(): Promise<[] | order[]> {
     return await this.prismaService.order.findMany();
   }
