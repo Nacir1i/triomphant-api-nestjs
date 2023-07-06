@@ -106,7 +106,7 @@ export class CustomerController
   }
 
   @UseInterceptors(CreateInterceptor)
-  @Get('comment/:id')
+  @Get(':id/comments')
   @HttpCode(HttpStatus.CREATED)
   async findCustomerComments(@Param('id', ParseIntPipe) id: number) {
     return await this.customerService.findCustomerComments(id);

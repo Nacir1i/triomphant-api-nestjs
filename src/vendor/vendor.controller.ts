@@ -21,7 +21,12 @@ import {
   UpdateInterceptor,
 } from '../utils/interceptors';
 import { VendorService } from './vendor.service';
-import { VendorDto, PartialTypedVendor } from './dto';
+import {
+  VendorDto,
+  PartialTypedVendor,
+  VendorCommentDto,
+  VendorCommentNoteDto,
+} from './dto';
 import { ParseIntPipe } from '@nestjs/common/pipes';
 import { ParseStringPipe } from '../utils/customPipes';
 import { ControllerInterface } from '../utils/interfaces';
@@ -89,6 +94,27 @@ export class VendorController
     const vendor = this.vendorService.update(id, updateVendorDto);
 
     return vendor;
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Post('comment/create')
+  @HttpCode(HttpStatus.CREATED)
+  async createComment(@Body() dto: VendorCommentDto) {
+    return await this.vendorService.createComment(dto);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Get(':id/comments')
+  @HttpCode(HttpStatus.CREATED)
+  async findCustomerComments(@Param('id', ParseIntPipe) id: number) {
+    return await this.vendorService.findVendorComments(id);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Post('comment/note/create')
+  @HttpCode(HttpStatus.CREATED)
+  async createCommentNote(@Body() dto: VendorCommentNoteDto) {
+    return this.vendorService.createCommentNote(dto);
   }
 
   @UseInterceptors(DeleteInterceptor)
