@@ -24,7 +24,12 @@ import {
 import { ParseStringPipe } from '../utils/customPipes';
 import { QuotesService } from './quotes.service';
 import { ControllerInterface } from '../utils/interfaces';
-import { QuoteDto, UpdateQuoteDto } from './dto';
+import {
+  QuoteCommentDto,
+  QuoteCommentNoteDto,
+  QuoteDto,
+  UpdateQuoteDto,
+} from './dto';
 import { quote } from '@prisma/client';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
@@ -87,6 +92,27 @@ export class QuotesController
     @Body() dto: UpdateQuoteDto,
   ) {
     return await this.quotesService.update(id, dto);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Post('comment/create')
+  @HttpCode(HttpStatus.CREATED)
+  async createComment(@Body() dto: QuoteCommentDto) {
+    return await this.quotesService.createComment(dto);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Get('comment/findAll/:id')
+  @HttpCode(HttpStatus.CREATED)
+  async findCustomerComments(@Param('id', ParseIntPipe) id: number) {
+    return await this.quotesService.findCustomerComments(id);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Post('comment/note/create')
+  @HttpCode(HttpStatus.CREATED)
+  async createCommentNote(@Body() dto: QuoteCommentNoteDto) {
+    return this.quotesService.createCommentNote(dto);
   }
 
   @UseInterceptors(DeleteInterceptor)

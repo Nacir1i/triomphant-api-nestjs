@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ServiceInterface } from '../utils/interfaces';
-import { QuoteDto, UpdateQuoteDto } from './dto';
-import { quote } from '@prisma/client';
+import {
+  QuoteCommentDto,
+  QuoteCommentNoteDto,
+  QuoteDto,
+  UpdateQuoteDto,
+} from './dto';
+import { quote, quote_comment, quote_comment_note } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { constructUpdateMany } from '../utils/common';
 
@@ -197,6 +202,56 @@ export class QuotesService
           create: dto.updateManualContent.add,
           updateMany: updateManyManualQuery,
           deleteMany: dto.updateManualContent.delete,
+        },
+      },
+    });
+  }
+
+  async createComment(dto: QuoteCommentDto): Promise<quote_comment> {
+    return await this.prismaService.quote_comment.create({
+      data: {
+        content: dto.content,
+        metadata: Buffer.from(dto.metadata),
+        is_system: dto.is_system,
+        notification_id: dto.notification_id,
+
+        quote: {
+          connect: {
+            id: dto.commenter_id,
+          },
+        },
+        commenter: {
+          connect: {
+            id: dto.commenter_id,
+          },
+        },
+      },
+    });
+  }
+
+  async findCustomerComments(id: number): Promise<[] | quote_comment[]> {
+    return await this.prismaService.quote_comment.findMany({
+      where: {
+        quote_id: id,
+      },
+      include: {
+        quote_comment_note: true,
+      },
+    });
+  }
+
+  async createCommentNote(
+    dto: QuoteCommentNoteDto,
+  ): Promise<quote_comment_note> {
+    return await this.prismaService.quote_comment_note.create({
+      data: {
+        content: dto.content,
+        notification_id: dto.notification_id,
+
+        comment: {
+          connect: {
+            id: dto.comment_id,
+          },
         },
       },
     });
