@@ -22,7 +22,12 @@ import {
 } from '../utils/interceptors';
 import { ParseStringPipe } from '../utils/customPipes';
 import { DeliveryInvoiceService } from './deliveryInvoice.service';
-import { DeliveryInvoiceDto, UpdateDeliveryInvoiceDto } from './dto';
+import {
+  DeliveryInvoiceCommentDto,
+  DeliveryInvoiceCommentNoteDto,
+  DeliveryInvoiceDto,
+  UpdateDeliveryInvoiceDto,
+} from './dto';
 import { delivery_invoice } from '@prisma/client';
 import { ControllerInterface } from '../utils/interfaces';
 import { ApiBearerAuth } from '@nestjs/swagger';
@@ -87,6 +92,27 @@ export class DeliveryInvoiceController
     @Body() dto: UpdateDeliveryInvoiceDto,
   ) {
     return this.deliveryInvoiceService.update(id, dto);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Post('comment/create')
+  @HttpCode(HttpStatus.CREATED)
+  async createComment(@Body() dto: DeliveryInvoiceCommentDto) {
+    return await this.deliveryInvoiceService.createComment(dto);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Get('comment/findAll/:id')
+  @HttpCode(HttpStatus.CREATED)
+  async findCustomerComments(@Param('id', ParseIntPipe) id: number) {
+    return await this.deliveryInvoiceService.findCustomerComments(id);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Post('comment/note/create')
+  @HttpCode(HttpStatus.CREATED)
+  async createCommentNote(@Body() dto: DeliveryInvoiceCommentNoteDto) {
+    return this.deliveryInvoiceService.createCommentNote(dto);
   }
 
   @UseInterceptors(DeleteInterceptor)

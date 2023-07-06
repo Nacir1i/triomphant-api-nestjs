@@ -1,7 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ServiceInterface } from '../utils/interfaces';
-import { DeliveryInvoiceDto, UpdateDeliveryInvoiceDto } from './dto';
-import { delivery_invoice } from '@prisma/client';
+import {
+  DeliveryInvoiceCommentDto,
+  DeliveryInvoiceCommentNoteDto,
+  DeliveryInvoiceDto,
+  UpdateDeliveryInvoiceDto,
+} from './dto';
+import {
+  delivery_invoice,
+  delivery_invoice_comment,
+  delivery_invoice_comment_note,
+} from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { constructUpdateMany } from '../utils/common';
 
@@ -159,6 +168,60 @@ export class DeliveryInvoiceService
       },
       data: {
         is_deleted: true,
+      },
+    });
+  }
+
+  async createComment(
+    dto: DeliveryInvoiceCommentDto,
+  ): Promise<delivery_invoice_comment> {
+    return await this.prismaService.delivery_invoice_comment.create({
+      data: {
+        content: dto.content,
+        metadata: Buffer.from(dto.metadata),
+        is_system: dto.is_system,
+        notification_id: dto.notification_id,
+
+        delivery_invoice: {
+          connect: {
+            id: dto.commenter_id,
+          },
+        },
+        commenter: {
+          connect: {
+            id: dto.commenter_id,
+          },
+        },
+      },
+    });
+  }
+
+  async findCustomerComments(
+    id: number,
+  ): Promise<[] | delivery_invoice_comment[]> {
+    return await this.prismaService.delivery_invoice_comment.findMany({
+      where: {
+        delivery_invoice_id: id,
+      },
+      include: {
+        delivery_invoice_comment_note: true,
+      },
+    });
+  }
+
+  async createCommentNote(
+    dto: DeliveryInvoiceCommentNoteDto,
+  ): Promise<delivery_invoice_comment_note> {
+    return await this.prismaService.delivery_invoice_comment_note.create({
+      data: {
+        content: dto.content,
+        notification_id: dto.notification_id,
+
+        comment: {
+          connect: {
+            id: dto.comment_id,
+          },
+        },
       },
     });
   }
