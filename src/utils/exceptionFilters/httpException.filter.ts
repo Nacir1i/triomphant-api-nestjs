@@ -6,10 +6,10 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
-interface exceptionResponseInterface {
-  statusCode: number;
-  message: any;
-  error: string;
+interface ExceptionResponse {
+  statusCode?: number;
+  message?: any;
+  error?: string;
 }
 
 @Catch(HttpException)
@@ -22,11 +22,10 @@ export class HttpExceptionFilter implements ExceptionFilter {
     const request = ctx.getRequest<Request>();
     const status = exception.getStatus();
 
-    const exceptionResponse =
-      exception.getResponse() as exceptionResponseInterface;
+    const exceptionResponse = exception.getResponse() as ExceptionResponse;
 
     response.status(status).json({
-      message: exceptionResponse.message,
+      message: exceptionResponse.message || 'Http request exception',
       statusCode: status,
       timestamp: new Date().toISOString(),
       path: request.url,

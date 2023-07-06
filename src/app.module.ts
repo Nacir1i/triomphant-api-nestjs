@@ -28,11 +28,16 @@ import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ChargesModule } from './charges/charges.module';
 import { RolesGuard } from './auth/role.guard';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+    }),
+    ThrottlerModule.forRoot({
+      ttl: 60,
+      limit: 2,
     }),
     EventEmitterModule.forRoot(),
     AuthModule,
@@ -67,6 +72,10 @@ import { DashboardModule } from './dashboard/dashboard.module';
     {
       provide: APP_GUARD,
       useClass: RolesGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
     UserService,
   ],
