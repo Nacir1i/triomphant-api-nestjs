@@ -3,13 +3,13 @@ import {
   IsString,
   IsOptional,
   IsNotEmpty,
-  IsEmail,
   IsNumber,
   IsArray,
   ValidateNested,
   IsBoolean,
 } from 'class-validator';
 import { Type } from 'class-transformer';
+import { IsMsgBuffer } from '../validators';
 
 export class BaseObjectDto {
   @ApiProperty()
@@ -160,4 +160,43 @@ export function constructUpdateMany(array: GenericObjectDto[], name: string) {
 
     return query;
   });
+}
+
+export class BaseComment {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly content: string;
+
+  @ApiProperty()
+  @IsMsgBuffer()
+  @IsNotEmpty()
+  readonly metadata: number[];
+
+  @ApiProperty()
+  @IsBoolean()
+  @IsNotEmpty()
+  readonly is_system: boolean;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  readonly commenter_id: number;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  readonly notification_id: number;
+}
+
+export class BaseCommentNote {
+  @ApiProperty()
+  @IsString()
+  @IsNotEmpty()
+  readonly content: string;
+
+  @ApiProperty()
+  @IsNumber()
+  @IsOptional()
+  readonly notification_id: number;
 }

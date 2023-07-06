@@ -10,7 +10,7 @@
     "prisma:dev:migrate": "npx prisma migrate dev",
     "db:dev:rm": "docker compose rm dev-db -s -f -v",
     "db:dev:up": "docker compose up dev-db -d",
-    "db:dev:restart": "npm run db:dev:rm && npm run db:dev:up && sleep 20 && npm run prisma:dev:deploy && npx prisma db seed",
+    "db:dev:restart": "npm run db:dev:rm && npm run db:dev:up && sleep 30 && npm run prisma:dev:deploy && npx prisma db seed",
     "prisma:test:deploy": "dotenv -e .env.test -- npx prisma migrate deploy",
     "prisma:test:migrate": "dotenv -e .env.test -- npx prisma migrate dev",
     "db:test:rm": "docker compose rm test-db -s -f -v",

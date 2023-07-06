@@ -1,41 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  IsString,
-  IsOptional,
-  IsNotEmpty,
-  IsBoolean,
-  IsNumber,
-} from 'class-validator';
-import { IsMsgBuffer } from '../../utils/validators';
+import { IsOptional, IsNumber } from 'class-validator';
+import { BaseComment } from 'src/utils/common';
 
-export class CustomerCommentDto {
-  @ApiProperty()
-  @IsString()
-  @IsNotEmpty()
-  readonly content: string;
-
-  @ApiProperty()
-  @IsMsgBuffer()
-  @IsNotEmpty()
-  readonly metadata: number[];
-
-  @ApiProperty()
-  @IsBoolean()
-  @IsNotEmpty()
-  readonly is_system: boolean;
-
+export class CustomerCommentDto extends BaseComment {
   @ApiProperty()
   @IsNumber()
   @IsOptional()
   readonly customer_id: number;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsOptional()
-  readonly commenter_id: number;
-
-  @ApiProperty()
-  @IsNumber()
-  @IsOptional()
-  readonly notification_id: number;
 }
