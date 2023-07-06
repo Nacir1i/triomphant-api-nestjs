@@ -1,7 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { ServiceInterface } from '../utils/interfaces';
-import { AppointmentDto, UpdateAppointmentDto } from './dto';
-import { appointment } from '@prisma/client';
+import {
+  AppointmentCommentDto,
+  AppointmentCommentNoteDto,
+  AppointmentDto,
+  UpdateAppointmentDto,
+} from './dto';
+import {
+  appointment,
+  appointment_comment,
+  appointment_comment_note,
+} from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import * as dayjs from 'dayjs';
 
@@ -253,6 +262,58 @@ export class AppointmentsService
       },
       data: {
         is_deleted: true,
+      },
+    });
+  }
+
+  async createComment(
+    dto: AppointmentCommentDto,
+  ): Promise<appointment_comment> {
+    return await this.prismaService.appointment_comment.create({
+      data: {
+        content: dto.content,
+        metadata: Buffer.from(dto.metadata),
+        is_system: dto.is_system,
+        notification_id: dto.notification_id,
+
+        appointment: {
+          connect: {
+            id: dto.appointment_id,
+          },
+        },
+        commenter: {
+          connect: {
+            id: dto.commenter_id,
+          },
+        },
+      },
+    });
+  }
+
+  async findCustomerComments(id: number): Promise<[] | appointment_comment[]> {
+    return await this.prismaService.appointment_comment.findMany({
+      where: {
+        appointment_id: id,
+      },
+      include: {
+        appointment_comment_note: true,
+      },
+    });
+  }
+
+  async createCommentNote(
+    dto: AppointmentCommentNoteDto,
+  ): Promise<appointment_comment_note> {
+    return await this.prismaService.appointment_comment_note.create({
+      data: {
+        content: dto.content,
+        notification_id: dto.notification_id,
+
+        comment: {
+          connect: {
+            id: dto.comment_id,
+          },
+        },
       },
     });
   }

@@ -217,7 +217,7 @@ export class QuotesService
 
         quote: {
           connect: {
-            id: dto.commenter_id,
+            id: dto.quote_id,
           },
         },
         commenter: {

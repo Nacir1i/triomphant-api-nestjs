@@ -186,7 +186,7 @@ export class VendorService
 
         vendor: {
           connect: {
-            id: dto.commenter_id,
+            id: dto.vendor_id,
           },
         },
         commenter: {

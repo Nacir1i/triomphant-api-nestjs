@@ -184,7 +184,7 @@ export class DeliveryInvoiceService
 
         delivery_invoice: {
           connect: {
-            id: dto.commenter_id,
+            id: dto.deliveryInvoice_id,
           },
         },
         commenter: {

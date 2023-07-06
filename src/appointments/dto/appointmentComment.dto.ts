@@ -6,5 +6,5 @@ export class AppointmentCommentDto extends BaseComment {
   @ApiProperty()
   @IsNumber()
   @IsOptional()
-  readonly customer_id: number;
+  readonly appointment_id: number;
 }

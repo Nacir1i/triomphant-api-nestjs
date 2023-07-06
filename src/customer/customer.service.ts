@@ -239,7 +239,7 @@ export class CustomerService
 
         customer: {
           connect: {
-            id: dto.commenter_id,
+            id: dto.customer_id,
           },
         },
         commenter: {

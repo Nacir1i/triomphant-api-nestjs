@@ -265,7 +265,7 @@ export class OrdersService
 
         order: {
           connect: {
-            id: dto.commenter_id,
+            id: dto.order_id,
           },
         },
         commenter: {

@@ -23,7 +23,12 @@ import {
 import { ParseStringPipe, ParseIsoDatePipe } from '../utils/customPipes';
 import { AppointmentsService } from './appointments.service';
 import { ControllerInterface } from '../utils/interfaces';
-import { AppointmentDto, UpdateAppointmentDto } from './dto';
+import {
+  AppointmentCommentDto,
+  AppointmentCommentNoteDto,
+  AppointmentDto,
+  UpdateAppointmentDto,
+} from './dto';
 import { appointment } from '@prisma/client';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
@@ -105,6 +110,27 @@ export class AppointmentsController
     @Body() dto: UpdateAppointmentDto,
   ) {
     return await this.appointmentsService.update(id, dto);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Post('comment/create')
+  @HttpCode(HttpStatus.CREATED)
+  async createComment(@Body() dto: AppointmentCommentDto) {
+    return await this.appointmentsService.createComment(dto);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Get('comment/findAll/:id')
+  @HttpCode(HttpStatus.CREATED)
+  async findCustomerComments(@Param('id', ParseIntPipe) id: number) {
+    return await this.appointmentsService.findCustomerComments(id);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Post('comment/note/create')
+  @HttpCode(HttpStatus.CREATED)
+  async createCommentNote(@Body() dto: AppointmentCommentNoteDto) {
+    return this.appointmentsService.createCommentNote(dto);
   }
 
   @UseInterceptors(DeleteInterceptor)
