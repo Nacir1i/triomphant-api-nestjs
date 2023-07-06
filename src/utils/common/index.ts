@@ -197,6 +197,11 @@ export class BaseCommentNote {
 
   @ApiProperty()
   @IsNumber()
+  @IsNotEmpty()
+  readonly comment_id: number;
+
+  @ApiProperty()
+  @IsNumber()
   @IsOptional()
   readonly notification_id: number;
 }
