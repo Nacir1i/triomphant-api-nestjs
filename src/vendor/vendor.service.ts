@@ -1,7 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { VendorDto, PartialTypedVendor } from './dto';
+import {
+  VendorDto,
+  PartialTypedVendor,
+  VendorCommentDto,
+  VendorCommentNoteDto,
+} from './dto';
 import { PrismaService } from '../prisma/prisma.service';
-import { vendor } from '@prisma/client';
+import { vendor, vendor_comment, vendor_comment_note } from '@prisma/client';
 import { ServiceInterface } from '../utils/interfaces';
 
 @Injectable()
@@ -167,6 +172,56 @@ export class VendorService
       },
       data: {
         is_deleted: true,
+      },
+    });
+  }
+
+  async createComment(dto: VendorCommentDto): Promise<vendor_comment> {
+    return await this.prismaService.vendor_comment.create({
+      data: {
+        content: dto.content,
+        metadata: Buffer.from(dto.metadata),
+        is_system: dto.is_system,
+        notification_id: dto.notification_id,
+
+        vendor: {
+          connect: {
+            id: dto.commenter_id,
+          },
+        },
+        commenter: {
+          connect: {
+            id: dto.commenter_id,
+          },
+        },
+      },
+    });
+  }
+
+  async findVendorComments(id: number): Promise<[] | vendor_comment[]> {
+    return await this.prismaService.vendor_comment.findMany({
+      where: {
+        vendor_id: id,
+      },
+      include: {
+        notes: true,
+      },
+    });
+  }
+
+  async createCommentNote(
+    dto: VendorCommentNoteDto,
+  ): Promise<vendor_comment_note> {
+    return await this.prismaService.vendor_comment_note.create({
+      data: {
+        content: dto.content,
+        notification_id: dto.notification_id,
+
+        comment: {
+          connect: {
+            id: dto.comment_id,
+          },
+        },
       },
     });
   }
