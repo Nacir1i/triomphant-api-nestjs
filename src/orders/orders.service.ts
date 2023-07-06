@@ -1,11 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { ServiceInterface } from '../utils/interfaces';
-import { OrderDto, UpdateOrderDto } from './dto';
+import {
+  OrderCommentDto,
+  OrderCommentNoteDto,
+  OrderDto,
+  UpdateOrderDto,
+} from './dto';
 import {
   Renamedpackage,
   cost_modifier,
   manual_order_content,
   order,
+  order_comment,
+  order_comment_note,
   order_package,
   order_payment,
   order_product,
@@ -244,6 +251,56 @@ export class OrdersService
       },
       data: {
         is_deleted: true,
+      },
+    });
+  }
+
+  async createComment(dto: OrderCommentDto): Promise<order_comment> {
+    return await this.prismaService.order_comment.create({
+      data: {
+        content: dto.content,
+        metadata: Buffer.from(dto.metadata),
+        is_system: dto.is_system,
+        notification_id: dto.notification_id,
+
+        order: {
+          connect: {
+            id: dto.commenter_id,
+          },
+        },
+        commenter: {
+          connect: {
+            id: dto.commenter_id,
+          },
+        },
+      },
+    });
+  }
+
+  async findOrderComments(id: number): Promise<[] | order_comment[]> {
+    return await this.prismaService.order_comment.findMany({
+      where: {
+        order_id: id,
+      },
+      include: {
+        order_comment_note: true,
+      },
+    });
+  }
+
+  async createCommentNote(
+    dto: OrderCommentNoteDto,
+  ): Promise<order_comment_note> {
+    return await this.prismaService.order_comment_note.create({
+      data: {
+        content: dto.content,
+        notification_id: dto.notification_id,
+
+        comment: {
+          connect: {
+            id: dto.comment_id,
+          },
+        },
       },
     });
   }
