@@ -24,7 +24,12 @@ import {
 import { ParseStringPipe } from '../utils/customPipes';
 import { OrdersService } from './orders.service';
 import { ControllerInterface } from '../utils/interfaces';
-import { OrderDto, UpdateOrderDto } from './dto';
+import {
+  OrderCommentDto,
+  OrderCommentNoteDto,
+  OrderDto,
+  UpdateOrderDto,
+} from './dto';
 import { order } from '@prisma/client';
 import { ApiBearerAuth } from '@nestjs/swagger';
 
@@ -85,6 +90,27 @@ export class OrdersController
     @Body() dto: UpdateOrderDto,
   ) {
     return await this.ordersService.update(id, dto);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Post('comment/create')
+  @HttpCode(HttpStatus.CREATED)
+  async createComment(@Body() dto: OrderCommentDto) {
+    return await this.ordersService.createComment(dto);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Get('comment/findAll/:id')
+  @HttpCode(HttpStatus.CREATED)
+  async findOrderComments(@Param('id', ParseIntPipe) id: number) {
+    return await this.ordersService.findOrderComments(id);
+  }
+
+  @UseInterceptors(CreateInterceptor)
+  @Post('comment/note/create')
+  @HttpCode(HttpStatus.CREATED)
+  async createCommentNote(@Body() dto: OrderCommentNoteDto) {
+    return this.ordersService.createCommentNote(dto);
   }
 
   @UseInterceptors(DeleteInterceptor)
