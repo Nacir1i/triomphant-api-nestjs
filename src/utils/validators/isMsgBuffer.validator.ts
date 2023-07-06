@@ -15,8 +15,6 @@ export function isMsgBuffer(value: any): boolean {
     }
     return true;
   } catch (error) {
-    console.log('error', error);
-
     return false;
   }
 }
